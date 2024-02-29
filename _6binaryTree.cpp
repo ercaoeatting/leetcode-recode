@@ -533,13 +533,14 @@ public:
         return root1;
     }
 };
-class Solution {
+class lc700 {
 public:
     TreeNode *searchBST(TreeNode *root, int val) {
         if (root == nullptr) return nullptr;
-        while (root != nullptr) {
-            if (root->val == val) return root;
-        }
+        if (root->val == val) return root;
+        if (root->val > val) return searchBST(root->left, val);
+        if (root->val < val) return searchBST(root->right, val);
+        return nullptr;
     }
 };
 int main() {
