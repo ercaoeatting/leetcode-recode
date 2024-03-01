@@ -543,6 +543,62 @@ public:
         return nullptr;
     }
 };
+class lc98 {
+public:
+    void sortInorder(TreeNode *root, vector<int> &sortvec) {
+        if (root == nullptr) return;
+        sortInorder(root->left, sortvec);
+        sortvec.push_back(root->val);
+        sortInorder(root->right, sortvec);
+    }
+    bool isValidBST(TreeNode *root) {
+        vector<int> sortvec;
+        sortInorder(root, sortvec);
+
+        for (int i = 0; i < sortvec.size() - 1; i++) {
+            if (sortvec[i] >= sortvec[i + 1]) return false;
+        }
+        return true;
+    }
+};
+class lc530 {
+public:
+    int result = INT_MAX;
+    TreeNode *pre = nullptr;
+
+    int getMinimumDifference(TreeNode *root) {
+        if (root == nullptr) return result;
+
+        getMinimumDifference(root->left);
+        if (pre != nullptr) result = min(result, root->val - pre->val);
+        pre = root;
+        getMinimumDifference(root->right);
+        return result;
+    }
+};
+class Solution {
+public:
+    vector<int> result;
+    TreeNode *pre;
+    int count;
+    int maxcount;
+    Solution() : result(vector<int>()), pre(nullptr), count(0), maxcount(0) {}
+    vector<int> findMode(TreeNode *root) {
+        if (!root) return result;
+        findMode(root->left);
+        if (pre == nullptr) { count = 1; }
+        else if (pre->val == root->val) { count++; }
+        else { count = 1; }
+        if (count == maxcount) { result.push_back(root->val); }
+        else if (count > maxcount) {
+            maxcount = count;
+            result.clear();
+            result.push_back(root->val);
+        }
+        findMode(root->right);
+        return result;
+    }
+};
 int main() {
     vector<int> a{3, 9, 20, 15, 7};
     vector<int> b{9, 3, 15, 20, 7};
