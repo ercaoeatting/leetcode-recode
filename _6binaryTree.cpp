@@ -533,6 +533,7 @@ public:
         return root1;
     }
 };
+// 二叉搜索树
 class lc700 {
 public:
     TreeNode *searchBST(TreeNode *root, int val) {
@@ -543,6 +544,7 @@ public:
         return nullptr;
     }
 };
+// 二叉搜索树的验证
 class lc98 {
 public:
     void sortInorder(TreeNode *root, vector<int> &sortvec) {
@@ -561,6 +563,7 @@ public:
         return true;
     }
 };
+// 二叉搜索树的最小绝对差
 class lc530 {
 public:
     int result = INT_MAX;
@@ -576,13 +579,14 @@ public:
         return result;
     }
 };
-class Solution {
+// 二叉搜索树中的众数
+class lc501 {
 public:
     vector<int> result;
     TreeNode *pre;
     int count;
     int maxcount;
-    Solution() : result(vector<int>()), pre(nullptr), count(0), maxcount(0) {}
+    lc501() : result(vector<int>()), pre(nullptr), count(0), maxcount(0) {}
     vector<int> findMode(TreeNode *root) {
         if (!root) return result;
         findMode(root->left);
@@ -597,6 +601,48 @@ public:
         }
         findMode(root->right);
         return result;
+    }
+};
+// 二叉树最近公共祖先
+class lc236 {
+public:
+    TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q) {
+        if (root == nullptr || root == p || root == q) return root;
+        TreeNode *left = lowestCommonAncestor(root->left, p, q);
+        TreeNode *right = lowestCommonAncestor(root->right, p, q);
+        if (left && right) { return root; }
+        else if (left) { return left; }
+        else if (right) { return right; }
+        else { return nullptr; }
+    }
+};
+// BST最近公共祖先
+class lc235 {
+public:
+    TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q) {
+        if (root->val > p->val && root->val > q->val) {
+            return lowestCommonAncestor(root->left, p, q);
+        }
+        else if (root->val < p->val && root->val < q->val) {
+            return lowestCommonAncestor(root->right, p, q);
+        }
+        else
+            return root;
+    }
+};
+// 二叉搜索树的插入
+// 记得再看看迭代法
+class Solution {
+public:
+    TreeNode *insertIntoBST(TreeNode *root, int val) {
+        if (root == nullptr) // 中
+        {
+            TreeNode *node = new TreeNode(val);
+            return node;
+        }
+        if (root->val > val) { root->left = insertIntoBST(root->left, val); }        // 左
+        else if (root->val < val) { root->right = insertIntoBST(root->right, val); } // 右
+        return root;
     }
 };
 int main() {
