@@ -632,7 +632,7 @@ public:
 };
 // 二叉搜索树的插入
 // 记得再看看迭代法
-class Solution {
+class lc701 {
 public:
     TreeNode *insertIntoBST(TreeNode *root, int val) {
         if (root == nullptr) // 中
@@ -642,6 +642,104 @@ public:
         }
         if (root->val > val) { root->left = insertIntoBST(root->left, val); }        // 左
         else if (root->val < val) { root->right = insertIntoBST(root->right, val); } // 右
+        return root;
+    }
+};
+
+// 删除BST的节点
+class lc450 {
+public:
+    TreeNode *deleteNode(TreeNode *root, int key) {
+        if (root == nullptr) return nullptr;
+        if (root->val == key) {
+            if (!root->left && !root->right) {
+                delete root;
+                return nullptr;
+            }
+            else if (!root->left) {
+                TreeNode *node = root->right;
+                delete root;
+                return node;
+            }
+            else if (!root->right) {
+                TreeNode *node = root->left;
+                delete root;
+                return node;
+            }
+            else {
+                TreeNode *rightleave = root->right;
+                while (!rightleave->left) { rightleave = rightleave->left; }
+                rightleave->left = root->left;
+                root->left = nullptr;
+                TreeNode *node2 = root->right;
+                delete root;
+                return node2;
+            }
+        }
+        else if (root->val > key)
+            root->left = deleteNode(root->left, key);
+        else
+            root->right = deleteNode(root->right, key);
+        return root;
+    }
+    TreeNode *solution2(TreeNode *root, int key) {
+        if (root == nullptr) return root;
+        if (root->val == key) {
+            if (root->right == nullptr) { // 这里第二次操作目标值：最终删除的作用
+                return root->left;
+            }
+            TreeNode *cur = root->right;
+            while (cur->left) { cur = cur->left; }
+            swap(root->val, cur->val); // 这里第一次操作目标值：交换目标值其右子树最左面节点。
+        }
+        root->left = deleteNode(root->left, key);
+        root->right = deleteNode(root->right, key);
+        return root;
+    }
+};
+// 修剪二叉搜索树
+class lc669 {
+public:
+    TreeNode *trimBST(TreeNode *root, int low, int high) {
+        if (!root) return nullptr;
+        if (root->val < low) return trimBST(root->right, low, high);
+        if (root->val > high) return trimBST(root->left, low, high);
+        root->left = trimBST(root->left, low, high);
+        root->right = trimBST(root->right, low, high);
+        return root;
+    }
+};
+// 将有序数组转换为二叉搜索树
+class lc108 {
+public:
+    TreeNode *sortedArrayToBST(vector<int> &nums) {
+        TreeNode *node = new TreeNode(0);
+        if (nums.size() == 1) {
+            node->val = nums[0];
+            return node;
+        }
+        int seg = nums.size() / 2;
+        vector<int> left(nums.begin(), nums.begin() + seg);
+        vector<int> right(nums.begin() + seg + 1, nums.end());
+        TreeNode *root = new TreeNode(nums[seg]);
+        if (left.size() > 0) root->left = sortedArrayToBST(left);
+        if (right.size() > 0) root->right = sortedArrayToBST(right);
+        return root;
+    }
+};
+// 二叉树转为累加
+class lc538 {
+public:
+    int pre = 0;
+    void traversal(TreeNode *cur) {
+        if (cur == nullptr) return;
+        traversal(cur->right);
+        cur->val += pre;
+        pre = cur->val;
+        traversal(cur->left);
+    }
+    TreeNode *convertBST(TreeNode *root) {
+        traversal(root);
         return root;
     }
 };
