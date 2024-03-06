@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <unordered_set>
 #include <vector>
 #include <string>
 using namespace std;
@@ -259,5 +260,102 @@ public:
         return result;
     }
 };
+// 子集问题
+class lc78 {
+    vector<int> path;
+    vector<vector<int>> result;
+    void backtracking(vector<int>& nums, int start) {
+        result.push_back(path);
+        for (int i = start; i < nums.size(); i++) {
+            path.push_back(nums[i]);
+            backtracking(nums, i + 1);
+            path.pop_back();
+        }
+    }
 
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        backtracking(nums, 0);
+        return result;
+    }
+};
+
+class lc90 {
+    vector<int> path;
+    vector<vector<int>> result;
+
+public:
+    void backtracking(vector<int>& nums, int start) {
+        result.push_back(path);
+        if (start >= nums.size()) return;
+        for (int i = start; i < nums.size(); i++) {
+            if (i > start && nums[i] == nums[i - 1]) continue;
+            path.push_back(nums[i]);
+            backtracking(nums, i + 1);
+            path.pop_back();
+        }
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        backtracking(nums, 0);
+        return result;
+    }
+};
+
+// 非递减子序列
+class lc491 {
+    vector<vector<int>> result;
+    vector<int> path;
+    void backtracking(vector<int>& nums, int start) {
+        if (path.size() > 1) result.push_back(path);
+        if (start >= nums.size()) return;
+        unordered_set<int> uset;
+        for (int i = start; i < nums.size(); i++) {
+            if ((!path.empty() && nums[i] < path.back()) || uset.find(nums[i]) != uset.end())
+                continue;
+            uset.insert(nums[i]);
+            path.push_back(nums[i]);
+            backtracking(nums, i + 1);
+            path.pop_back();
+        }
+    }
+
+public:
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        backtracking(nums, 0);
+        return result;
+    }
+};
+// 排列问题
+// 全排列
+class lc46 {
+    vector<vector<int>> result;
+    vector<int> path;
+    vector<bool> used;
+    void backtracking(vector<int>& nums, vector<bool>& used) {
+        int use = 1;
+        for (int i = 0; i < used.size(); i++) {
+            if (used[i] == 0) use = 0;
+        }
+        if (use) {
+            result.push_back(path);
+            return;
+        }
+        for (int i = 0; i < nums.size(); i++) {
+            if (used[i] == true) continue;
+            used[i] = true;
+            path.push_back(nums[i]);
+            backtracking(nums, used);
+            path.pop_back();
+            used[i] = false;
+        }
+    }
+
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<bool> used(nums.size(), false);
+        backtracking(nums, used);
+        return result;
+    }
+};
 int main() {}
