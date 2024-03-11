@@ -1,5 +1,8 @@
 #include <algorithm>
+#include <map>
+#include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 #include <string>
 using namespace std;
@@ -309,6 +312,7 @@ class lc491 {
     void backtracking(vector<int>& nums, int start) {
         if (path.size() > 1) result.push_back(path);
         if (start >= nums.size()) return;
+
         unordered_set<int> uset;
         for (int i = start; i < nums.size(); i++) {
             if ((!path.empty() && nums[i] < path.back()) || uset.find(nums[i]) != uset.end())
@@ -357,5 +361,147 @@ public:
         backtracking(nums, used);
         return result;
     }
+};
+class lc47 {
+private:
+    vector<vector<int>> result;
+    vector<int> path;
+    void backtracking(vector<int>& nums, vector<bool>& used) {
+        // 此时说明找到了一组
+        if (path.size() == nums.size()) {
+            result.push_back(path);
+            return;
+        }
+        for (int i = 0; i < nums.size(); i++) {
+            // used[i - 1] == true，说明同一树枝nums[i - 1]使用过
+            // used[i - 1] == false，说明同一树层nums[i - 1]使用过
+            // 如果同一树层nums[i - 1]使用过则直接跳过
+            if (i > 0 && nums[i] == nums[i - 1] && used[i - 1] == false) { continue; }
+            if (used[i] == false) {
+                used[i] = true;
+                path.push_back(nums[i]);
+                backtracking(nums, used);
+                path.pop_back();
+                used[i] = false;
+            }
+        }
+    }
+
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        result.clear();
+        path.clear();
+        sort(nums.begin(), nums.end()); // 排序
+        vector<bool> used(nums.size(), false);
+        backtracking(nums, used);
+        return result;
+    }
+};
+
+// 重新规划行程
+class lc332 {
+public:
+    unordered_map<string, map<string, int>> targets;
+    vector<string> result;
+    bool backtracking(int ticketnum) {
+        if (result.size() == ticketnum + 1) { return true; }
+        for (auto& target : targets[result[result.size() - 1]]) {
+            if (target.second > 0) {
+                result.push_back(target.first);
+                target.second--;
+                if (backtracking(ticketnum)) return true;
+                target.second++;
+                result.pop_back();
+            }
+        }
+        return false;
+    }
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        for (const vector<string>& vec : tickets) {
+            targets[vec[0]][vec[1]]++; // 记录映射关系
+        }
+        result.push_back("JFK"); // 起始机场
+        backtracking(tickets.size());
+        return result;
+    }
+};
+// 棋盘问题
+// N皇后
+class lc51 {
+    vector<vector<string>> result;
+    bool isValid(int row, int col, vector<string>& chessboard, int n) {
+        // 检查列
+        for (int i = 0; i < row; i++) {
+            if (chessboard[i][col] == 'Q') return false;
+        }
+        // 斜线
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if (chessboard[i][j] == 'Q') return false;
+        }
+        for (int i = row - 1, j = col + 1; i >= 0 && j <= n; i--, j++) {
+            if (chessboard[i][j] == 'Q') return false;
+        }
+        return true;
+    }
+    void backtracking(int n, int row, vector<string>& chessboard) {
+        if (row == n) {
+            result.push_back(chessboard);
+            return;
+        }
+        for (int col = 0; col < n; col++) {
+            if (isValid(row, col, chessboard, n)) {
+                chessboard[row][col] = 'Q';
+                backtracking(n, row + 1, chessboard);
+                chessboard[row][col] = '.';
+            }
+        }
+    }
+
+public:
+    vector<vector<string>> solveNQueens(int n) {
+        vector<string> chessboard(n, string(n, '.'));
+        backtracking(n, 0, chessboard);
+        return result;
+    }
+};
+// 解数独
+class lc37 {
+public:
+    bool isValid(int i, int j, char k, const vector<vector<char>>& board) {
+        // 检查行
+        for (int row = 0; row < 9; row++) {
+            if (board[row][j] == k) return false;
+        }
+        // 检查列
+        for (int line = 0; line < 9; line++) {
+            if (board[i][line] == k) return false;
+        }
+        // 检查本宫格
+        int startrow = (i / 3) * 3;
+        int startcol = (j / 3) * 3;
+        for (int row = startrow; row < startrow + 3; row++) {
+            for (int col = startcol; col < startcol + 3; col++) {
+                if (board[row][col] == k) return false;
+            }
+        }
+        return true;
+    }
+    bool backtracking(vector<vector<char>>& board, int row, int line) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != '.') continue;
+                for (char k = '1'; k <= '9'; k++) {
+                    if (isValid(i, j, k, board)) {
+                        board[i][j] = k;
+                        if (backtracking(board, i + 1, j + 1)) return true;
+                        board[i][j] = '.';
+                    }
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+    void solveSudoku(vector<vector<char>>& board) { backtracking(board, 0, 0); }
 };
 int main() {}
