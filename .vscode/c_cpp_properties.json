@@ -1,14 +1,18 @@
 {
   "configurations": [
-    {
-      "compilerPath": "D:\\Liuhan\\mingw64\\bin\\g++.exe",
-      "cppStandard": "c++14",
-      "includePath": [
-        "${workspaceFolder}/**"
-      ],
-      "intelliSenseMode": "windows-gcc-x64",
-      "name": "Win32"
-    }
+      {
+          "name": "Linux",
+          "includePath": [
+              "${workspaceFolder}/**"
+              
+          ],
+          "defines": [],
+          "compilerPath": "/usr/bin/gcc",
+          "cStandard": "c11",
+          "cppStandard": "gnu++11",
+          "intelliSenseMode": "linux-gcc-x64",
+          "configurationProvider": "ms-vscode.makefile-tools"
+      }
   ],
   "version": 4
 }

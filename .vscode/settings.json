@@ -1,112 +1,22 @@
 {
+    "clangd.path":"/usr/bin/clangd",
     
-    "clangd.fallbackFlags": [
-        "-I${workspaceFolder}/include"
-    ],
-    "clangd.path": "D:/liuhan/mingw64/clangd_17.0.3/bin/clangd.exe",
-    "clangd.detectExtensionConflicts": true,
-    "clangd.arguments": [
-        // 在后台自动分析文件（基于complie_commands)
-        "--background-index",
-        // 标记compelie_commands.json文件的目录位置
-        "--compile-commands-dir=build",
-        // 同时开启的任务数量
-        "-j=12",
-        // 告诉clangd用那个clang进行编译，路径参考which clang++的路径
-        // "--query-driver=/usr/bin/clang++",
-        // clang-tidy功能
-        "--clang-tidy",
-        "--clang-tidy-checks=performance-*,bugprone-*",
-        // 全局补全（会自动补充头文件）
-        "--all-scopes-completion",
-        // 更详细的补全内容
-        "--completion-style=detailed",
-        // 补充头文件的形式
-        "--header-insertion=iwyu",
-        // pch优化的位置
-        "--pch-storage=disk",
-        //补全提示时不使用参数列表
-        "--function-arg-placeholders=false",
-    ],
-    "clangd.serverCompletionRanking": true,
     "files.associations": {
-        "*.h": "c",
-        "*.m": "matlab",
-        "*.C": "c",
-        "1.C": "cpp",
-        "array": "cpp",
-        "atomic": "cpp",
-        "bit": "cpp",
         "*.tcc": "cpp",
-        "cctype": "cpp",
-        "clocale": "cpp",
-        "cmath": "cpp",
-        "compare": "cpp",
-        "concepts": "cpp",
-        "cstdarg": "cpp",
-        "cstddef": "cpp",
-        "cstdint": "cpp",
-        "cstdio": "cpp",
-        "cstdlib": "cpp",
-        "cwchar": "cpp",
-        "cwctype": "cpp",
-        "deque": "cpp",
-        "string": "cpp",
-        "unordered_map": "cpp",
-        "vector": "cpp",
-        "exception": "cpp",
-        "algorithm": "cpp",
-        "functional": "cpp",
-        "iterator": "cpp",
-        "memory": "cpp",
-        "memory_resource": "cpp",
-        "numeric": "cpp",
-        "random": "cpp",
-        "string_view": "cpp",
-        "system_error": "cpp",
-        "tuple": "cpp",
-        "type_traits": "cpp",
-        "utility": "cpp",
-        "initializer_list": "cpp",
-        "iosfwd": "cpp",
-        "iostream": "cpp",
+        "fstream": "cpp",
+        "array": "cpp",
         "istream": "cpp",
         "limits": "cpp",
-        "new": "cpp",
-        "numbers": "cpp",
         "ostream": "cpp",
-        "stdexcept": "cpp",
+        "sstream": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp",
-        "cstring": "cpp",
-        "forward_list": "cpp",
-        "unordered_set": "cpp",
-        "optional": "cpp",
-        "typeindex": "cpp",
-        "complex": "cpp",
-        "fstream": "cpp",
-        "sstream": "cpp"
+        "tuple": "cpp",
+        "utility": "cpp",
+        "iosfwd": "cpp",
+        "iostream": "cpp",
+        "atomic": "cpp",
+        "condition_variable": "cpp"
     },
-        "clang-format.executable": "D:\\Liuhan\\mingw64\\LLVM\\bin\\clang-format.exe",
-        "[cpp]": {
-            // 在cpp文件中，编辑器在保存的时候进行格式化
-            "editor.formatOnSave": true,
-            // 在cpp文件中，编辑器在打字的时候进行格式化 就是这里出了问题！！
-            "editor.formatOnType": false,
-            // 在cpp文件中，编辑器在粘贴的时候进行格式化
-            "editor.formatOnPaste": false,
-            // 在cpp文件中，编辑器的默认格式化器为 "xaver.clang-format"
-            // 这里的"xaver.clang-format"就是我们安装的clang-format
-            // vscode插件
-            "editor.defaultFormatter": "xaver.clang-format"
-        },
-        "clang-format.assumeFilename": "D:\\Liuhan\\mingw64\\clangd_17.0.3\\.clang-format",
-        "editor.tabSize": 4,
-        "editor.insertSpaces":true,
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "never"
-        },
-    
-}   
-
-
+    "C_Cpp.errorSquiggles": "enabled",
+    "editor.fontFamily": "Inconsolata , LXGW WenKai Mono, monospace",
+}
