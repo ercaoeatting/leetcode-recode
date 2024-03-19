@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <list>
+#include <string>
 #include <vector>
 using namespace std;
 // 分发饼干
@@ -336,3 +337,105 @@ public:
         return intervals.size() - count;
     }
 };
+// 划分字母区间
+class lc763 {
+public:
+    vector<int> partitionLabels(string s) {
+        vector<int> ans;
+        int hash[27] = {0};                  // i为字符，hash[i]为字符出现的最后位置
+        for (int i = 0; i < s.size(); i++) { // 统计每一个字符最后出现的位置
+            hash[s[i] - 'a'] = i;
+        }
+        int right = 0;
+        int left = 0;
+        for (int i = 0; i < s.size(); i++) {
+            right = max(hash[s[i] - 'a'], right);
+            if (i == right) {
+                ans.emplace_back(right - left + 1);
+                left = right + 1;
+            }
+        }
+        return ans;
+    }
+};
+// 合并区间
+class lc56 {
+public:
+    static bool cmp(vector<int> a, vector<int> b) { return a[0] < b[0]; }
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        vector<vector<int>> ans;
+        sort(intervals.begin(), intervals.end(), cmp);
+        int left = intervals[0][0];
+        int right = intervals[0][1];
+        for (int i = 1; i < intervals.size(); i++) {
+            if (intervals[i][0] <= right)
+                right = max(intervals[i][1], right);
+            else {
+                ans.emplace_back(vector<int>{left, right});
+                left = intervals[i][0];
+                right = intervals[i][1];
+            }
+        }
+        ans.emplace_back(vector<int>{left, right});
+        return ans;
+    }
+    class Solution {
+    public:
+        vector<vector<int>> merge(vector<vector<int>>& intervals) {
+            vector<vector<int>> result;
+            if (intervals.size() == 0) return result; // 区间集合为空直接返回
+            // 排序的参数使用了lambda表达式
+            sort(intervals.begin(), intervals.end(),
+                 [](const vector<int>& a, const vector<int>& b) { return a[0] < b[0]; });
+
+            // 第一个区间就可以放进结果集里，后面如果重叠，在result上直接合并
+            result.push_back(intervals[0]);
+
+            for (int i = 1; i < intervals.size(); i++) {
+                if (result.back()[1] >= intervals[i][0]) { // 发现重叠区间
+                    // 合并区间，只更新右边界就好，因为result.back()的左边界一定是最小值，因为我们按照左边界排序的
+                    result.back()[1] = max(result.back()[1], intervals[i][1]);
+                }
+                else {
+                    result.push_back(intervals[i]); // 区间不重叠
+                }
+            }
+            return result;
+        }
+    };
+};
+// 单调递增的数字
+class lc738 {
+public:
+    int monotoneIncreasingDigits(int n) {
+        string nums = to_string(n);
+        int flag = nums.size() - 1;
+        for (int i = nums.size() - 1; i >= 1; i--) {
+            if (nums[i] < nums[i - 1]) {
+                nums[i - 1]--;
+                for (int j = i; j < nums.size(); j++) { nums[j] = '9'; }
+            }
+        }
+        return stoi(nums);
+    }
+    // 上面是on2，可以改进啊
+    class Solution {
+    public:
+        int monotoneIncreasingDigits(int N) {
+            string strNum = to_string(N);
+            // flag用来标记赋值9从哪里开始
+            // 设置为这个默认值，为了防止第二个for循环在flag没有被赋值的情况下执行
+            int flag = strNum.size();
+            for (int i = strNum.size() - 1; i > 0; i--) {
+                if (strNum[i - 1] > strNum[i]) {
+                    flag = i;
+                    strNum[i - 1]--;
+                }
+            }
+            for (int i = flag; i < strNum.size(); i++) { strNum[i] = '9'; }
+            return stoi(strNum);
+        }
+    };
+};
+
+int main() { int n = 10; }
