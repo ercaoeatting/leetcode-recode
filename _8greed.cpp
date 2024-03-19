@@ -21,6 +21,7 @@ public:
     }
 };
 // 摆动序列
+// mark
 class lc376 {
 public:
     int wiggleMaxLength(vector<int>& nums) {
@@ -37,6 +38,21 @@ public:
         }
         return count;
     }
+    // 更好的解法 by 大力王
+    class Solution {
+    public:
+        int wiggleMaxLength(vector<int>& nums) {
+            if (nums.size() < 2) return nums.size();
+            int pre = 0, res = 1;
+            for (int i = 1; i < nums.size(); i++) {
+                if (nums[i] == nums[i - 1]) continue;
+                int cur = (nums[i] > nums[i - 1]) ? 1 : -1;
+                res += cur != pre;
+                pre = cur;
+            }
+            return res;
+        }
+    };
 };
 // 最大子序和
 class lc53 {
@@ -76,6 +92,42 @@ public:
         return cover > nums.size() - 1;
     }
 };
+// 跳跃游戏II
+class lc45 {
+public:
+    int jump(vector<int>& nums) {
+        if (nums.size() == 1) return 0;
+        int cur = 0, next = 0;
+        int ans = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            next = max(next, i + nums[i]); // 下一步“可能”达到的地方
+            if (i == cur) {
+                ans++;
+                cur = next;
+            }
+            if (cur >= nums.size() - 1) break;
+        }
+        return ans;
+    }
+    // 版本二
+    class Solution {
+    public:
+        int jump(vector<int>& nums) {
+            int curDistance = 0;  // 当前覆盖的最远距离下标
+            int ans = 0;          // 记录走的最大步数
+            int nextDistance = 0; // 下一步覆盖的最远距离下标
+            for (int i = 0; i < nums.size() - 1; i++) {
+                // 注意这里是小于nums.size() - 1，这是关键所在
+                nextDistance = max(nums[i] + i, nextDistance); // 更新下一步覆盖的最远距离下标
+                if (i == curDistance) {         // 遇到当前覆盖的最远距离下标
+                    curDistance = nextDistance; // 更新当前覆盖的最远距离下标
+                    ans++;
+                }
+            }
+            return ans;
+        }
+    };
+};
 // K次取反后最大化的数组和
 class lc1005 {
     static bool cmp(int a, int b) { return abs(a) > abs(b); }
@@ -95,6 +147,7 @@ public:
         return result;
     }
 };
+
 // 加油站
 class lc134 {
 public:
@@ -241,25 +294,28 @@ public:
         return vector<vector<int>>(list.begin(), list.end());
     }
 };
+// 引爆气球
+class lc452 {
+private:
+    static bool cmp(const vector<int>& a, const vector<int>& b) { return a[0] < b[0]; }
 
-<<<<<<< HEAD
-int main(){} == == == = public : int findMinArrowShots(vector<vector<int>> & points) {
-    if (points.size() == 0) return 0;
-    sort(points.begin(), points.end(), cmp);
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        if (points.size() == 0) return 0;
+        sort(points.begin(), points.end(), cmp);
 
-    int result = 1; // points 不为空至少需要一支箭
-    for (int i = 1; i < points.size(); i++) {
-        if (points[i][0] > points[i - 1][1]) { // 气球i和气球i-1不挨着，注意这里不是>=
-            result++;                          // 需要一支箭
+        int result = 1; // points 不为空至少需要一支箭
+        for (int i = 1; i < points.size(); i++) {
+            if (points[i][0] > points[i - 1][1]) { // 气球i和气球i-1不挨着，注意这里不是>=
+                result++;                          // 需要一支箭
+            }
+            else {                                                  // 气球i和气球i-1挨着
+                points[i][1] = min(points[i - 1][1], points[i][1]); // 更新重叠气球最小右边界
+            }
         }
-        else {                                                  // 气球i和气球i-1挨着
-            points[i][1] = min(points[i - 1][1], points[i][1]); // 更新重叠气球最小右边界
-        }
+        return result;
     }
-    return result;
-}
-}
-;
+};
 
 // 无重叠区间
 class lc435 {
@@ -280,4 +336,3 @@ public:
         return intervals.size() - count;
     }
 };
-/// afasf
