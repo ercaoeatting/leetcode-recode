@@ -437,5 +437,47 @@ public:
         }
     };
 };
-
+// 监控二叉树
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+class over {
+public:
+    int traversal(TreeNode* cur, int& ans) {
+        if (cur == nullptr) return 2;
+        int left = traversal(cur->left, ans);
+        int right = traversal(cur->right, ans);
+        // 左右节点都有覆盖
+        if (left == 2 && right == 2) return 0;
+        // 左右节点存在未覆盖
+        else if (left == 0 || right == 0) {
+            ans++;
+            return 1;
+        }
+        // 左右节点存在摄像头
+        else if (left == 1 || right == 1)
+            return 2;
+        return -1;
+    }
+    int minCameraCover(TreeNode* root) {
+        int ans = 0;
+        if (traversal(root, ans) == 0) ans++;
+        return ans;
+    }
+};
+class lc509 {
+public:
+    int fib(int n) {
+        vector<int> dp(n + 1);
+        dp[0] = 0;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) { dp[i] = dp[i - 1] + dp[i - 2]; }
+        return dp[n];
+    }
+};
 int main() { int n = 10; }
