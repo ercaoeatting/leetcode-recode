@@ -19,8 +19,7 @@
         "-g",
         "${file}",
         "-o",
-        "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe",
-        "-w",
+        "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe"
       ],
       "command": "D:\\Liuhan\\mingw64\\bin\\g++.exe",
       "group": {
@@ -47,7 +46,6 @@
         "-NoProfile",
         "-File",
         "D:\\Liuhan\\mingw64\\bin\\pause-console.ps1",
-        "-w",
         {
           "quoting": "weak",
           "value": "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe"
@@ -64,7 +62,7 @@
         "reveal": "never",
         "showReuseMessage": false
       },
-      "problemMatcher": [],
+      
       "type": "shell"
     },
     {
@@ -74,8 +72,7 @@
         "-NoProfile",
         "-File",
         "D:\\Liuhan\\mingw64\\bin\\check-ascii.ps1",
-        "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe",
-        "-w",
+        "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe"
       ],
       "command": "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",
       "dependsOn": "gcc single file build",
