@@ -1,6 +1,8 @@
 #include <algorithm>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <string>
 #include <vector>
 using namespace std;
 class lc509 {
@@ -158,4 +160,97 @@ public:
         cout << dp[index - 1][bagweight];
         ;
     }
+    void deal(int M, int bagweight) {
+        vector<int> weight(M, 0);
+        vector<int> value(M, 0);
+        for (int i = 0; i < M; i++) { cin >> weight[i]; }
+        for (int j = 0; j < M; j++) { cin >> value[j]; }
+        vector<int> dp(bagweight + 1, 0);
+        for (int i = 0; i < M; i++) {
+            for (int j = bagweight; j >= weight[i]; j--) {
+                dp[j] = max(dp[j], dp[j - weight[i]] + value[i]);
+            }
+        }
+        std::cout << dp[bagweight] << std::endl;
+    }
 };
+class lc416 {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        for (int i = 0; i < nums.size(); i++) { sum += nums[i]; }
+        if (sum % 2 != 0) return false;
+        vector<int> dp(sum / 2 + 1, 0);
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = sum / 2; j >= nums[i]; j--) {
+                dp[j] = max(dp[j], dp[j - nums[i]] + nums[i]);
+            }
+        }
+        return dp[sum / 2] == sum / 2;
+    }
+};
+
+class lc1049 {
+public:
+    int lastStoneWeightII(vector<int>& nums) {
+        int sum = 0;
+        for (int i = 0; i < nums.size(); i++) { sum += nums[i]; }
+        if (sum % 2 != 0) return false;
+        vector<int> dp(sum / 2 + 1, 0);
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = sum / 2; j >= nums[i]; j--) {
+                // sum/2 和+1都行，因为2 3 和3 2 最后输出都是1
+                dp[j] = max(dp[j], dp[j - nums[i]] + nums[i]);
+            }
+        }
+        return abs(2 * dp[sum / 2] - sum);
+    }
+};
+class lc494 {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+        int sum = 0;
+        for (int k : nums) sum += k;
+        if (abs(target) > sum) return 0;
+        if ((target + sum) % 2 == 1) return 0;
+        vector<int> dp((target + sum) / 2 + 1, 0);
+        dp[0] = 1;
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = (sum + target) / 2; j >= nums[i]; j--) { dp[j] += dp[j - nums[i]]; }
+        }
+        return dp[(target + sum) / 2];
+    }
+};
+
+class lc474 {
+public:
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+        for (string s : strs) {
+            int n0 = 0, n1 = 0;
+            for (char c : s) {
+                if (c == '0')
+                    n0++;
+                else
+                    n1++;
+            }
+            for (int i = m; i >= n0; i--) {
+                for (int j = n; j >= n1; j--) { dp[i][j] = max(dp[i][j], dp[i - n0][j - n1] + 1); }
+            }
+        }
+        return dp[m][n];
+    }
+};
+
+class lc518 {
+public:
+    int change(int amount, vector<int>& coins) {
+        vector<int> dp(amount + 1, 0);
+        dp[0] = 1;
+        for (int i = 0; i < coins.size(); i++) {
+            for (int j = coins[i]; j <= amount; j++) { dp[j] += dp[j - coins[i]]; }
+        }
+        return dp[amount];
+    }
+};
+int main() { vector<string> a{"10", "0001", "111001", "1", "0"}; }
