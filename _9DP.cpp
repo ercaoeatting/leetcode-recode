@@ -229,10 +229,8 @@ public:
         for (string s : strs) {
             int n0 = 0, n1 = 0;
             for (char c : s) {
-                if (c == '0')
-                    n0++;
-                else
-                    n1++;
+                if (c == '0') { n0++; }
+                else { n1++; }
             }
             for (int i = m; i >= n0; i--) {
                 for (int j = n; j >= n1; j--) { dp[i][j] = max(dp[i][j], dp[i - n0][j - n1] + 1); }
@@ -241,7 +239,8 @@ public:
         return dp[m][n];
     }
 };
-
+// 完全背包
+// 零钱兑换II
 class lc518 {
 public:
     int change(int amount, vector<int>& coins) {
@@ -251,6 +250,20 @@ public:
             for (int j = coins[i]; j <= amount; j++) { dp[j] += dp[j - coins[i]]; }
         }
         return dp[amount];
+    }
+};
+// 组合总和IV
+class lc377 {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        vector<int> dp(target + 1, 0);
+        dp[0] = 1;
+        for (int j = 0; j <= target; j++) {
+            for (int i = 0; i < nums.size(); i++) {
+                if (j >= nums[i] && dp[j] < INT_MAX - dp[j - nums[i]]) dp[j] += dp[j - nums[i]];
+            }
+        }
+        return dp[target];
     }
 };
 int main() { vector<string> a{"10", "0001", "111001", "1", "0"}; }
