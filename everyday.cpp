@@ -1,5 +1,7 @@
+#include <list>
 #include <unordered_set>
 #include <string>
+#include <vector>
 using namespace std;
 struct TreeNode {
     int val;
@@ -23,7 +25,7 @@ public:
     bool find(int target) { return valSet.count(target) == 1; }
 };
 
-class Solution {
+class FinalString {
 public:
     void reverse(string &s) {
         int left = 0, right = s.size() - 1;
@@ -42,7 +44,59 @@ public:
         return res;
     }
 };
-int main() {
-    string s = "string";
-    string t = Solution().finalString(s);
-}
+class MyHashMap {
+public:
+    MyHashMap() {}
+
+    void put(int key, int value) {}
+
+    int get(int key) {}
+
+    void remove(int key) {}
+};
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap* obj = new MyHashMap();
+ * obj->put(key,value);
+ * int param_2 = obj->get(key);
+ * obj->remove(key);
+ */
+
+class MyHashSet {
+private:
+    vector<list<int>> data;
+    static const int base = 769;
+    static int hash(int key) { return key % base; }
+
+public:
+    MyHashSet() : data(base) {}
+
+    void add(int key) {
+        int h = hash(key);
+        for (auto it = data[h].begin(); it != data[h].end(); it++) {
+            if ((*it) == key) return;
+        }
+        data[h].push_back(key);
+    }
+
+    void remove(int key) {
+        int h = hash(key);
+        for (auto it = data[h].begin(); it != data[h].end(); it++) {
+            if ((*it) == key) {
+                data[h].erase(it);
+                return;
+            }
+        }
+    }
+
+    bool contains(int key) {
+        int h = hash(key);
+        for (auto it = data[h].begin(); it != data[h].end(); it++) {
+            if ((*it) == key) { return true; }
+        }
+        return false;
+    }
+};
+
+int main() {}

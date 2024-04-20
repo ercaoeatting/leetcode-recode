@@ -1,21 +1,24 @@
-// 一维dp数组实现
 #include <iostream>
-#include <vector>
 using namespace std;
-void deal(int M, int bagweight) {
-    vector<int> weight(M, 0);
-    vector<int> value(M, 0);
-    for (int i = 0; i < M; i++) { cin >> weight[i]; }
-    for (int j = 0; j < M; j++) { cin >> value[j]; }
-    vector<int> dp(bagweight + 1, 0);
-    for (int i = 0; i < M; i++) {
-        for (int j = bagweight; j >= weight[0]; j--) {
-            dp[j] = max(dp[j], dp[j - weight[i]] + value[i]);
-        }
-    }
-    std::cout << dp[bagweight] << std::endl;
+void print() { cout << "递归终止" << endl; }
+template <typename T, typename... Args>
+void print(T arg, Args... args) {
+    cout << "我是可变参数模版，本次展开的参数是：" << arg << endl;
+    print(args...);
 }
-int main() {
-    int M, N;
-    while (cin >> M >> N) { deal(M, N); }
+template <typename T, typename... Args>
+void show(T& mine, Args... args) {
+    cout << "展开前我要运行，先看一个参数：" << mine << endl;
+    print(args...);
+    cout << "函数完成" << endl;
 }
+
+template <typename T>
+int imax(T a) {
+    return a;
+}
+template <typename T, typename... Args>
+int imax(T arg, Args... args) {
+    return max(arg, imax(args...));
+}
+int main() { cout<< imax(2,3,1,45,42,45,34); }

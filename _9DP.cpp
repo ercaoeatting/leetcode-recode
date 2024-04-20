@@ -1,8 +1,11 @@
 #include <algorithm>
+#include <climits>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 using namespace std;
 class lc509 {
@@ -266,4 +269,252 @@ public:
         return dp[target];
     }
 };
-int main() { vector<string> a{"10", "0001", "111001", "1", "0"}; }
+// 零钱兑换
+class lc322 {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        vector<int> dp(amount + 1, INT_MAX);
+        dp[0] = 0;
+        for (int i = 0; i < coins.size(); i++) {
+            for (int j = coins[i]; j <= amount; j++) {
+                if (dp[j - coins[i]] != INT_MAX) dp[j] = min(dp[j], dp[j - coins[i]] + 1);
+            }
+        }
+        return dp[amount];
+    }
+};
+// 完全平方数
+class lc279 {
+public:
+    int numSquares(int n) {
+        vector<int> dp(n + 1, INT_MAX);
+        dp[0] = 0;
+        for (int i = 0; i <= n; i++) {         // 遍历背包
+            for (int j = 1; j * j <= i; j++) { // 遍历物品
+                dp[i] = min(dp[i - j * j] + 1, dp[i]);
+            }
+        }
+        return dp[n];
+    }
+};
+// 单词拆分
+class lc139 {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        vector<bool> dp(s.size() + 1, false);
+        dp[0] = true;
+        unordered_set<string> word(wordDict.begin(), wordDict.end());
+        for (int j = 1; j <= s.size(); j++) {
+            for (int i = 0; i < j; i++) {
+                if (dp[j]) break; // 剪枝操作
+                if (!dp[i]) continue;
+                string substr = s.substr(i, j - i);
+                if (word.find(substr) != word.end() && dp[i]) { dp[j] = true; }
+            }
+        }
+        return dp[s.size()];
+    }
+};
+// 打家劫舍1
+class lc198 {
+public:
+    int rob(vector<int>& nums) {
+        int size = nums.size();
+        if (size == 1) { return nums[0]; }
+        if (size == 2) { return max(nums[0], nums[1]); }
+        vector<int> dp(size, 0);
+        dp[0] = nums[0];
+        dp[1] = max(nums[0], nums[1]);
+        for (int i = 2; i < size; i++) { dp[i] = max(dp[i - 2] + nums[i], dp[i - 1]); }
+        return dp[size - 1];
+    }
+};
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+
+class lc152 {
+public:
+    int maxProduct(vector<int>& nums) {
+        vector<vector<int>> dp(nums.size() + 1, vector<int>(2, 0));
+        // dp[i][0] 最小值   dp[i][1] 最大值
+        dp[0][0] = nums[0];
+        dp[0][1] = nums[0];
+        int res = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] >= 0) {
+                dp[i][1] = max(dp[i - 1][1] * nums[i], nums[i]);
+                dp[i][0] = min(dp[i - 1][0] * nums[i], nums[i]);
+                res = max(dp[i][1], res);
+            }
+            else {
+                dp[i][1] = max(dp[i - 1][0] * nums[i], nums[i]);
+                dp[i][0] = min(dp[i - 1][1] * nums[i], nums[i]);
+                res = max(dp[i][1], res);
+            }
+        }
+        return res;
+    }
+};
+class m17_16 {
+public:
+    int massage(vector<int>& nums) {
+        int size = nums.size();
+        if (size == 0) return 0;
+        if (size == 1) return nums[0];
+        if (size == 2) return max(nums[0], nums[1]);
+        vector<int> dp(size, 0);
+        dp[0] = nums[0];
+        dp[1] = max(nums[0], nums[1]);
+        for (int i = 2; i < size; i++) { dp[i] = max(dp[i - 1], dp[i - 2] + nums[i]); }
+        return dp[size - 1];
+    }
+};
+
+class lc337 {
+public:
+    unordered_map<TreeNode*, int> umap; // 节点，结果
+    int rob_bt(TreeNode* root) {
+        if (root == nullptr) return 0;
+        if (root->left == nullptr && root->right == nullptr) return root->val;
+        if (umap[root]) return umap[root];
+        // 抢劫父节点
+        int val1 = root->val;
+        if (root->left) val1 += rob_bt(root->left->left) + rob_bt(root->left->right); // 不考虑左子
+        if (root->right)
+            val1 += rob_bt(root->right->left) + rob_bt(root->right->right); // 不考虑右子
+        // 不抢劫父节点
+        int val2 = rob_bt(root->left) + rob_bt(root->right);
+        umap[root] = max(val1, val2); // 记忆化
+        return max(val1, val2);
+    }
+    vector<int> robTree(TreeNode* cur) {
+        if (cur == nullptr) return vector<int>{0, 0};
+        // dp[k][0]不偷该节点所得到的的最大金钱，dp[k][1]记录偷该节点所得到的的最大金钱。
+        vector<int> left = robTree(cur->left);
+        vector<int> right = robTree(cur->right);
+        int val1 = cur->val + left[0] + right[0];                   // 偷当前节点
+        int val2 = max(left[0], left[1]) + max(right[0], right[1]); // 不偷当前节点，“考虑”偷子节点
+        return {val1, val2};
+    }
+    int rob(TreeNode* root) {
+        vector<int> res = robTree(root);
+        return max(res[0], res[1]);
+    }
+};
+// 买股票
+// 一次买卖
+class lc121 {
+public:
+    // 贪心
+    int maxProfit_t(vector<int>& prices) {
+        int minp = prices[0], res = 0;
+        for (int i : prices) {
+            minp = min(minp, i);
+            res = max(res, i - minp);
+        }
+        return res;
+    }
+    // DP
+    int maxProfit(vector<int>& prices) {
+        if (prices.size() == 0) return 0;
+        // dp[k][0] 不持有 [1]持有 dp[i][0] 表示第i天不持有股票所得最多现金
+        vector<vector<int>> dp(prices.size(), vector<int>(2, 0));
+        dp[0][0] = 0;
+        dp[0][1] = -prices[0];
+        for (int i = 1; i < prices.size(); i++) {
+            dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i]);
+            dp[i][1] = max(dp[i - 1][1], -prices[i]);
+        }
+        return dp[prices.size() - 1][0];
+    }
+    // 滚动数组压缩
+    int maxProfit_zip(vector<int>& prices) {
+        int len = prices.size();
+        vector<vector<int>> dp(2, vector<int>(2)); // 注意这里只开辟了一个2 * 2大小的二维数组
+        dp[0][0] -= prices[0];
+        dp[0][1] = 0;
+        for (int i = 1; i < len; i++) {
+            dp[i % 2][0] = max(dp[(i - 1) % 2][0], -prices[i]);
+            dp[i % 2][1] = max(dp[(i - 1) % 2][1], prices[i] + dp[(i - 1) % 2][0]);
+        }
+        return dp[(len - 1) % 2][1];
+    }
+};
+// 多次买卖
+class LC122 {
+public:
+    int maxProfit(vector<int>& prices) {
+        int len = prices.size();
+        vector<vector<int>> dp(2, vector<int>(2)); // 注意这里只开辟了一个2 * 2大小的二维数组
+        dp[0][0] -= prices[0];
+        dp[0][1] = 0;
+        for (int i = 1; i < len; i++) {
+            // 两个状态             i-1持有股票          i-1不持有股票
+            dp[i % 2][0] = max(dp[(i - 1) % 2][0], dp[(i - 1) % 2][1] - prices[i]); // dp [0]持有
+            dp[i % 2][1] = max(dp[(i - 1) % 2][1], prices[i] + dp[(i - 1) % 2][0]); // 不持有
+        }
+        return dp[(len - 1) % 2][1];
+    }
+};
+// 两次买卖
+class lc123 {
+public:
+    int maxProfit(vector<int>& prices) {
+        int len = prices.size();
+        vector<vector<int>> dp(len, vector<int>(5));
+        // 0 不操作 1第一次持有 2第一次不持有 3第二次持有 4第二次不持有
+        dp[0][1] = -prices[0];
+        dp[0][2] = 0;
+        dp[0][3] = -prices[0];
+        dp[0][4] = 0;
+        for (int i = 1; i < len; i++) {
+            dp[i][1] = max(dp[i - 1][1], -prices[i]);               // 第1次持有
+            dp[i][2] = max(dp[i - 1][2], dp[i - 1][1] + prices[i]); // 第1次不持有
+            dp[i][3] = max(dp[i - 1][3], dp[i - 1][2] - prices[i]); // 第2次持有
+            dp[i][4] = max(dp[i - 1][4], dp[i - 1][3] + prices[i]); // 第2次不持有
+        }
+        return dp[len - 1][4];
+    }
+};
+// k次买卖
+class lc188 {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        vector<vector<int>> dp(prices.size(), vector<int>(2 * k + 1, 0));
+        // dp[1] 第一次持有  dp[2] 1no  dp[3]2have
+        for (int i = 0; i < k; i++) { dp[0][2 * i + 1] = -prices[0]; }
+        for (int i = 1; i < prices.size(); i++) {
+            for (int j = 0; j < 2 * k - 1; j += 2) {
+                dp[i][j + 1] = max(dp[i - 1][j + 1], dp[i - 1][j] - prices[i]);     // 持有
+                dp[i][j + 2] = max(dp[i - 1][j + 2], dp[i - 1][j + 1] + prices[i]); // 不持有
+            }
+        }
+        return dp[prices.size() - 1][2 * k];
+    }
+};
+// 冷冻期
+class Solution {
+public:
+    template <typename Fn, typename... Args>
+    int a(Fn&& fn, Args&&... args) {}
+    int maxProfit(vector<int>& prices) {
+        vector<vector<int>> dp(2, vector<int>(4, 0));
+        dp[0][0] = -prices[0];
+        for (int i = 1; i < prices.size(); i++) {
+            dp[i % 2][0] = max(dp[(i - 1) % 2][0],
+                               max(dp[(i - 1) % 2][1] - prices[i], dp[(i - 1) % 2][3] - prices[i]));
+            dp[i % 2][1] = max(dp[(i - 1) % 2][1], dp[(i - 1) % 2][3]);
+            dp[i % 2][2] = dp[(i - 1) % 2][0] + prices[i];
+            dp[i % 2][3] = dp[(i - 1) % 2][2];
+        }
+        return max(dp[(prices.size() - 1) % 2][1],
+                   max(dp[(prices.size() - 1) % 2][2], dp[(prices.size() - 1) % 2][3]));
+    }
+};
+int main() {}
