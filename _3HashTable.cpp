@@ -64,7 +64,8 @@ public:
 };
 class lc454 {
 public:
-    int fourSumCount(vector<int> &nums1, vector<int> &nums2, vector<int> &nums3, vector<int> &nums4) {
+    int fourSumCount(vector<int> &nums1, vector<int> &nums2, vector<int> &nums3,
+                     vector<int> &nums4) {
         unordered_map<int, int> sum12;
         int count = 0;
         for (int i : nums1) {

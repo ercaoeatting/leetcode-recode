@@ -7,7 +7,7 @@
       "environment": [],
       "externalConsole": true,
       "internalConsoleOptions": "neverOpen",
-      "miDebuggerPath": "D:\\Liuhan\\mingw64\\bin\\gdb.exe",
+      "miDebuggerPath": "E:\\Liuhan\\mingw64\\bin\\gdb.exe",
       "name": "gcc single file debug",
       "preLaunchTask": "check ascii",
       "program": "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe",

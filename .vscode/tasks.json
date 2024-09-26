@@ -1,7 +1,7 @@
 {
   "options": {
     "env": {
-      "Path": "D:\\Liuhan\\mingw64\\bin;${env:Path}"
+      "Path": "E:\\Liuhan\\mingw64\\bin;${env:Path}"
     },
     "shell": {
       "args": [
@@ -21,7 +21,7 @@
         "-o",
         "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe"
       ],
-      "command": "D:\\Liuhan\\mingw64\\bin\\g++.exe",
+      "command": "E:\\Liuhan\\mingw64\\bin\\g++.exe",
       "group": {
         "isDefault": true,
         "kind": "build"
@@ -45,7 +45,7 @@
         "ByPass",
         "-NoProfile",
         "-File",
-        "D:\\Liuhan\\mingw64\\bin\\pause-console.ps1",
+        "E:\\Liuhan\\mingw64\\bin\\pause-console.ps1",
         {
           "quoting": "weak",
           "value": "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe"
@@ -71,7 +71,7 @@
         "ByPass",
         "-NoProfile",
         "-File",
-        "D:\\Liuhan\\mingw64\\bin\\check-ascii.ps1",
+        "E:\\Liuhan\\mingw64\\bin\\check-ascii.ps1",
         "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe"
       ],
       "command": "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe",

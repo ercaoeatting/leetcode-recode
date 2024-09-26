@@ -66,9 +66,7 @@ public:
         vector<int> dp(cost.size() + 1);
         dp[0] = 0;
         dp[1] = 0;
-        for (int i = 2; i <= cost.size(); i++) {
-            dp[i] = min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
-        }
+        for (int i = 2; i <= cost.size(); i++) { dp[i] = min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]); }
         return dp[cost.size()];
     }
 };
@@ -122,9 +120,7 @@ public:
         memset(dp, 0, sizeof(int) * (n + 1));
         dp[2] = 1;
         for (int i = 3; i <= n; i++) {
-            for (int j = 1; j <= i / 2; j++) {
-                dp[i] = max(dp[i], max((i - j) * j, dp[i - j] * j));
-            }
+            for (int j = 1; j <= i / 2; j++) { dp[i] = max(dp[i], max((i - j) * j, dp[i - j] * j)); }
         }
         return dp[n];
     }
@@ -156,8 +152,7 @@ public:
                 if (j < weight[i])
                     dp[i][j] = dp[i - 1][j];
                 else
-                    dp[i][j] =
-                        max(dp[i - 1][j], dp[i - 1][j - weight[i]] + value[i]); // 核心转移公式
+                    dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - weight[i]] + value[i]); // 核心转移公式
             }
         }
         cout << dp[index - 1][bagweight];
@@ -170,9 +165,7 @@ public:
         for (int j = 0; j < M; j++) { cin >> value[j]; }
         vector<int> dp(bagweight + 1, 0);
         for (int i = 0; i < M; i++) {
-            for (int j = bagweight; j >= weight[i]; j--) {
-                dp[j] = max(dp[j], dp[j - weight[i]] + value[i]);
-            }
+            for (int j = bagweight; j >= weight[i]; j--) { dp[j] = max(dp[j], dp[j - weight[i]] + value[i]); }
         }
         std::cout << dp[bagweight] << std::endl;
     }
@@ -185,9 +178,7 @@ public:
         if (sum % 2 != 0) return false;
         vector<int> dp(sum / 2 + 1, 0);
         for (int i = 0; i < nums.size(); i++) {
-            for (int j = sum / 2; j >= nums[i]; j--) {
-                dp[j] = max(dp[j], dp[j - nums[i]] + nums[i]);
-            }
+            for (int j = sum / 2; j >= nums[i]; j--) { dp[j] = max(dp[j], dp[j - nums[i]] + nums[i]); }
         }
         return dp[sum / 2] == sum / 2;
     }
@@ -385,9 +376,8 @@ public:
         if (umap[root]) return umap[root];
         // 抢劫父节点
         int val1 = root->val;
-        if (root->left) val1 += rob_bt(root->left->left) + rob_bt(root->left->right); // 不考虑左子
-        if (root->right)
-            val1 += rob_bt(root->right->left) + rob_bt(root->right->right); // 不考虑右子
+        if (root->left) val1 += rob_bt(root->left->left) + rob_bt(root->left->right);    // 不考虑左子
+        if (root->right) val1 += rob_bt(root->right->left) + rob_bt(root->right->right); // 不考虑右子
         // 不抢劫父节点
         int val2 = rob_bt(root->left) + rob_bt(root->right);
         umap[root] = max(val1, val2); // 记忆化
@@ -499,22 +489,50 @@ public:
     }
 };
 // 冷冻期
-class Solution {
+class lc309 {
 public:
     template <typename Fn, typename... Args>
-    int a(Fn&& fn, Args&&... args) {}
     int maxProfit(vector<int>& prices) {
         vector<vector<int>> dp(2, vector<int>(4, 0));
         dp[0][0] = -prices[0];
         for (int i = 1; i < prices.size(); i++) {
-            dp[i % 2][0] = max(dp[(i - 1) % 2][0],
-                               max(dp[(i - 1) % 2][1] - prices[i], dp[(i - 1) % 2][3] - prices[i]));
+            dp[i % 2][0] = max(dp[(i - 1) % 2][0], max(dp[(i - 1) % 2][1] - prices[i], dp[(i - 1) % 2][3] - prices[i]));
             dp[i % 2][1] = max(dp[(i - 1) % 2][1], dp[(i - 1) % 2][3]);
             dp[i % 2][2] = dp[(i - 1) % 2][0] + prices[i];
             dp[i % 2][3] = dp[(i - 1) % 2][2];
         }
-        return max(dp[(prices.size() - 1) % 2][1],
-                   max(dp[(prices.size() - 1) % 2][2], dp[(prices.size() - 1) % 2][3]));
+        return max(dp[(prices.size() - 1) % 2][1], max(dp[(prices.size() - 1) % 2][2], dp[(prices.size() - 1) % 2][3]));
     }
 };
+// 最长递增子序列
+class lc300 {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        if (nums.size() <= 1) return nums.size();
+        vector<int> dp(nums.size(), 0);
+        dp[0] = 1;
+        int result = 0;
+        for (int i = 1; i < nums.size(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) { dp[i] = max(dp[i], dp[j] + 1); }
+            }
+            result = (dp[i] > result) ? dp[i] : result;
+        }
+        return result;
+    }
+    // 维护优化时间复杂度O(N)O(logN)
+    int lengthOfLIS2(vector<int>& nums) {
+        vector<int> p{nums[0]};
+        for (int i = 1; i < nums.size(); i++) {
+            if (auto num = nums[i]; num > p.back())
+                p.push_back(num);
+            else {
+                auto j = lower_bound(p.begin(), p.end(), num);
+                *j = num;
+            }
+        }
+        return p.size();
+    }
+};
+
 int main() {}
