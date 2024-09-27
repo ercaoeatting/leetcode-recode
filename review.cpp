@@ -1,12 +1,13 @@
 #include <algorithm>
 #include <cstdint>
+#include <cstdlib>
 #include <iostream>
 #include <unordered_map>
 #include <vector>
 using namespace std;
 class Solution707 {
 public:
-    int search(vector<int>& nums, int target) {
+    int search(vector<int> &nums, int target) {
         int left = 0, right = nums.size() - 1;
         while (left <= right) {
             int middle = (left + right) / 2;
@@ -20,7 +21,7 @@ public:
 //
 class Solution27 {
 public:
-    int removeElement(vector<int>& nums, int val) {
+    int removeElement(vector<int> &nums, int val) {
         int slow = 0;
         for (int fast = 0; fast < nums.size(); fast++) {
             if (nums[fast] != val) { nums[slow++] = nums[fast]; }
@@ -31,7 +32,7 @@ public:
 // 有序数组的平方
 class Solution977 {
 public:
-    vector<int> sortedSquares(vector<int>& nums) {
+    vector<int> sortedSquares(vector<int> &nums) {
         int size = nums.size();
         vector<int> result(nums.size(), 0);
         int left = 0, right = nums.size() - 1;
@@ -52,7 +53,7 @@ public:
 // 长度最小的子数组
 class Solution209 {
 public:
-    int minSubArrayLen(int target, vector<int>& nums) {
+    int minSubArrayLen(int target, vector<int> &nums) {
         int i = 0, j = 0, sum = 0;
         int result = INT32_MAX;
         while (j < nums.size()) {
@@ -69,7 +70,7 @@ public:
 // 水果篮子
 class Solution904 {
 public:
-    int totalFruit(vector<int>& fruits) {
+    int totalFruit(vector<int> &fruits) {
         int i = 0, j = 0, result = 0;
         unordered_map<int, int> type;
         while (j < fruits.size()) {
@@ -109,20 +110,20 @@ public:
 // 单链表
 struct ListNode {
     int val;                                // 节点上存储的元素
-    ListNode* next;                         // 指向下一个节点的指针
+    ListNode *next;                         // 指向下一个节点的指针
     ListNode(int x) : val(x), next(NULL) {} // 节点的构造函数
-    ListNode(int x, ListNode* next) : val(x), next(next) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
 class Solution203 {
 public:
-    ListNode* removeElements(ListNode* head, int val) {
-        ListNode* dummyHead = new ListNode(0);
+    ListNode *removeElements(ListNode *head, int val) {
+        ListNode *dummyHead = new ListNode(0);
         dummyHead->next = head;
-        ListNode* cur = dummyHead;
+        ListNode *cur = dummyHead;
         while (cur->next) {
             if (cur->next->val == val) {
-                ListNode* tmp = cur->next;
+                ListNode *tmp = cur->next;
                 cur->next = tmp->next;
                 delete tmp;
             }
@@ -138,9 +139,9 @@ class MyLinkedList {
 public:
     struct node {
         int val;
-        node* next;
+        node *next;
         node(int val) : val(val), next(nullptr) {}
-        node(int val, node* next) : val(val), next(next) {}
+        node(int val, node *next) : val(val), next(next) {}
     };
     MyLinkedList() {
         _dummyHead = new node(0);
@@ -149,13 +150,13 @@ public:
 
     int get(int index) {
         if (index < 0 || index > (_size - 1)) { return -1; }
-        node* tmp = _dummyHead->next;
+        node *tmp = _dummyHead->next;
         while (index--) { tmp = tmp->next; }
         return tmp->val;
     }
 
     void addAtHead(int val) {
-        node* tmp = new node(val);
+        node *tmp = new node(val);
         if (_dummyHead->next) tmp->next = _dummyHead->next;
         _dummyHead->next = tmp;
         _size++;
@@ -163,8 +164,8 @@ public:
     }
 
     void addAtTail(int val) {
-        node* newNode = new node(val);
-        node* cur = _dummyHead;
+        node *newNode = new node(val);
+        node *cur = _dummyHead;
         while (cur->next != nullptr) { cur = cur->next; }
         cur->next = newNode;
         _size++;
@@ -173,9 +174,9 @@ public:
     void addAtIndex(int index, int val) {
         if (index < 0) index = 0;
         if (index > (_size)) { return; }
-        node* cur = _dummyHead;
+        node *cur = _dummyHead;
         while (index--) { cur = cur->next; }
-        node* tmp = new node(val, cur->next);
+        node *tmp = new node(val, cur->next);
         cur->next = tmp;
         _size++;
         return;
@@ -183,9 +184,9 @@ public:
 
     void deleteAtIndex(int index) {
         if (index < 0 || index > (_size - 1)) return;
-        node* cur = _dummyHead;
+        node *cur = _dummyHead;
         while (index--) { cur = cur->next; }
-        node* tmp = cur->next;
+        node *tmp = cur->next;
         cur->next = tmp->next;
         delete tmp;
         _size--;
@@ -194,41 +195,41 @@ public:
 
 private:
     int _size;
-    node* _dummyHead;
+    node *_dummyHead;
 };
 
 class Solution206 {
 public:
-    ListNode* reverseList1(ListNode* head) {
+    ListNode *reverseList1(ListNode *head) {
         if (!head->next) return head;
-        ListNode* pre = nullptr;
-        ListNode* cur = head;
+        ListNode *pre = nullptr;
+        ListNode *cur = head;
         while (cur) {
-            ListNode* tmp = cur->next;
+            ListNode *tmp = cur->next;
             cur->next = pre;
             pre = cur;
             cur = tmp;
         }
         return pre;
     }
-    ListNode* reverse(ListNode* pre, ListNode* cur) {
+    ListNode *reverse(ListNode *pre, ListNode *cur) {
         if (!cur) return pre;
-        ListNode* tmp = cur->next;
+        ListNode *tmp = cur->next;
         cur->next = pre;
         return reverse(cur, tmp);
     }
-    ListNode* reverseList(ListNode* head) { return reverse(nullptr, head); }
+    ListNode *reverseList(ListNode *head) { return reverse(nullptr, head); }
 };
 
 class Solution24 {
 public:
-    ListNode* swapPairs(ListNode* head) {
-        ListNode* dummyHead = new ListNode(0);
+    ListNode *swapPairs(ListNode *head) {
+        ListNode *dummyHead = new ListNode(0);
         dummyHead->next = head;
-        ListNode* cur = dummyHead;
+        ListNode *cur = dummyHead;
         while (cur->next && cur->next->next) {
-            ListNode* tmp = cur->next;
-            ListNode* tmp2 = cur->next->next;
+            ListNode *tmp = cur->next;
+            ListNode *tmp2 = cur->next->next;
             cur->next = cur->next->next;
             tmp->next = tmp2->next;
             tmp2->next = tmp;
@@ -240,8 +241,8 @@ public:
 
 class Solution19 {
 public:
-    ListNode* removeNthFromEnd(ListNode* head, int n) {
-        ListNode* dummyHead = new ListNode(0, head);
+    ListNode *removeNthFromEnd(ListNode *head, int n) {
+        ListNode *dummyHead = new ListNode(0, head);
         dummyHead->next = head;
         ListNode *fast = dummyHead, *slow = dummyHead;
         while (n--) { fast = fast->next; }
@@ -249,7 +250,7 @@ public:
             fast = fast->next;
             slow = slow->next;
         }
-        ListNode* cur = slow->next;
+        ListNode *cur = slow->next;
         slow->next = slow->next->next;
         delete cur;
         return head;
@@ -267,6 +268,33 @@ public:
             if (a[i] != 0) return false;
         }
         return true;
+    }
+};
+// 面试题链表相交
+class Solution {
+public:
+    int len(ListNode *head) {
+        ListNode *cur = head;
+        int len = 0;
+        while (cur) {
+            cur = cur->next;
+            len++;
+        }
+        return len;
+    }
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        int lenA = len(headA);
+        int lenB = len(headB);
+        ListNode *curA = headA, *curB = headB;
+        if (lenA < lenB) { swap(curA, curB); }
+        int dlen = abs(lenA - lenB);
+        while (dlen--) { curA = curA->next; }
+        while (curA) {
+            if (curA == curB) { return curA; }
+            curA = curA->next;
+            curB = curB->next;
+        }
+        return nullptr;
     }
 };
 int main() { cout << "test" << endl; }
