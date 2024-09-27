@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstdint>
 #include <iostream>
 #include <unordered_map>
@@ -255,23 +256,17 @@ public:
     }
 };
 
-//字母异位词
+// 字母异位词
 class Solution242 {
 public:
     bool isAnagram(string s, string t) {
         int a[26] = {0};
-        for(int i = 0;i < s.size();i++) {
-            a[s[i]-'a']++;
-        }
-        for(int i = 0;i < s.size();i++) {
-            a[t[i]-'a']--;
-        }
-        for(int i = 0;i < 26;i++) {
-            if(a[i]!=0) return false;
+        for (int i = 0; i < s.size(); i++) { a[s[i] - 'a']++; }
+        for (int i = 0; i < s.size(); i++) { a[t[i] - 'a']--; }
+        for (int i = 0; i < 26; i++) {
+            if (a[i] != 0) return false;
         }
         return true;
     }
 };
-int main() {
-    cout << "test" << endl;
-}
+int main() { cout << "test" << endl; }
