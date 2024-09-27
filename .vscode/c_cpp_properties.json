@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    {
+      "compilerPath": "E:\\Liuhan\\mingw64\\bin\\g++.exe",
+      "cppStandard": "c++17",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "-I${workspaceFolder}/include",
+        "-IC:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.41.34120\\include"
+      ],
+      "intelliSenseMode": "windows-msvc-x64",
+      "name": "Win32"
+    }
+  ],
+  "version": 4
+}
