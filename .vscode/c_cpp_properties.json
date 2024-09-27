@@ -1,0 +1,13 @@
+{
+  "configurations": [
+    {
+        "compilerPath": "C:/Program Files/LLVM/bin/clang++.exe",
+      "cppStandard": "c++14",
+      "includePath": [
+        "${workspaceFolder}/**"
+      ],
+      "name": "Win32"
+    }
+  ],
+  "version": 4
+}
