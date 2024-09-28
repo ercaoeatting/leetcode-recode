@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
@@ -285,17 +286,11 @@ public:
         int lenA = len(headA);
         int lenB = len(headB);
         ListNode *curA = headA, *curB = headB;
-        if(lenA<lenB) {
-            swap(curA,curB);
-        }
+        if (lenA < lenB) { swap(curA, curB); }
         int dlen = abs(lenA - lenB);
-        while (dlen--) {
-            curA = curA->next;
-        }
+        while (dlen--) { curA = curA->next; }
         while (curA) {
-            if (curA == curB) {
-                return curA;
-            }
+            if (curA == curB) { return curA; }
             curA = curA->next;
             curB = curB->next;
         }
