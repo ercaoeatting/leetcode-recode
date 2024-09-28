@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 using namespace std;
 class Solution707 {
@@ -271,7 +272,7 @@ public:
     }
 };
 // 面试题链表相交
-class Solution {
+class Solution_meet {
 public:
     int len(ListNode *head) {
         ListNode *cur = head;
@@ -295,6 +296,36 @@ public:
             curB = curB->next;
         }
         return nullptr;
+    }
+};
+//链表环
+class Solution142 {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *fast = head, *slow = head;
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if(fast == slow) {
+                ListNode *findRes = head, *help = fast;
+                while (findRes!=help) {
+                    findRes = findRes->next;
+                    help = help->next;
+                }
+                return findRes;
+            }
+        }
+        return nullptr;
+    }
+};
+//两个数组的交集
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        unordered_set<int> inter;
+        for (int num : nums1) {
+            
+        }
     }
 };
 int main() { cout << "test" << endl; }
