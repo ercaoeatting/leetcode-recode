@@ -4,6 +4,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 using namespace std;
 class Solution707 {
@@ -298,7 +299,7 @@ public:
         return nullptr;
     }
 };
-//链表环
+// 链表环
 class Solution142 {
 public:
     ListNode *detectCycle(ListNode *head) {
@@ -306,9 +307,9 @@ public:
         while (fast && fast->next) {
             slow = slow->next;
             fast = fast->next->next;
-            if(fast == slow) {
+            if (fast == slow) {
                 ListNode *findRes = head, *help = fast;
-                while (findRes!=help) {
+                while (findRes != help) {
                     findRes = findRes->next;
                     help = help->next;
                 }
@@ -318,14 +319,73 @@ public:
         return nullptr;
     }
 };
-//两个数组的交集
-class Solution {
+// 两个数组的交集
+class Solution349 {
 public:
-    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+    vector<int> intersection(vector<int> &nums1, vector<int> &nums2) {
         unordered_set<int> inter;
-        for (int num : nums1) {
-            
+        unordered_set<int> res;
+        inter.insert(nums1.begin(), nums1.end());
+        for (int num : nums2) {
+            if (inter.find(num) != inter.end()) { res.insert(num); }
+        }
+        return vector<int>(res.begin(), res.end());
+    }
+};
+// 快乐数
+class Solution202 {
+public:
+    int getSum(int n) {
+        int sum = 0;
+        while (n) {
+            sum += (n % 10) * (n % 10);
+            n /= 10;
+        }
+        return sum;
+    }
+    bool isHappy(int n) {
+        unordered_set<int> sums;
+        int sum = n;
+        while (1) {
+            sum = getSum(sum);
+            if (sum == 1) return true;
+            if (sums.find(sum) != sums.end()) return false;
+            sums.insert(sum);
         }
     }
 };
-int main() { cout << "test" << endl; }
+
+class Solution1 {
+public:
+    vector<int> twoSum(vector<int> &nums, int target) {
+        std::unordered_map<int, int> map;
+        for (int i = 0; i < nums.size(); i++) {
+            auto iter = map.find(target - nums[i]);
+            if (iter != map.end())
+                return {iter->second, i};
+            else
+                map.insert(pair<int, int>(nums[i], i));
+        }
+        return {};
+    }
+};
+// 四数相加II
+class Solution454 {
+public:
+    int fourSumCount(vector<int> &nums1, vector<int> &nums2, vector<int> &nums3,
+                     vector<int> &nums4) {
+        unordered_map<int, int> umap;
+        int count = 0;
+        for (int i : nums1) {
+            for (int j : nums2) { umap[i + j]++; }
+        }
+        for (int i : nums3) {
+            for (int j : nums4) {
+                auto iter = umap.find(-(i + j));
+                if (iter != umap.end()) { count += umap[-(i + j)]; }
+            }
+        }
+        return count;
+    }
+};
+int main() {}
