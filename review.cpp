@@ -376,16 +376,78 @@ public:
                      vector<int> &nums4) {
         unordered_map<int, int> umap;
         int count = 0;
-        for (int i : nums1) {
-            for (int j : nums2) { umap[i + j]++; }
+        for (int a : nums1) {
+            for (int b : nums2) { umap[a + b]++; }
         }
-        for (int i : nums3) {
-            for (int j : nums4) {
-                auto iter = umap.find(-(i + j));
-                if (iter != umap.end()) { count += umap[-(i + j)]; }
+
+        for (int c : nums3) {
+            for (int d : nums4) {
+                if (umap.find(-(c + d)) != umap.end()) { count += umap[-(c + d)]; }
             }
         }
         return count;
     }
 };
-int main() {}
+// 赎金信
+class Solution383 {
+public:
+    bool canConstruct1(string ransomNote, string magazine) {
+        unordered_map<char, int> umap;
+        for (char i : magazine) { umap[i]++; }
+        for (char j : ransomNote) {
+            if (umap.find(j) == umap.end()) { return false; }
+            else {
+                umap[j]--;
+                if (umap[j] < 0) return false;
+            }
+        }
+        return true;
+    }
+    // 用数组其实就行
+    bool canConstruct(string ransomNote, string magazine) {
+        int record[26] = {0};
+        for (char i : magazine) { record[i - 'a']++; }
+        for (char j : ransomNote) {
+            if (record[j - 'a'] > 0) {
+                record[j - 'a']--;
+                continue;
+            }
+            return false;
+        }
+        return true;
+    }
+};
+// 三数之和
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int> &nums) {
+        vector<vector<int>> result(0);
+        if (nums.size() <= 2) return result;
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] > 0) return result;
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            int left = i + 1;
+            int right = nums.size() - 1;
+            while (left < right) {
+                if (nums[i] + nums[left] + nums[right] > 0)
+                    right--;
+                else if (nums[i] + nums[left] + nums[right] < 0)
+                    left++;
+                else {
+                    result.push_back(vector<int>{nums[i], nums[left], nums[right]});
+                    while (left < right && nums[right] == nums[right - 1]) { right--; }
+                    while (left < right && nums[left] == nums[left + 1]) { left++; }
+                    right--;
+                    left++;
+                }
+            }
+        }
+        return result;
+    }
+};
+int main() {
+    vector<int> num = {-1, 0, 1, 2, -1, -4};
+    vector<vector<int>> threeSum = Solution().threeSum(num);
+    int a = 6;
+}
