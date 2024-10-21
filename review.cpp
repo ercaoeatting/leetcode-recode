@@ -1,7 +1,8 @@
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <cstdlib>
-#include <iostream>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -418,7 +419,7 @@ public:
     }
 };
 // 三数之和
-class Solution {
+class Solution15 {
 public:
     vector<vector<int>> threeSum(vector<int> &nums) {
         vector<vector<int>> result(0);
@@ -446,8 +447,87 @@ public:
         return result;
     }
 };
+
+class Solution18 {
+public:
+    vector<vector<int>> fourSum(vector<int> &nums, int target) {
+        vector<vector<int>> result(0);
+        if (nums.size() <= 3) return result;
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < nums.size(); i++) {
+            if (i == (nums.size() - 3)) return result;
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            for (int j = i + 1; j < nums.size(); j++) {
+                if (nums[i] + nums[j] > target && nums[i] + nums[j] > 0) break;
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+                int left = j + 1, right = nums.size() - 1;
+                while (left < right) {
+                    if ((long)(nums[i] + nums[j] + nums[left] + nums[right] < target))
+                        left++;
+                    else if ((long)nums[i] + nums[j] + nums[left] + nums[right] > target)
+                        right--;
+                    else {
+                        result.push_back(vector<int>{nums[i], nums[j], nums[left], nums[right]});
+                        while (left < right && nums[left] == nums[left + 1]) left++;
+                        while (left < right && nums[right] == nums[right - 1]) right--;
+                        left++;
+                        right--;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+};
+
+// 541 反串字符串
+class Solution541 {
+public:
+    string reverseStr(string s, int k) {
+        for (int i = 0; i < s.size(); i += 2 * k) {
+            if (i + k <= s.size())
+                reverse(s.begin() + i, s.begin() + i + k);
+            else
+                reverse(s.begin() + i, s.end());
+        }
+        return s;
+    }
+};
+// 151 反转字符串里单词
+class Solution151 {
+public:
+    void deleteSpace(string &s) {
+        int slow = 0;
+        for (int i = 0; i < s.size(); i++) {
+            if (s[i] != ' ') {
+                if (slow != 0) s[slow++] = ' ';
+                while (i < s.size() && s[i] != ' ') s[slow++] = s[i++];
+            }
+        }
+        s.resize(slow);
+    }
+    void reverseS(string &s, int a, int b) {
+        for (int i = a, j = b; i < j; i++, j--) { swap(s[i], s[j]); }
+    }
+    string reverseWords(string s) {
+        deleteSpace(s);
+        reverseS(s, 0, s.size() - 1);
+        int a = 0;
+        for (int i = 0; i < s.size(); i++) {
+            if (s[i] == ' ') {
+                int b = i - 1;
+                reverseS(s, a, b);
+                a = i + 1;
+            }
+            if (i == s.size() - 1) { reverseS(s, a, i); }
+        }
+        return s;
+    }
+};
+// 459.重复的子字符串
+
+//
 int main() {
-    vector<int> num = {-1, 0, 1, 2, -1, -4};
-    vector<vector<int>> threeSum = Solution().threeSum(num);
+    vector<int> num = {1, -2, -5, -4, -3, 3, 3, 5};
     int a = 6;
 }
