@@ -2,6 +2,8 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <queue>
+#include <stack>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -526,8 +528,142 @@ public:
 };
 // 459.重复的子字符串
 
-//
-int main() {
-    vector<int> num = {1, -2, -5, -4, -3, 3, 3, 5};
-    int a = 6;
-}
+// 栈和队列
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue* obj = new MyQueue();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->peek();
+ * bool param_4 = obj->empty();
+ */
+// 232 用栈实现队列
+class MyQueue {
+private:
+    stack<int> in;
+    stack<int> out;
+
+public:
+    MyQueue() {}
+
+    void push(int x) { in.push(x); }
+
+    int pop() {
+        if (!out.empty()) {
+            int res = out.top();
+            out.pop();
+            return res;
+        }
+        while (!in.empty()) {
+            out.push(in.top());
+            in.pop();
+        }
+        int res = out.top();
+        out.pop();
+        return res;
+    }
+
+    int peek() {
+        if (!out.empty()) { return out.top(); }
+        while (!in.empty()) {
+            out.push(in.top());
+            in.pop();
+        }
+        return out.top();
+    }
+
+    bool empty() { return in.empty() && out.empty(); }
+};
+// 225 用队列实现栈
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack* obj = new MyStack();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->top();
+ * bool param_4 = obj->empty();
+ */
+class MyStack {
+public:
+    queue<int> que1, que2;
+    MyStack() {}
+
+    void push(int x) { que1.push(x); }
+
+    int pop() {
+        int size = que1.size();
+        while (size-- && size >= 1) {
+            que2.push(que1.front());
+            que1.pop();
+        }
+        int res = que1.front();
+        que1.pop();
+        que1 = que2;            // 再将que2赋值给que1
+        while (!que2.empty()) { // 清空que2
+            que2.pop();
+        }
+        return res;
+    }
+
+    int top() {
+        int size = que1.size() - 1;
+        while (size--) {
+            que2.push(que1.front());
+            que1.pop();
+        }
+        int res = que1.front();
+        que1 = que2;
+        que1.push(res);
+        while (!que2.empty()) { // 清空que2
+            que2.pop();
+        }
+        return res;
+    }
+
+    bool empty() { return que1.empty() && que2.empty(); }
+};
+// 20 有效的括号
+class Solution20 {
+public:
+    bool isValid(string s) {
+        stack<char> st;
+        for (char c : s) {
+            if (!st.empty() && st.top() == c) { st.pop(); }
+            else if (c == '(')
+                st.push(')');
+            else if (c == '[')
+                st.push(']');
+            else if (c == '{')
+                st.push('}');
+            else
+                return false;
+        }
+        return st.empty();
+    }
+};
+
+// 1047 删除相邻项
+class Solution1047 {
+public:
+    string removeDuplicates(string s) {
+        stack<int> st;
+        for (char c : s) {
+            if (st.empty()) {
+                st.push(c);
+                continue;
+            }
+            if (st.top() == c)
+                st.pop();
+            else
+                st.push(c);
+        }
+        string result = "";
+        while (!st.empty()) { // 将栈中元素放到result字符串汇总
+            result += st.top();
+            st.pop();
+        }
+        reverse(result.begin(), result.end()); // 此时字符串需要反转一下
+        return result;
+    }
+};
+int main() { string s = "()"; }
