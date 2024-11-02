@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <deque>
 #include <queue>
 #include <stack>
 #include <string>
@@ -527,6 +528,33 @@ public:
     }
 };
 // 459.重复的子字符串
+// 
+// KMP 28
+class Solution28 {
+    void getNext(int *next, const string &s) {
+        int j = 0;
+        next[0] = 0;
+        for (int i = 1; i < s.size(); i++) {
+            while (j > 0 && s[i] != s[j]) { j = next[j - 1]; } //前后缀不同
+            if (s[i] == s[j]) { j++; }                         // 找到相同的前后缀
+            next[i] = j;
+        }
+    }
+
+public:
+    int strStr(string haystack, string needle) {
+        if (needle.size() == 0) return 0;
+        int next[needle.size()];
+        getNext(next, needle);
+        int j = 0;
+        for (int i = 0; i < haystack.size(); i++) {
+            while (j > 0 && haystack[i] != needle[j]) { j = next[j - 1]; }
+            if (haystack[i] == needle[j]) { j++; }
+            if (j == needle.size()) { return (i - needle.size() + 1); }
+        }
+        return -1;
+    }
+};
 
 // 栈和队列
 /**
@@ -690,4 +718,80 @@ public:
         return result;
     }
 };
+// 239 滑动窗口最大值 难题
+class Solution239 {
+public:
+    struct mostQ {
+        deque<int> Q;
+        void push(int c) {
+            while (!Q.empty() && c > Q.back()) { Q.pop_back(); }
+            Q.push_back(c);
+        }
+        void pop(int c) {
+            if (!Q.empty() && c == Q.front()) //我感觉这里才是精华，能知道要不要弹出
+                Q.pop_front();
+        }
+        int front() { return Q.front(); }
+    };
+    vector<int> maxSlidingWindow(vector<int> &nums, int k) {
+        mostQ mq;
+        vector<int> res(nums.size() - k + 1, 0);
+        for (int i = 0; i < k; i++) { mq.push(nums[i]); }
+        res[0] = mq.front();
+        int j = 1;
+        for (int i = k; i < nums.size(); i++) {
+            mq.pop(nums[i - k]);
+            mq.push(nums[i]);
+            res[j++] = mq.front();
+        }
+        return res;
+    }
+};
+// 347 前k个高频元素
+class Solution347 {
+public:
+    bool com(const pair<int, int> &lhs, const pair<int, int> &rhs) {
+        return lhs.second > rhs.second; // Sort in descending order by frequency
+    }
+
+    vector<int> topKFrequent1(vector<int> &nums, int k) { //十足的笨办法  复杂度nlogn
+        unordered_map<int, int> map;
+        for (int num : nums) { map[num]++; }
+        vector<pair<int, int>> vec(map.begin(), map.end());
+        sort(vec.begin(), vec.end(), [](const pair<int, int> &lhs, const pair<int, int> &rhs) {
+            return lhs.second > rhs.second;
+        });
+        vector<int> a(k);
+        for (int i = 0; i < k; ++i) { a[i] = vec[i].first; }
+        return a;
+    }
+    // 小顶堆
+
+    vector<int> topKFrequent(vector<int> &nums, int k) { //复杂度nlogk
+        // 要统计元素出现频率
+        unordered_map<int, int> map; // map<nums[i],对应出现的次数>
+        for (int i = 0; i < nums.size(); i++) { map[nums[i]]++; }
+
+        // 对频率排序
+        // 定义一个小顶堆，大小为k
+        priority_queue<pair<int, int>, vector<pair<int, int>>, std::greater<int>> pri_que;
+
+        // 用固定大小为k的小顶堆，扫面所有频率的数值
+        for (unordered_map<int, int>::iterator it = map.begin(); it != map.end(); it++) {
+            pri_que.push(*it);
+            if (pri_que.size() > k) { // 如果堆的大小大于了K，则队列弹出，保证堆的大小一直为k
+                pri_que.pop();
+            }
+        }
+
+        // 找出前K个高频元素，因为小顶堆先弹出的是最小的，所以倒序来输出到数组
+        vector<int> result(k);
+        for (int i = k - 1; i >= 0; i--) {
+            result[i] = pri_que.top().first;
+            pri_que.pop();
+        }
+        return result;
+    }
+};
+
 int main() { vector<string> a{"2", "1", "+", "3", "*"}; }
