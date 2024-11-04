@@ -1,11 +1,13 @@
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <deque>
 #include <queue>
 #include <stack>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -528,7 +530,7 @@ public:
     }
 };
 // 459.重复的子字符串
-// 
+//
 // KMP 28
 class Solution28 {
     void getNext(int *next, const string &s) {
@@ -793,5 +795,218 @@ public:
         return result;
     }
 };
+//二叉树
+// 144 前序
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+class Solution_preordrer {
+public:
+    vector<int> preorderTraversal(TreeNode *root) {
+        vector<int> a;
+        stack<TreeNode *> st;
+        if (root == nullptr) return a;
+        st.push(root);
+        while (!st.empty()) {
+            TreeNode *node = st.top();
+            a.push_back(node->val);
+            st.pop();
+            st.push(node->right);
+            st.push(node->left);
+        }
+        return a;
+    }
+};
+class SolutionINORDER {
+public:
+    vector<int> inorderTraversal(TreeNode *root) {
+        vector<int> a;
+        stack<TreeNode *> st;
+        if (root == nullptr) return a;
+        TreeNode *cur = root;
+        while (cur != nullptr || !st.empty()) {
+            if (cur != nullptr) {
+                st.push(cur);
+                cur = cur->left;
+            }
+            else {
+                cur = st.top();
+                st.pop();
+                a.push_back(cur->val);
+                cur = cur->right;
+            }
+        }
+        return a;
+    }
+};
+// 226 INVERT
+class Solution226 {
+public:
+    void prec(TreeNode *cur) {
+        if (cur == nullptr) return;
+        prec(cur->left);
+        prec(cur->right);
+        swap(cur->left, cur->right);
+    }
+    TreeNode *invertTree(TreeNode *root) {
+        if (root == nullptr) return nullptr;
+        prec(root);
+        return root;
+    }
+};
+//层序遍历102
+class Solution102 {
+public:
+    vector<vector<int>> levelOrder(TreeNode *root) {
+        queue<TreeNode *> q;
+        vector<vector<int>> res;
+        if (!root) return vector<vector<int>>();
+        q.push(root);
+        while (!q.empty()) {
+            int size = q.size();
+            vector<int> tmp;
+            while (size--) {
+                TreeNode *cur = q.front();
+                if (cur->left) q.push(cur->left);
+                if (cur->right) q.push(cur->right);
+                q.pop();
+                tmp.push_back(cur->val);
+            }
+            res.push_back(tmp);
+        }
+        return res;
+    }
+};
+// 199 二叉树的右视图
+class Solution199 {
+public:
+    vector<int> rightSideView(TreeNode *root) {
+        queue<TreeNode *> q;
+        vector<int> res;
+        if (!root) return vector<int>();
+        q.push(root);
+        while (!q.empty()) {
+            int size = q.size();
+            TreeNode *cur;
+            while (size--) {
+                cur = q.front();
+                if (cur->left) q.push(cur->left);
+                if (cur->right) q.push(cur->right);
+                if (size == 0) res.push_back(cur->val);
+                q.pop();
+            }
+        }
+        return res;
+    }
+};
+// 637. 二叉树的层平均值
+class Solution637 {
+public:
+    vector<double> averageOfLevels(TreeNode *root) {
+        queue<TreeNode *> q;
+        vector<double> res;
+        if (!root) return vector<double>();
+        q.push(root);
+        while (!q.empty()) {
+            int size = q.size();
+            double ave = 0;
+            int whsize = size;
+            TreeNode *cur;
+            while (size--) {
+                cur = q.front();
+                if (cur->left) q.push(cur->left);
+                if (cur->right) q.push(cur->right);
+                q.pop();
+                ave += (double)cur->val;
+            }
+            res.push_back(ave / whsize);
+        }
+        return res;
+    }
+};
+// 116. 填充每个节点的下一个右侧节点指针
+class Node {
+public:
+    int val;
+    Node *left;
+    Node *right;
+    Node *next;
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+    Node(int _val, Node *_left, Node *_right, Node *_next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
+class Solution116 {
+public:
+    Node *connect(Node *root) {
+        queue<Node *> q;
+        if (!root) return nullptr;
+        q.push(root);
+        while (!q.empty()) {
+            int size = q.size();
+            Node *cur;
+            while (size--) {
+                cur = q.front();
+                if (cur->left) q.push(cur->left);
+                if (cur->right) q.push(cur->right);
+                q.pop();
+                if (size != 0)
+                    cur->next = q.front();
+                else
+                    cur->next = nullptr;
+            }
+        }
+        return root;
+    }
+};
+// 104. 二叉树的最大深度
 
+class Solution104 {
+public:
+    int maxDepth(TreeNode *root) {
+        queue<TreeNode *> q;
+        if (!root) return 0;
+        q.push(root);
+        int maxdep = 0;
+        while (!q.empty()) {
+            int size = q.size();
+            TreeNode *cur;
+            maxdep++;
+            while (size--) {
+                cur = q.front();
+                if (cur->left) q.push(cur->left);
+                if (cur->right) q.push(cur->right);
+                q.pop();
+            }
+        }
+        return maxdep;
+    }
+};
+// 111. 二叉树的最小深度
+class Solution {
+public:
+    int minDepth(TreeNode *root) {
+        queue<TreeNode *> q;
+        if (!root) return 0;
+        q.push(root);
+        int maxdep = 0;
+        while (!q.empty()) {
+            int size = q.size();
+            TreeNode *cur;
+            while (size--) {
+                cur = q.front();
+                if (cur->left) q.push(cur->left);
+                if (cur->right) q.push(cur->right);
+                if(cur->left && cur->right) maxdep++;
+                q.pop();
+            }
+        }
+        return maxdep;
+    }
+};
 int main() { vector<string> a{"2", "1", "+", "3", "*"}; }
