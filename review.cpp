@@ -756,7 +756,8 @@ public:
         return lhs.second > rhs.second; // Sort in descending order by frequency
     }
 
-    vector<int> topKFrequent1(vector<int> &nums, int k) { //十足的笨办法  复杂度nlogn
+    vector<int> topKFrequent1(vector<int> &nums,
+                              int k) { //十足的笨办法  复杂度nlogn
         unordered_map<int, int> map;
         for (int num : nums) { map[num]++; }
         vector<pair<int, int>> vec(map.begin(), map.end());
@@ -988,7 +989,7 @@ public:
     }
 };
 // 111. 二叉树的最小深度
-class Solution {
+class Solution111 {
 public:
     int minDepth(TreeNode *root) {
         queue<TreeNode *> q;
@@ -1002,11 +1003,25 @@ public:
                 cur = q.front();
                 if (cur->left) q.push(cur->left);
                 if (cur->right) q.push(cur->right);
-                if(cur->left && cur->right) maxdep++;
+                if (cur->left && cur->right) maxdep++;
                 q.pop();
             }
         }
         return maxdep;
     }
+};
+// 101 对称二叉树
+class Solution {
+public:
+    bool compare(TreeNode *left, TreeNode *right) {
+        if (!left && !right)
+            return true;
+        else if ((left && !right) || (!left && right))
+            return false;
+        else if (left->val != right->val)
+            return false;
+        return compare(left->left, right->right) && compare(left->right, right->left);
+    }
+    bool isSymmetric(TreeNode *root) { return compare(root->left, root->right); }
 };
 int main() { vector<string> a{"2", "1", "+", "3", "*"}; }
