@@ -1,9 +1,11 @@
+#include "stdio.h"
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <deque>
+#include <ios>
 #include <queue>
 #include <stack>
 #include <string>
@@ -537,7 +539,7 @@ class Solution28 {
         int j = 0;
         next[0] = 0;
         for (int i = 1; i < s.size(); i++) {
-            while (j > 0 && s[i] != s[j]) { j = next[j - 1]; } //前后缀不同
+            while (j > 0 && s[i] != s[j]) { j = next[j - 1]; } // 前后缀不同
             if (s[i] == s[j]) { j++; }                         // 找到相同的前后缀
             next[i] = j;
         }
@@ -730,7 +732,7 @@ public:
             Q.push_back(c);
         }
         void pop(int c) {
-            if (!Q.empty() && c == Q.front()) //我感觉这里才是精华，能知道要不要弹出
+            if (!Q.empty() && c == Q.front()) // 我感觉这里才是精华，能知道要不要弹出
                 Q.pop_front();
         }
         int front() { return Q.front(); }
@@ -757,7 +759,7 @@ public:
     }
 
     vector<int> topKFrequent1(vector<int> &nums,
-                              int k) { //十足的笨办法  复杂度nlogn
+                              int k) { // 十足的笨办法  复杂度nlogn
         unordered_map<int, int> map;
         for (int num : nums) { map[num]++; }
         vector<pair<int, int>> vec(map.begin(), map.end());
@@ -770,7 +772,7 @@ public:
     }
     // 小顶堆
 
-    vector<int> topKFrequent(vector<int> &nums, int k) { //复杂度nlogk
+    vector<int> topKFrequent(vector<int> &nums, int k) { // 复杂度nlogk
         // 要统计元素出现频率
         unordered_map<int, int> map; // map<nums[i],对应出现的次数>
         for (int i = 0; i < nums.size(); i++) { map[nums[i]]++; }
@@ -796,8 +798,8 @@ public:
         return result;
     }
 };
-//二叉树
-// 144 前序
+// 二叉树
+//  144 前序
 struct TreeNode {
     int val;
     TreeNode *left;
@@ -823,6 +825,7 @@ public:
         return a;
     }
 };
+// 迭代
 class SolutionINORDER {
 public:
     vector<int> inorderTraversal(TreeNode *root) {
@@ -860,7 +863,7 @@ public:
         return root;
     }
 };
-//层序遍历102
+// 层序遍历102
 class Solution102 {
 public:
     vector<vector<int>> levelOrder(TreeNode *root) {
@@ -1011,7 +1014,7 @@ public:
     }
 };
 // 101 对称二叉树
-class Solution {
+class Solution101 {
 public:
     bool compare(TreeNode *left, TreeNode *right) {
         if (!left && !right)
@@ -1024,4 +1027,87 @@ public:
     }
     bool isSymmetric(TreeNode *root) { return compare(root->left, root->right); }
 };
-int main() { vector<string> a{"2", "1", "+", "3", "*"}; }
+// 222. 完全二叉树的节点个数
+class Solution222 {
+public:
+    void getNum(TreeNode *cur, int &num) {
+        if (cur == nullptr) return;
+        getNum(cur->right, num);
+        num++;
+        getNum(cur->left, num);
+    }
+    int countNodes1(TreeNode *root) {
+        int num = 0;
+        getNum(root, num);
+        return num;
+    }
+    int countNodes(TreeNode *root) {
+        if (!root) return 0;
+        TreeNode *left = root->left;
+        TreeNode *right = root->right;
+        int leftDepth = 0, rightDepth = 0; // 这里初始为0是有目的的，为了下面求指数方便
+        while (left) {
+            left = left->left;
+            leftDepth++;
+        }
+        while (right) {
+            right = right->right;
+            rightDepth++;
+        }
+        if (leftDepth == rightDepth) {
+            return (2 << leftDepth) - 1; // 注意(2<<1) 相当于2^2，所以leftDepth初始为0
+        }
+        return countNodes(root->left) + countNodes(root->right) + 1;
+    }
+};
+// 110 平衡二叉树
+class Solution110 {
+public:
+    int balance(TreeNode *root) {
+        if (root == nullptr) return 0;
+        int lh = balance(root->left);
+        if (lh == -1) return -1;
+        int rh = balance(root->right);
+        if (rh == -1) return -1;
+        int zh = abs(lh - rh);
+        if (zh > 1)
+            return -1;
+        else
+            return 1 + max(lh, rh);
+    }
+    bool isBalanced(TreeNode *root) { return balance(root); }
+};
+
+// 257 二叉树的所有路径
+class Solution {
+public:
+    void getWay(TreeNode *cur, vector<string> &way, vector<int> &s) {
+        s.push_back(cur->val);
+        if (cur->left == NULL && cur->right == NULL) {
+            string path;
+            for (int ss : s) {
+                path += to_string(ss);
+                path += "->";
+            }
+            path.pop_back();
+            path.pop_back();
+            way.push_back(path);
+        }
+        if (cur->left) {
+            getWay(cur->left, way, s);
+            s.pop_back();
+        }
+        if (cur->right) {
+            getWay(cur->right, way, s);
+            s.pop_back();
+        }
+    }
+    vector<string> binaryTreePaths(TreeNode *root) {
+        // 中左右
+        vector<int> s;
+        vector<string> res;
+        getWay(root, res, s);
+        return res;
+    }
+};
+int main() {}
