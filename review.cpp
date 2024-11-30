@@ -1,15 +1,9 @@
-#include "stdio.h"
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
-#include <cstdint>
-#include <cstdlib>
-#include <deque>
-#include <ios>
 #include <queue>
 #include <stack>
 #include <string>
-#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -772,31 +766,31 @@ public:
     }
     // 小顶堆
 
-    vector<int> topKFrequent(vector<int> &nums, int k) { // 复杂度nlogk
-        // 要统计元素出现频率
-        unordered_map<int, int> map; // map<nums[i],对应出现的次数>
-        for (int i = 0; i < nums.size(); i++) { map[nums[i]]++; }
+    // vector<int> topKFrequent(vector<int> &nums, int k) { // 复杂度nlogk
+    //     // 要统计元素出现频率
+    //     unordered_map<int, int> map; // map<nums[i],对应出现的次数>
+    //     for (int i = 0; i < nums.size(); i++) { map[nums[i]]++; }
 
-        // 对频率排序
-        // 定义一个小顶堆，大小为k
-        priority_queue<pair<int, int>, vector<pair<int, int>>, std::greater<int>> pri_que;
+    //     // 对频率排序
+    //     // 定义一个小顶堆，大小为k
+    //     priority_queue<pair<int, int>, vector<pair<int, int>>, std::greater<int>> pri_que;
 
-        // 用固定大小为k的小顶堆，扫面所有频率的数值
-        for (unordered_map<int, int>::iterator it = map.begin(); it != map.end(); it++) {
-            pri_que.push(*it);
-            if (pri_que.size() > k) { // 如果堆的大小大于了K，则队列弹出，保证堆的大小一直为k
-                pri_que.pop();
-            }
-        }
+    //     // 用固定大小为k的小顶堆，扫面所有频率的数值
+    //     for (unordered_map<int, int>::iterator it = map.begin(); it != map.end(); it++) {
+    //         pri_que.push(*it);
+    //         if (pri_que.size() > k) { // 如果堆的大小大于了K，则队列弹出，保证堆的大小一直为k
+    //             pri_que.pop();
+    //         }
+    //     }
 
-        // 找出前K个高频元素，因为小顶堆先弹出的是最小的，所以倒序来输出到数组
-        vector<int> result(k);
-        for (int i = k - 1; i >= 0; i--) {
-            result[i] = pri_que.top().first;
-            pri_que.pop();
-        }
-        return result;
-    }
+    //     // 找出前K个高频元素，因为小顶堆先弹出的是最小的，所以倒序来输出到数组
+    //     vector<int> result(k);
+    //     for (int i = k - 1; i >= 0; i--) {
+    //         result[i] = pri_que.top().first;
+    //         pri_que.pop();
+    //     }
+    //     return result;
+    // }
 };
 // 二叉树
 //  144 前序
@@ -1079,7 +1073,7 @@ public:
 };
 
 // 257 二叉树的所有路径
-class Solution {
+class Solution257 {
 public:
     void getWay(TreeNode *cur, vector<string> &way, vector<int> &s) {
         s.push_back(cur->val);
@@ -1107,6 +1101,27 @@ public:
         vector<int> s;
         vector<string> res;
         getWay(root, res, s);
+        return res;
+    }
+};
+// 513. 找树左下角的值
+class Solution513 {
+public:
+    int findBottomLeftValue(TreeNode *root) {
+        queue<TreeNode *> q;
+        q.push(root);
+        int res;
+        while (!q.empty()) {
+            int size = q.size();
+            int sizet = size;
+            while (size--) {
+                TreeNode *cur = q.front();
+                if (sizet == size + 1) res = cur->val;
+                q.pop();
+                if (cur->left) { q.push(cur->left); }
+                if (cur->right) { q.push(cur->right); }
+            }
+        }
         return res;
     }
 };
