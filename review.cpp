@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <queue>
 #include <stack>
 #include <string>
@@ -1123,6 +1124,126 @@ public:
             }
         }
         return res;
+    }
+};
+// 112 路径综合
+class Solution112 {
+public:
+    bool res1 = false, res2 = false;
+    bool hasPathSum(TreeNode *root, int targetSum) {
+        if (root == nullptr) return false;
+        if (root->val == targetSum && !root->left && root->right) return true;
+        if (root->left) { res1 = hasPathSum(root->left, targetSum - root->val); }
+        if (root->right) { res2 = hasPathSum(root->right, targetSum - root->val); }
+        return res1 || res2;
+    }
+    bool hasPathSum2(TreeNode *root, int targetSum) {
+        stack<pair<TreeNode *, int>> st;
+        if (!root) return false;
+        st.push({root, targetSum});
+        while (!st.empty()) {
+            pair<TreeNode *, int> pcur = st.top();
+            st.pop();
+            if (pcur.first->val == pcur.second && !pcur.first->left && !pcur.first->right)
+                return true;
+            if (pcur.first->left) { st.push({pcur.first->left, pcur.second - pcur.first->val}); }
+            if (pcur.first->right) { st.push({pcur.first->right, pcur.second - pcur.first->val}); }
+        }
+        return false;
+    }
+};
+
+// 106. 从中序与后序遍历序列构造二叉树
+class Solution106 {
+public:
+    class Solution {
+    private:
+        // 中序区间：[inorderBegin, inorderEnd)，后序区间[postorderBegin, postorderEnd)
+        TreeNode *traversal(vector<int> &inorder, int inorderBegin, int inorderEnd,
+                            vector<int> &postorder, int postorderBegin, int postorderEnd) {
+            if (postorderBegin == postorderEnd) return NULL;
+
+            int rootValue = postorder[postorderEnd - 1];
+            TreeNode *root = new TreeNode(rootValue);
+
+            if (postorderEnd - postorderBegin == 1) return root;
+
+            int delimiterIndex;
+            for (delimiterIndex = inorderBegin; delimiterIndex < inorderEnd; delimiterIndex++) {
+                if (inorder[delimiterIndex] == rootValue) break;
+            }
+            // 切割中序数组
+            // 左中序区间，左闭右开[leftInorderBegin, leftInorderEnd)
+            int leftInorderBegin = inorderBegin;
+            int leftInorderEnd = delimiterIndex;
+            // 右中序区间，左闭右开[rightInorderBegin, rightInorderEnd)
+            int rightInorderBegin = delimiterIndex + 1;
+            int rightInorderEnd = inorderEnd;
+
+            // 切割后序数组
+            // 左后序区间，左闭右开[leftPostorderBegin, leftPostorderEnd)
+            int leftPostorderBegin = postorderBegin;
+            int leftPostorderEnd = postorderBegin + delimiterIndex -
+                                   inorderBegin; // 终止位置是 需要加上 中序区间的大小size
+            // 右后序区间，左闭右开[rightPostorderBegin, rightPostorderEnd)
+            int rightPostorderBegin = postorderBegin + (delimiterIndex - inorderBegin);
+            int rightPostorderEnd = postorderEnd - 1; // 排除最后一个元素，已经作为节点了
+
+            root->left = traversal(inorder, leftInorderBegin, leftInorderEnd, postorder,
+                                   leftPostorderBegin, leftPostorderEnd);
+            root->right = traversal(inorder, rightInorderBegin, rightInorderEnd, postorder,
+                                    rightPostorderBegin, rightPostorderEnd);
+
+            return root;
+        }
+
+    public:
+        TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
+            if (inorder.size() == 0 || postorder.size() == 0) return NULL;
+            // 左闭右开的原则
+            return traversal(inorder, 0, inorder.size(), postorder, 0, postorder.size());
+        }
+    };
+    TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
+        if (inorder.size() == 0) return nullptr;
+        int rootval = postorder[postorder.size() - 1];
+        TreeNode *root = new TreeNode(rootval);
+        if (inorder.size() == 1) return root;
+        int split = -1;
+        for (int i = 0; i < inorder.size(); i++) {
+            if (inorder[i] == rootval) { split = i; }
+        }
+        vector<int> leftTreein(inorder.begin(), inorder.begin() + split);
+        vector<int> leftTreepo(postorder.begin(), postorder.begin() + leftTreein.size());
+        vector<int> rightTreein(inorder.begin() + split + 1, inorder.end());
+        vector<int> rightTreepo(postorder.begin() + leftTreein.size(), postorder.end() - 1);
+        root->left = buildTree(leftTreein, leftTreepo);
+        root->right = buildTree(rightTreein, rightTreepo);
+        return root;
+    }
+};
+// 654 最大二叉树
+class Solution {
+public:
+    TreeNode *traversal(vector<int> &nums, int begin, int end) {
+        int size = end - begin;
+        if (size == 0) return nullptr;
+        int maxnum = INT32_MIN;
+        int maxpos = begin;
+        for (int i = begin; i < end; i++) {
+            if (nums[i] > maxnum) {
+                maxpos = i;
+                maxnum = nums[i];
+            }
+        }
+        TreeNode *root = new TreeNode(maxnum);
+        if (size == 1) return root;
+        root->left = traversal(nums, begin, maxpos);
+        root->right = traversal(nums, maxpos + 1, end);
+        return root;
+    }
+    TreeNode *constructMaximumBinaryTree(vector<int> &nums) {
+        return traversal(nums, 0, nums.size());
     }
 };
 int main() {}
