@@ -1223,7 +1223,7 @@ public:
     }
 };
 // 654 最大二叉树
-class Solution {
+class Solution654 {
 public:
     TreeNode *traversal(vector<int> &nums, int begin, int end) {
         int size = end - begin;
@@ -1244,6 +1244,47 @@ public:
     }
     TreeNode *constructMaximumBinaryTree(vector<int> &nums) {
         return traversal(nums, 0, nums.size());
+    }
+};
+// 617 合并二叉树
+class Solution617 {
+public:
+    // 写的不怎么样
+    TreeNode *traversal(TreeNode *root1, TreeNode *root2) {
+        if (!root1 && !root2) return nullptr; // 两棵树都为空，返回空
+        // 如果 root1 或 root2 为空，则取另一个树的值，否则相加
+        int val1 = (root1 ? root1->val : 0);
+        int val2 = (root2 ? root2->val : 0);
+        TreeNode *root = new TreeNode(val1 + val2);
+        // 递归合并左右子树
+        if (root1 || root2) {
+            root->left = traversal(root1 ? root1->left : nullptr, root2 ? root2->left : nullptr);
+            root->right = traversal(root1 ? root1->right : nullptr, root2 ? root2->right : nullptr);
+        }
+        return root;
+    }
+    // 这段好点
+    TreeNode *mergeTrees2(TreeNode *t1, TreeNode *t2) {
+        if (t1 == NULL) return t2;                  // 如果t1为空，合并之后就应该是t2
+        if (t2 == NULL) return t1;                  // 如果t2为空，合并之后就应该是t1
+        t1->val += t2->val;                         // 中
+        t1->left = mergeTrees2(t1->left, t2->left); // 左
+        t1->right = mergeTrees2(t1->right, t2->right); // 右
+        return t1;
+    }
+};
+
+// 700. 二叉搜索树中的搜索
+class Solution {
+public:
+    TreeNode *searchBST(TreeNode *root, int val) {
+        if (!root) return nullptr;
+        if (root->val == val)
+            return root;
+        else if (root->val > val)
+            return searchBST(root->left, val);
+        else
+            return searchBST(root->right, val);
     }
 };
 int main() {}
