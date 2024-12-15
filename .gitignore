@@ -1,4 +1,5 @@
 .vscode/
+.cache/
 exe/
 build/
 test.cpp
