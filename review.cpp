@@ -1301,7 +1301,7 @@ public:
     }
 };
 // 530.二叉搜索树的最小绝对差
-class Solution {
+class Solution530 {
 public:
     int delta = INT_MAX;
     TreeNode *pre = nullptr;
@@ -1369,5 +1369,56 @@ public:
     }
 };
 // 501.二叉搜索树中的众数
+class Solution501_1 {
+public:
+    unordered_map<int, int> umap;
+    void travel(TreeNode *cur) {
+        if (!cur) return;
+        travel(cur->left);
+        umap[cur->val]++;
+        travel(cur->right);
+    }
 
+    vector<int> findMode1(TreeNode *root) {
+        travel(root);
+        vector<pair<int, int>> res1(umap.begin(), umap.end());
+        sort(res1.begin(), res1.end(),
+             [&](const pair<int, int> &a, const pair<int, int> &b) { return a.second > b.second; });
+        vector<int> res;
+        res.push_back(res1[0].first);
+        for (int i = 1; i < res1.size(); i++) {
+            if (res1[i].second == res1[0].second) res.push_back(res1[i].first);
+        }
+        return res;
+    }
+};
+class Solution {
+public:
+    int maxf = 0;
+    int f = 0;
+    vector<int> res;
+    TreeNode *pre = nullptr;
+    void traversal(TreeNode *root) {
+        if (root == nullptr) return;
+        traversal(root->left);
+        if (pre) {
+            if (pre->val == root->val)
+                f++;
+            else { f = 1; }
+            if (f == maxf)
+                res.push_back(root->val);
+            else if (f > maxf) {
+                maxf = f;
+                res.clear();
+                res.push_back(root->val);
+            }
+        }
+        pre = root;
+        traversal(root->right);
+    }
+    vector<int> findMode(TreeNode *root) {
+        traversal(root);
+        return res;
+    }
+};
 int main() {}
