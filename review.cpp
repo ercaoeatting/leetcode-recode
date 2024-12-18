@@ -1392,7 +1392,7 @@ public:
         return res;
     }
 };
-class Solution {
+class Solution501_2 {
 public:
     int maxf = 0;
     int f = 0;
@@ -1401,24 +1401,46 @@ public:
     void traversal(TreeNode *root) {
         if (root == nullptr) return;
         traversal(root->left);
-        if (pre) {
-            if (pre->val == root->val)
-                f++;
-            else { f = 1; }
-            if (f == maxf)
-                res.push_back(root->val);
-            else if (f > maxf) {
-                maxf = f;
-                res.clear();
-                res.push_back(root->val);
-            }
+        // 中
+        // 先处理f
+        if (!pre) { f = 1; } // 第一个非空节点
+        else if (root->val == pre->val) { f++; }
+        else { // 3 3 4（遇到了这个节点） 4
+            f = 1;
         }
+        // 再处理具体的众数
+        if (f > maxf) {
+            maxf = f;
+            res.clear();
+            res.push_back(root->val);
+        }
+        else if (f == maxf) { res.push_back(root->val); }
         pre = root;
         traversal(root->right);
     }
     vector<int> findMode(TreeNode *root) {
         traversal(root);
         return res;
+    }
+};
+
+// 236. 二叉树的最近公共祖先
+class Solution236 {
+public:
+    TreeNode *travel(TreeNode *root, TreeNode *p, TreeNode *q) {
+        if (!root || root == p || root == q) return root;
+        TreeNode *cur = travel(root->left, p, q);
+        TreeNode *cur2 = travel(root->right, p, q);
+        if (cur && cur2)
+            return root;
+        else if (!cur2)
+            return cur;
+        else if (!cur)
+            return cur2;
+        return nullptr;
+    }
+    TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q) {
+        return travel(root, p, q);
     }
 };
 int main() {}
