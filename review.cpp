@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <climits>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -1275,16 +1276,98 @@ public:
 };
 
 // 700. 二叉搜索树中的搜索
-class Solution {
+class Solution700 {
 public:
-    TreeNode *searchBST(TreeNode *root, int val) {
+    TreeNode *searchBST1(TreeNode *root, int val) {
         if (!root) return nullptr;
         if (root->val == val)
             return root;
         else if (root->val > val)
-            return searchBST(root->left, val);
+            return searchBST1(root->left, val);
         else
-            return searchBST(root->right, val);
+            return searchBST1(root->right, val);
+    }
+    TreeNode *searchBST(TreeNode *root, int val) {
+        if (!root) return nullptr;
+        while (root) {
+            if (root->val == val)
+                return root;
+            else if (root->val > val)
+                root = root->left;
+            else
+                root = root->right;
+        }
+        return nullptr;
     }
 };
+// 530.二叉搜索树的最小绝对差
+class Solution {
+public:
+    int delta = INT_MAX;
+    TreeNode *pre = nullptr;
+    void travel(TreeNode *cur) {
+        if (!cur) return;
+        travel(cur->left);
+        if (pre) { delta = min(delta, cur->val - pre->val); }
+        pre = cur;
+        travel(cur->right);
+    }
+    int getMinimumDifference2(TreeNode *root) {
+        travel(root);
+        return delta;
+    }
+    int getMinimumDifference(TreeNode *root) {
+        stack<TreeNode *> st;
+        if (root) st.push(root);
+        while (!st.empty()) {
+            TreeNode *cur = st.top();
+            if (!cur) {
+                st.pop();
+                if (cur->left) st.push(cur->left);
+                st.push(cur);
+                st.push(nullptr);
+                if (cur->right) st.push(cur->right);
+            }
+            else {
+                st.pop();
+                cur = st.top();
+                st.pop();
+                if (pre) { delta = min(delta, cur->val - pre->val); }
+                pre = cur;
+            }
+        }
+        return delta;
+    }
+};
+// 98. 验证二叉搜索树
+class Solution98 {
+public:
+    int maxval = INT_MIN;
+    void travel(TreeNode *cur, vector<int> &s) {
+        if (cur == nullptr) return;
+        travel(cur->left, s);
+        s.push_back(cur->val);
+        travel(cur->right, s);
+    }
+    bool isValidBST(TreeNode *cur) {
+        if (!cur) return true;
+        bool reslef = isValidBST(cur);
+        if (cur->val > maxval)
+            maxval = cur->val;
+        else
+            return false;
+        bool resrig = isValidBST(cur);
+        return reslef && resrig;
+    }
+    bool isValidBST2(TreeNode *root) {
+        vector<int> s;
+        travel(root, s);
+        for (int i = 0; i < s.size() - 1; i++) {
+            if (s[i] >= s[i + 1]) return false;
+        }
+        return true;
+    }
+};
+// 501.二叉搜索树中的众数
+
 int main() {}
