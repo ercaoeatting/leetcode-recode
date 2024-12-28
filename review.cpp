@@ -1443,4 +1443,36 @@ public:
         return travel(root, p, q);
     }
 };
+// 701 二叉搜索树的插入
+class Solution {
+public:
+    TreeNode *father;
+    void travel(TreeNode *root, int val) {
+        if (!root) {
+            TreeNode *node = new TreeNode(val);
+            if (father->val > val) { father->left = node; }
+            else
+                father->right = node;
+            return;
+        }
+        father = root;
+        if (root->val < val) { travel(root->right, val); }
+        if (root->val > val) { travel(root->left, val); }
+    }
+    TreeNode *insertIntoBST2(TreeNode *root, int val) {
+        if (!root) return new TreeNode(val);
+        travel(root, val);
+        return root;
+    }
+    // 方法2
+    TreeNode *insertIntoBST(TreeNode *root, int val) {
+        if (root == NULL) {
+            TreeNode *node = new TreeNode(val);
+            return node;
+        }
+        if (root->val > val) root->left = insertIntoBST(root->left, val);
+        if (root->val < val) root->right = insertIntoBST(root->right, val);
+        return root;
+    }
+};
 int main() {}
