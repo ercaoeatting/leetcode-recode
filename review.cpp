@@ -775,12 +775,15 @@ public:
 
     //     // 对频率排序
     //     // 定义一个小顶堆，大小为k
-    //     priority_queue<pair<int, int>, vector<pair<int, int>>, std::greater<int>> pri_que;
+    //     priority_queue<pair<int, int>, vector<pair<int, int>>,
+    //     std::greater<int>> pri_que;
 
     //     // 用固定大小为k的小顶堆，扫面所有频率的数值
-    //     for (unordered_map<int, int>::iterator it = map.begin(); it != map.end(); it++) {
+    //     for (unordered_map<int, int>::iterator it = map.begin(); it !=
+    //     map.end(); it++) {
     //         pri_que.push(*it);
-    //         if (pri_que.size() > k) { // 如果堆的大小大于了K，则队列弹出，保证堆的大小一直为k
+    //         if (pri_que.size() > k) { //
+    //         如果堆的大小大于了K，则队列弹出，保证堆的大小一直为k
     //             pri_que.pop();
     //         }
     //     }
@@ -1041,7 +1044,8 @@ public:
         if (!root) return 0;
         TreeNode *left = root->left;
         TreeNode *right = root->right;
-        int leftDepth = 0, rightDepth = 0; // 这里初始为0是有目的的，为了下面求指数方便
+        int leftDepth = 0,
+            rightDepth = 0; // 这里初始为0是有目的的，为了下面求指数方便
         while (left) {
             left = left->left;
             leftDepth++;
@@ -1159,7 +1163,8 @@ class Solution106 {
 public:
     class Solution {
     private:
-        // 中序区间：[inorderBegin, inorderEnd)，后序区间[postorderBegin, postorderEnd)
+        // 中序区间：[inorderBegin, inorderEnd)，后序区间[postorderBegin,
+        // postorderEnd)
         TreeNode *traversal(vector<int> &inorder, int inorderBegin, int inorderEnd,
                             vector<int> &postorder, int postorderBegin, int postorderEnd) {
             if (postorderBegin == postorderEnd) return NULL;
@@ -1442,5 +1447,97 @@ public:
     TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q) {
         return travel(root, p, q);
     }
+};
+// 701 二叉搜索树的插入
+class Solution701 {
+public:
+    TreeNode *insertIntoBST(TreeNode *root, int val) {
+        if (!root) return new TreeNode(val);
+        if (root->val > val)
+            root->left = insertIntoBST(root->left, val);
+        else
+            root->right = insertIntoBST(root->right, val);
+        return root;
+    }
+};
+// 450 二叉搜索树的删除
+class Solution450 {
+public:
+    TreeNode *deleteNode(TreeNode *root, int key) {
+        if (root == nullptr) return nullptr;
+        if (root->left) root->left = deleteNode(root->left, key);
+        if (root->right) root->right = deleteNode(root->right, key);
+        if (root->val == key) {
+            // 左右孩子都空
+            if (!root->left && !root->right) {
+                delete root;
+                return nullptr;
+            }
+            // 左或者右孩子不空
+            else if (root->left && !root->right) { return root->left; }
+            else if (!root->left && root->right) { return root->right; }
+            // 左右都不空
+            else {
+                TreeNode *rootLeft = root->left;
+                TreeNode *rootRight = root->right;
+                root = root->right;
+                while (root->left) { root = root->left; }
+                root->left = rootLeft;
+                return rootRight;
+            }
+        }
+        return root;
+    }
+};
+// 669. 修剪二叉搜索树
+class Solution669 {
+public:
+    TreeNode *trimBST(TreeNode *root, int low, int high) {
+        if (!root) return nullptr;
+        if (root->left) root->left = trimBST(root->left, low, high);
+        if (root->right) root->right = trimBST(root->right, low, high);
+        if (root->val < low)
+            return root->right;
+        else if (root->val > high)
+            return root->left;
+        else
+            return root;
+        return root;
+    }
+};
+// 654.最大二叉树
+class Solution654_2 {
+public:
+    TreeNode *travel(vector<int> &nums, int left, int right) {
+        if (left > right) return nullptr;
+        int max_size = -1, max_value = INT_MIN;
+        for (int i = left; i <= right; i++) {
+            if (nums[i] > max_value) {
+                max_size = i;
+                max_value = nums[i];
+            }
+        }
+        TreeNode *root = new TreeNode(max_value);
+        root->left = travel(nums, left, max_size - 1);
+        root->right = travel(nums, max_size + 1, right);
+        return root;
+    }
+    TreeNode *constructMaximumBinaryTree(vector<int> &nums) {
+        return travel(nums, 0, nums.size() - 1);
+    }
+};
+// 108. 将有序数组转换为二叉搜索树
+class Solution108 {
+public:
+    TreeNode *travelsal(vector<int> &nums, int left, int right) {
+        if (left > right) return nullptr;
+        int max_value = nums[(left + right) / 2];
+        int max_size = (left + right) / 2;
+        TreeNode *root = new TreeNode(max_value);
+        root->left = travelsal(nums, left, max_size - 1);
+        root->right = travelsal(nums, max_size + 1, right);
+        return root;
+    }
+    TreeNode *sortedArrayToBST(vector<int> &nums) { return travelsal(nums, 0, nums.size() - 1); }
 };
 int main() {}
