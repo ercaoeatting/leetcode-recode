@@ -1540,4 +1540,41 @@ public:
     }
     TreeNode *sortedArrayToBST(vector<int> &nums) { return travelsal(nums, 0, nums.size() - 1); }
 };
+// 538. 把二叉搜索树转换为累加树
+class Solution538 {
+public:
+    TreeNode *pre = nullptr;
+    TreeNode *convertBST(TreeNode *root) {
+        if (!root) return nullptr;
+        if (root->right) convertBST(root->right);
+        if (pre) { root->val += pre->val; }
+        pre = root;
+        if (root->left) convertBST(root->left);
+        return root;
+    }
+};
+
+// 回溯
+// 77. 组合
+class Solution {
+    vector<vector<int>> res;
+    vector<int> path;
+    void back(int n, int k, int start) {
+        if (path.size() == k) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = start; i <= n /*  n - k + path.size() + 1  */; i++) {
+            path.push_back(i);
+            back(n, k, i + 1);
+            path.pop_back();
+        }
+    }
+
+public:
+    vector<vector<int>> combine(int n, int k) {
+        back(n, k, 1);
+        return res;
+    }
+};
 int main() {}
