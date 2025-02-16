@@ -1556,7 +1556,7 @@ public:
 
 // 回溯
 // 77. 组合
-class Solution {
+class Solution77 {
     vector<vector<int>> res;
     vector<int> path;
     void back(int n, int k, int start) {
@@ -1574,6 +1574,83 @@ class Solution {
 public:
     vector<vector<int>> combine(int n, int k) {
         back(n, k, 1);
+        return res;
+    }
+};
+// 216. 组合总和 III
+class Solution216 {
+    vector<vector<int>> res;
+    vector<int> path;
+    void back(int k, int n, int start, int sum_now) {
+        if (path.size() == k) {
+            if (sum_now == n) res.push_back(path);
+            return;
+        }
+        for (int i = start; i <= 9; i++) {
+            path.push_back(i);
+            back(k, n, i + 1, sum_now + i);
+            path.pop_back();
+        }
+    }
+
+public:
+    vector<vector<int>> combinationSum3(int k, int n) {
+        back(k, n, 1, 0);
+        return res;
+    }
+};
+// 17. 电话号码的字母组合
+class Solution17 {
+    const string letterMap[10] = {
+        "",     // 0
+        "",     // 1
+        "abc",  // 2
+        "def",  // 3
+        "ghi",  // 4
+        "jkl",  // 5
+        "mno",  // 6
+        "pqrs", // 7
+        "tuv",  // 8
+        "wxyz", // 9
+    };
+    vector<string> res;
+    void back(string digits, int start, string path) {
+        if (path.size() == digits.size()) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = start;;) { // 没用，只有i = start 才是有效的
+            for (int j = 0; j < letterMap[digits[i] - '0'].size(); j++)
+                back(digits, i + 1, path + letterMap[digits[i] - '0'][j]);
+        }
+    }
+
+public:
+    vector<string> letterCombinations(string digits) {
+        if (digits == "") return vector<string>{};
+        back(digits, 0, "");
+        return res;
+    }
+};
+// 39. 组合总和
+class Solution39 {
+public:
+    vector<vector<int>> res;
+    vector<int> path;
+    void back(vector<int> &candidates, int target, int sum, int start) {
+        if (sum > target) return;
+        if (sum == target) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = start; i < candidates.size(); i++) {
+            path.push_back(candidates[i]);
+            back(candidates, target, sum + candidates[i], i);
+            path.pop_back();
+        }
+    }
+    vector<vector<int>> combinationSum(vector<int> &candidates, int target) {
+        back(candidates, target, 0, 0);
         return res;
     }
 };
