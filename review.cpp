@@ -1613,23 +1613,25 @@ class Solution17 {
         "tuv",  // 8
         "wxyz", // 9
     };
-    vector<string> res;
-    void back(string digits, int start, string path) {
-        if (path.size() == digits.size()) {
-            res.push_back(path);
-            return;
-        }
-        for (int i = start;;) { // 没用，只有i = start 才是有效的
-            for (int j = 0; j < letterMap[digits[i] - '0'].size(); j++)
-                back(digits, i + 1, path + letterMap[digits[i] - '0'][j]);
-        }
-    }
 
 public:
+    vector<string> result;
+    void getCombinations(const string &digits, int index, const string &s) { // 注意参数的不同
+        if (index == digits.size()) {
+            result.push_back(s);
+            return;
+        }
+        int digit = digits[index] - '0';
+        string letters = letterMap[digit];
+        for (int i = 0; i < letters.size(); i++) {
+            getCombinations(digits, index + 1, s + letters[i]); // 注意这里的不同
+        }
+    }
     vector<string> letterCombinations(string digits) {
-        if (digits == "") return vector<string>{};
-        back(digits, 0, "");
-        return res;
+        result.clear();
+        if (digits.size() == 0) { return result; }
+        getCombinations(digits, 0, "");
+        return result;
     }
 };
 // 39. 组合总和
@@ -1651,6 +1653,68 @@ public:
     }
     vector<vector<int>> combinationSum(vector<int> &candidates, int target) {
         back(candidates, target, 0, 0);
+        return res;
+    }
+};
+// 40. 组合总和 II
+class Solution40 {
+public:
+    vector<vector<int>> res;
+    vector<int> path;
+    void back(vector<int> &candidates, int target, int sum, int start, vector<bool> used) {
+        if (sum > target) return;
+        if (sum == target) {
+            res.push_back(path);
+            return;
+        }
+        // if (i > start && candidates[i] == candidates[i - 1]) continue;
+        for (int i = start; i < candidates.size() && sum + candidates[i] <= target; i++) {
+            if (i > 0 && used[i - 1] == 0 && candidates[i] == candidates[i - 1]) continue;
+            path.push_back(candidates[i]);
+            used[i] = 1;
+            back(candidates, target, sum + candidates[i], i + 1, used);
+            used[i] = 0;
+            path.pop_back();
+        }
+    }
+    vector<vector<int>> combinationSum2(vector<int> &candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector<bool> used(candidates.size(), 0);
+        back(candidates, target, 0, 0, used);
+        return res;
+    }
+};
+// 131 分割回文串
+class Solution131 {
+    vector<string> path;
+    vector<vector<string>> res;
+    bool isPalindrome(string &s) {
+        int left = 0, right = s.size() - 1;
+        while (left < right) {
+            if (s[left] != s[right]) return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+    void back(string s, int start) {
+        if (start >= s.size()) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = start; i < s.size(); i++) {
+            string substr = string(s.begin() + start, s.begin() + i + 1);
+            if (isPalindrome(substr)) {
+                path.push_back(substr);
+                back(s, i + 1);
+                path.pop_back();
+            }
+        }
+    }
+
+public:
+    vector<vector<string>> partition(string s) {
+        back(s, 0);
         return res;
     }
 };
