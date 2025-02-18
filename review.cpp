@@ -1718,4 +1718,38 @@ public:
         return res;
     }
 };
-int main() {}
+// 93 复原IP地址
+class Solution {
+    bool isValid(const string &s, int start, int end) {
+        if (start > end) { return false; }
+        if (s[start] == '0' && start != end) { return false; }
+        int num = 0;
+        for (int i = start; i <= end; i++) {
+            if (s[i] > '9' || s[i] < '0') { return false; }
+            num = num * 10 + (s[i] - '0');
+            if (num > 255) { return false; }
+        }
+        return true;
+    }
+    vector<string> res;
+    void back(string s, int start, int dottime) {
+        if (dottime == 3) {
+            if (isValid(s, start, s.size() - 1)) res.push_back(s);
+            return;
+        }
+        for (int i = start; i < s.size(); i++) {
+            if (isValid(s, start, i)) {
+                s.insert(s.begin() + i + 1, '.');
+                back(s, i + 2, dottime + 1);
+                s.erase(s.begin() + i + 1);
+            }
+        }
+    }
+
+public:
+    vector<string> restoreIpAddresses(string s) {
+        back(s, 0, 0);
+        return res;
+    }
+};
+int main() { Solution().restoreIpAddresses("25525511135"); }

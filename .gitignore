@@ -3,4 +3,5 @@
 exe/
 build/
 test.cpp
+a.cpp
 *.exe
