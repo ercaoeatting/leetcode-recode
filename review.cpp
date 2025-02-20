@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <iostream>
 #include <queue>
 #include <stack>
 #include <string>
@@ -1719,7 +1720,7 @@ public:
     }
 };
 // 93 复原IP地址
-class Solution {
+class Solution93 {
     bool isValid(const string &s, int start, int end) {
         if (start > end) { return false; }
         if (s[start] == '0' && start != end) { return false; }
@@ -1752,4 +1753,103 @@ public:
         return res;
     }
 };
-int main() { Solution().restoreIpAddresses("25525511135"); }
+
+// 78.子集
+class Solution78 {
+public:
+    vector<int> path;
+    vector<vector<int>> res;
+    void back(vector<int> &nums, int start) {
+        if (start >= nums.size()) { return; }
+        for (int i = start; i < nums.size(); i++) {
+            path.push_back(nums[i]);
+            res.push_back(path);
+            back(nums, i + 1);
+            path.pop_back();
+        }
+    }
+    vector<vector<int>> subsets(vector<int> &nums) {
+        res.push_back({});
+        back(nums, 0);
+        return res;
+    }
+};
+// 90. 子集 II
+class Solution90 {
+public:
+    vector<int> path;
+    vector<vector<int>> res;
+    void back(vector<int> &nums, int start) {
+        if (start >= nums.size()) { return; }
+        for (int i = start; i < nums.size(); i++) {
+            if (i > start && nums[i] == nums[i - 1]) continue;
+            path.push_back(nums[i]);
+            res.push_back(path);
+            back(nums, i + 1);
+            path.pop_back();
+        }
+    }
+    vector<vector<int>> subsetsWithDup(vector<int> &nums) {
+        sort(nums.begin(), nums.end(), [](int left, int right) { return left < right; });
+        res.push_back({});
+        back(nums, 0);
+        return res;
+    }
+};
+// 491. 非递减子序列
+class Solution491 {
+private:
+    vector<vector<int>> result;
+    vector<int> path;
+    void backtracking(vector<int> &nums, int startIndex) {
+        if (path.size() > 1) {
+            result.push_back(path);
+            // 注意这里不要加return，要取树上的节点
+        }
+        unordered_set<int> uset; // 使用set对本层元素进行去重
+        for (int i = startIndex; i < nums.size(); i++) {
+            if ((!path.empty() && nums[i] < path.back()) || uset.find(nums[i]) != uset.end()) {
+                continue;
+            }
+            uset.insert(nums[i]); // 记录这个元素在本层用过了，本层后面不能再用了
+            path.push_back(nums[i]);
+            backtracking(nums, i + 1);
+            path.pop_back();
+        }
+    }
+
+public:
+    vector<vector<int>> findSubsequences(vector<int> &nums) {
+        result.clear();
+        path.clear();
+        backtracking(nums, 0);
+        return result;
+    }
+    class Solution {
+    private:
+        vector<vector<int>> result;
+        vector<int> path;
+        void backtracking(vector<int> &nums, int startIndex) {
+            if (path.size() > 1) { result.push_back(path); }
+            int used[201] = {0}; // 这里使用数组来进行去重操作，题目说数值范围[-100, 100]
+            for (int i = startIndex; i < nums.size(); i++) {
+                if ((!path.empty() && nums[i] < path.back()) || used[nums[i] + 100] == 1) {
+                    continue;
+                }
+                used[nums[i] + 100] = 1; // 记录这个元素在本层用过了，本层后面不能再用了
+                path.push_back(nums[i]);
+                backtracking(nums, i + 1);
+                path.pop_back();
+            }
+        }
+
+    public:
+        vector<vector<int>> findSubsequences(vector<int> &nums) {
+            result.clear();
+            path.clear();
+            backtracking(nums, 0);
+            return result;
+        }
+    };
+};
+int main() {}
