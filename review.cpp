@@ -3,7 +3,8 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
+#include <list>
+#include <map>
 #include <queue>
 #include <stack>
 #include <string>
@@ -1852,4 +1853,161 @@ public:
         }
     };
 };
-int main() {}
+// 46. 全排列
+class Solution46 {
+public:
+    vector<vector<int>> result;
+    vector<int> path;
+    vector<bool> used;
+    void back(vector<int> &nums) {
+        if (path.size() == nums.size()) {
+            result.push_back(path);
+            return;
+        }
+        for (int i = 0; i < nums.size(); i++) {
+            if (used[i]) continue;
+            path.push_back(nums[i]);
+            used[i] = true;
+            back(nums);
+            used[i] = false;
+            path.pop_back();
+        }
+    }
+    vector<vector<int>> permute(vector<int> &nums) {
+        used.resize(nums.size());
+        back(nums);
+        return result;
+    }
+};
+// 47.全排列 II
+class Solution47 {
+public:
+    vector<vector<int>> result;
+    vector<int> path;
+    vector<bool> used;
+    void back(vector<int> &nums) {
+        if (path.size() == nums.size()) {
+            result.push_back(path);
+            return;
+        }
+        for (int i = 0; i < nums.size(); i++) {
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) continue;
+            path.push_back(nums[i]);
+            used[i] = true;
+            back(nums);
+            used[i] = false;
+            path.pop_back();
+        }
+    }
+    vector<vector<int>> permuteUnique(vector<int> &nums) {
+        used.resize(nums.size());
+        sort(nums.begin(), nums.end());
+        back(nums);
+        return result;
+    }
+};
+// 332. 重新安排行程
+class Solution332 {
+public:
+    int tn;
+    vector<string> res;
+    unordered_map<string, map<string, int>> umap;
+    bool back() {
+        if (res.size() == tn + 1) return true;
+        for (auto &f : umap[res[res.size() - 1]]) {
+            if (f.second > 0) {
+                res.push_back(f.first);
+                f.second--;
+                if (back()) return true;
+                res.pop_back();
+                f.second++;
+            }
+        }
+        return false;
+    }
+    vector<string> findItinerary(vector<vector<string>> &tickets) {
+        tn = tickets.size();
+        for (const auto &ticket : tickets) { umap[ticket[0]][ticket[1]]++; }
+        res.push_back("JFK");
+        back();
+        return res;
+    }
+};
+// 51. N 皇后
+class Solution51 {
+    int nn;
+    vector<vector<string>> res;
+    vector<string> solve;
+    bool ifRight(int row, int col, vector<string> &chessboard) {
+        for (int i = 0; i < row; i++) { // 这是一个剪枝
+            if (chessboard[i][col] == 'Q') { return false; }
+        }
+        // 检查 45度角是否有皇后
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if (chessboard[i][j] == 'Q') { return false; }
+        }
+        // 检查 135度角是否有皇后
+        for (int i = row - 1, j = col + 1; i >= 0 && j < nn; i--, j++) {
+            if (chessboard[i][j] == 'Q') { return false; }
+        }
+        return true;
+    }
+    void back(int row) {
+        if (row >= nn) {
+            res.push_back(solve);
+            return;
+        }
+        for (int i = 0; i < nn; i++) {
+            if (ifRight(row, i, solve)) {
+                solve[row][i] = 'Q';
+                back(row + 1);
+                solve[row][i] = '.';
+            }
+        }
+    }
+
+public:
+    vector<vector<string>> solveNQueens(int n) {
+        nn = n;
+        solve = vector<string>(nn, string(nn, '.'));
+        back(0);
+        return res;
+    }
+};
+// 37. 解数独
+class Solution {
+    bool isValid(int row, int col, char val, vector<vector<char>> &board) {
+        for (int i = 0; i < 9; i++) { // 判断行里是否重复
+            if (board[row][i] == val) { return false; }
+        }
+        for (int j = 0; j < 9; j++) { // 判断列里是否重复
+            if (board[j][col] == val) { return false; }
+        }
+        int startRow = (row / 3) * 3;
+        int startCol = (col / 3) * 3;
+        for (int i = startRow; i < startRow + 3; i++) { // 判断9方格里是否重复
+            for (int j = startCol; j < startCol + 3; j++) {
+                if (board[i][j] == val) { return false; }
+            }
+        }
+        return true;
+    }
+
+public:
+    bool back(vector<vector<char>> &board) {
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board[0].size(); j++) {
+                if (board[i][j] != '.') { continue; }
+                for (char k = '1'; k <= '9'; k++)
+                    if (isValid(i, j, k, board)) {
+                        board[i][j] = k;
+                        if (back(board)) return true;
+                        board[i][j] = '.';
+                    }
+                return false;
+            }
+        }
+        return true;
+    }
+    void solveSudoku(vector<vector<char>> &board) { back(board); }
+};
