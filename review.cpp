@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <list>
 #include <map>
 #include <queue>
@@ -1975,7 +1976,7 @@ public:
     }
 };
 // 37. 解数独
-class Solution {
+class Solution37 {
     bool isValid(int row, int col, char val, vector<vector<char>> &board) {
         for (int i = 0; i < 9; i++) { // 判断行里是否重复
             if (board[row][i] == val) { return false; }
@@ -2011,3 +2012,142 @@ public:
     }
     void solveSudoku(vector<vector<char>> &board) { back(board); }
 };
+
+// 455. 分发饼干
+class Solution455 {
+public:
+    int findContentChildren(vector<int> &g, vector<int> &s) {
+        sort(g.begin(), g.end(), std::greater<int>());
+        sort(s.begin(), s.end(), std::greater<int>());
+        int num = 0, boyi = 0;
+        // 饼干
+        for (int i = 0; i < s.size();) {
+            if (boyi >= g.size()) break;
+            if (s[i] >= g[boyi]) {
+                num++;
+                boyi++;
+                i++;
+            }
+            else { boyi++; }
+        }
+        return num;
+    }
+    int findContentChildren2(vector<int> &g, vector<int> &s) {
+        sort(g.begin(), g.end(), std::greater<int>());
+        sort(s.begin(), s.end(), std::greater<int>());
+        int num = 0, cookiei = 0;
+        // 遍历小孩
+        for (int i = 0; i < g.size(); i++) {
+            if (cookiei < s.size() && g[i] <= s[cookiei]) {
+                num++;
+                cookiei++;
+            }
+        }
+        return num;
+    }
+};
+// 376. 摆动序列
+class Solution376 {
+public:
+    int dp[1024][2] = {0};
+    int wiggleMaxLength(vector<int> &nums) {
+        dp[0][0] = dp[0][1] = 1;
+        for (int i = 1; i < nums.size(); i++) {
+            dp[i][0] = dp[i][1] = 1;
+            for (int j = 0; j < i; j++) {
+                if (nums[j] > nums[i]) dp[i][1] = max(dp[i][1], dp[j][0] + 1); // 做山谷
+                if (nums[j] < nums[i]) dp[i][0] = max(dp[i][0], dp[j][1] + 1);
+            }
+        }
+        return max(dp[nums.size() - 1][0], dp[nums.size() - 1][1]);
+    }
+    int wiggleMaxLength2(vector<int> &nums) {
+        if (nums.size() <= 1) return nums.size();
+        int curDiff = 0; // 当前一对差值
+        int preDiff = 0; // 前一对差值
+        int result = 1;  // 记录峰值个数，序列默认序列最右边有一个峰值
+        for (int i = 0; i < nums.size() - 1; i++) {
+            curDiff = nums[i + 1] - nums[i];
+            // 出现峰值
+            if ((preDiff <= 0 && curDiff > 0) || (preDiff >= 0 && curDiff < 0)) {
+                result++;
+                preDiff = curDiff;
+            }
+        }
+        return result;
+    }
+};
+
+// 53. 最大子数组和
+class Solution53 {
+public:
+    int maxSubArray(vector<int> &nums) {
+        int sum = INT32_MIN;
+        int count = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            count += nums[i];
+            sum = max(count, sum);
+            if (count < 0) { count = 0; }
+        }
+        return sum;
+    }
+};
+// 122. 买卖股票的最佳时机 II
+class Solution122 {
+public:
+    int maxProfit2(vector<int> &prices) {
+        int profit = 0;
+        for (int i = 1; i < prices.size(); i++) {
+            if ((prices[i] - prices[i - 1]) > 0) profit += prices[i] - prices[i - 1];
+        }
+        return profit;
+    }
+    // DP
+    int maxProfit(vector<int> &prices) {
+        int n = prices.size();
+        int dp[n][2];
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        // dp[i][0] 第i天持有股票的最大现金
+        // dp[i][1] 第i天不持有股票的最大现金
+        for (int i = 1; i < prices.size(); i++) {
+            dp[i][1] = max(prices[i] - dp[i - 1][0], dp[i - 1][1]);
+            dp[i][0] = max(dp[i - 1][0], -prices[i] + dp[i - 1][1]);
+        }
+        return max(dp[n - 1][0], dp[n - 1][1]);
+    }
+};
+// 55. 跳跃游戏
+class Solution {
+public:
+    bool canJump(vector<int> &nums) {
+        int comm = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            if (comm >= i) comm = max(comm, nums[i] + i);
+        }
+        return comm >= nums.size() - 1;
+    }
+    bool canJump_std(vector<int> &nums) {
+        int cover = 0;
+        if (nums.size() == 1) return true;
+        for (int i = 0; i <= cover; i++) {
+            cover = max(i + nums[i], cover);
+            if (cover >= nums.size() - 1) return true; // 说明可以覆盖到终点了
+        }
+        return false;
+    }
+    bool canJump2(vector<int> &nums) {
+        vector<int> dp(nums.size(), 0);
+        dp[0] = 1;
+        for (int i = 0; i < nums.size(); i++) {
+            if (dp[i] == 1) {
+                for (int j = 1; j <= nums[i] && i + j < nums.size(); j++) { dp[i + j] = 1; }
+            }
+        }
+        return dp[nums.size() - 1];
+    }
+};
+int main() {
+    vector<int> a{3, 2, 1, 0, 4};
+    Solution().canJump(a);
+}

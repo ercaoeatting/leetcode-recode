@@ -1,6 +1,10 @@
+#include <algorithm>
+#include <iostream>
 #include <list>
+#include <stack>
 #include <unordered_set>
 #include <string>
+#include <utility>
 #include <vector>
 using namespace std;
 struct TreeNode {
@@ -99,4 +103,137 @@ public:
     }
 };
 
-int main() {}
+// 2502. 设计内存分配器
+
+/**
+ * Your Allocator object will be instantiated and called as such:
+ * Allocator* obj = new Allocator(n);
+ * int param_1 = obj->allocate(size,mID);
+ * int param_2 = obj->freeMemory(mID);
+ */
+class MyAllocator {
+    vector<int> array_;
+    vector<vector<int>> check_;
+    int n_;
+
+public:
+    MyAllocator(int n) : n_(n), array_(n) {}
+
+    int allocate(int size, int mID) {
+        if (size <= 0 || size > n_) return -1;
+        vector<vector<int>> can;
+        if (check_.empty()) { can.push_back({0, n_ - 1}); }
+        else {
+            int begin1 = check_[0][0];
+            int end1 = check_[0][1];
+            if (begin1 > 0) { can.push_back({0, begin1 - 1}); }
+            for (int i = 1; i < check_.size(); i++) {
+                int begin2 = check_[i][0];
+                int end2 = check_[i][1];
+                if (begin2 > end1 + 1) can.push_back({end1 + 1, begin2 - 1});
+                begin1 = begin2;
+                end1 = end2;
+            }
+            if (end1 < n_ - 1) { can.push_back({end1 + 1, n_ - 1}); }
+        }
+        for (auto &block : can) {
+            int start = block[0];
+            int end = block[1];
+            int available_size = end - start + 1;
+            if (available_size >= size) {
+                // 分配内存，并插入到 check_ 的正确位置以保持有序
+                vector<int> new_block = {start, start + size - 1, mID};
+                auto insert_pos = lower_bound(
+                    check_.begin(), check_.end(), new_block,
+                    [](const vector<int> &a, const vector<int> &b) { return a[0] < b[0]; });
+                check_.insert(insert_pos, new_block);
+
+                // 标记内存为 mID
+                fill(array_.begin() + start, array_.begin() + start + size, mID);
+                return start; // 返回分配的内存起始位置
+            }
+        }
+        return -1;
+    }
+    int freeMemory(int mID) {
+        int count = 0;
+        // 遍历 check_，释放所有标记为 mID 的内存块
+        for (auto it = check_.begin(); it != check_.end();) {
+            if ((*it)[2] == mID) {
+                // 标记内存为 0
+                for (int i = (*it)[0]; i <= (*it)[1]; i++) { array_[i] = 0; }
+                it = check_.erase(it); // 从 check_ 中移除该内存块
+                count++;
+            }
+            else { it++; }
+        }
+        return count; // 返回释放的内存块数量
+    }
+};
+
+// 作者：力扣官方题解
+class Allocator {
+public:
+    Allocator(int n) : n(n), memory(n) {}
+
+    int allocate(int size, int mID) {
+        int count = 0;
+        for (int i = 0; i < n; ++i) {
+            if (memory[i]) { count = 0; }
+            else {
+                ++count;
+                if (count == size) {
+                    for (int j = i - count + 1; j <= i; ++j) { memory[j] = mID; }
+                    return i - count + 1;
+                }
+            }
+        }
+        return -1;
+    }
+
+    int freeMemory(int mID) {
+        int count = 0;
+        for (int i = 0; i < n; ++i) {
+            if (memory[i] == mID) {
+                ++count;
+                memory[i] = 0;
+            }
+        }
+        return count;
+    }
+
+private:
+    int n;
+    vector<int> memory;
+};
+
+class BrowserHistory {
+    stack<string> stack1;
+    stack<string> stack2;
+
+public:
+    BrowserHistory(string homepage) { stack1.push(homepage); }
+
+    void visit(string url) {
+        stack1.push(url);
+        while (!stack2.empty()) { stack2.pop(); }
+    };
+
+    string back(int steps) {
+        while (steps--) {
+            if (stack1.size() <= 1) break;
+            stack2.push(stack1.top());
+            stack1.pop();
+        }
+        return stack1.top();
+    }
+
+    string forward(int steps) {
+        while (steps--) {
+            if (stack2.empty()) break;
+            stack1.push(stack2.top());
+            stack2.pop();
+        }
+        return stack1.top();
+    }
+};
