@@ -237,3 +237,39 @@ public:
         return stack1.top();
     }
 };
+
+/**
+ * Your TextEditor object will be instantiated and called as such:
+ * TextEditor* obj = new TextEditor();
+ * obj->addText(text);
+ * int param_2 = obj->deleteText(k);
+ * string param_3 = obj->cursorLeft(k);
+ * string param_4 = obj->cursorRight(k);
+ */
+class TextEditor {
+    vector<char> texts;
+
+public:
+    TextEditor() : texts(1, '|') {}
+
+    void addText(string text) {
+        for (auto it = texts.begin(); it != texts.end();) {
+            if (*it == '|') {
+                texts.insert(it, text.begin(), text.end());
+                break;
+            }
+        }
+        cout << text;
+    }
+
+    int deleteText(int k) {}
+
+    string cursorLeft(int k) {}
+
+    string cursorRight(int k) {}
+};
+
+int main() {
+    string s = "aafasaf";
+    TextEditor().addText(s);
+}
