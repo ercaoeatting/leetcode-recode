@@ -1,7 +1,9 @@
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <list>
 #include <stack>
+#include <unordered_map>
 #include <unordered_set>
 #include <string>
 #include <utility>
@@ -248,25 +250,73 @@ public:
  */
 class TextEditor {
     vector<char> texts;
+    vector<char>::iterator cursor;
 
 public:
-    TextEditor() : texts(1, '|') {}
+    TextEditor() { cursor = texts.end(); }
 
     void addText(string text) {
-        for (auto it = texts.begin(); it != texts.end();) {
-            if (*it == '|') {
-                texts.insert(it, text.begin(), text.end());
-                break;
-            }
-        }
-        cout << text;
+        for (char c : text) { texts.insert(cursor, c); }
     }
 
-    int deleteText(int k) {}
+    int deleteText(int k) {
+        int count = 0;
+        while (k-- && cursor != texts.begin()) {
+            texts.erase(prev(cursor));
+            count++;
+        }
+        return count;
+    }
 
-    string cursorLeft(int k) {}
+    string cursorLeft(int k) {
+        while (cursor != texts.begin() && k--) { cursor = prev(cursor); }
+        auto head = cursor;
+        for (int i = 0; i < 10 && head != texts.begin(); i++) { head = prev(head); }
+        return string(head, cursor);
+    }
 
-    string cursorRight(int k) {}
+    string cursorRight(int k) {
+        while (cursor != texts.end() && k--) { cursor = next(cursor); }
+        auto head = cursor;
+        for (int i = 0; i < 10 && head != texts.begin(); i++) { head = prev(head); }
+        return string(head, cursor);
+    }
+};
+class MyFoodRatings {
+public:
+    unordered_map<string, vector<pair<string, int>>> foodmap;
+    MyFoodRatings(vector<string> &foods, vector<string> &cuisines, vector<int> &ratings) {
+        for (int i = 0; i < cuisines.size(); i++) {
+            foodmap[cuisines[i]].push_back({foods[i], ratings[i]});
+        }
+    }
+
+    void changeRating(string food, int newRating) {
+        for (auto &s : foodmap) {
+            for (int i = 0; i < s.second.size(); i++) {
+                if (s.second[i].first == food) {
+                    s.second[i].second = newRating;
+                    break;
+                }
+            }
+        }
+    }
+
+    string highestRated(string cuisine) {
+        if (foodmap.find(cuisine) == foodmap.end()) return ""; // 如果菜系不存在，返回空字符串
+
+        int maxRating = -1;
+        string res = "";
+
+        for (const auto &pair : foodmap[cuisine]) {
+            if (pair.second > maxRating || (pair.second == maxRating && pair.first < res)) {
+                maxRating = pair.second;
+                res = pair.first;
+            }
+        }
+
+        return res;
+    }
 };
 
 int main() {
