@@ -318,8 +318,84 @@ public:
         return res;
     }
 };
-
+class Solution1422 {
+public:
+    int maxScore(string s) {
+        int score = s[0] == '0' ? 1 : 0;
+        for (int i = 1; i < s.size(); i++) {
+            if (s[i] == '1') score++;
+        }
+        int maxScore = score;
+        for (int i = 1; i < s.size() - 1; i++) {
+            if (s[i] == '0') {
+                score++;
+                maxScore = max(score, maxScore);
+            }
+            if (s[i] == '1') score--;
+        }
+        return score;
+    }
+};
+class Solution852 {
+public:
+    int peakIndexInMountainArray(vector<int> &arr) {
+        int left = 0, right = arr.size() - 2;
+        int ans = -1;
+        while (left < right) {
+            int middle = left + (right - left) / 2;
+            if (arr[middle] > arr[middle + 1]) {
+                right = middle - 1;
+                ans = middle;
+            }
+            else { left = middle + 1; }
+        }
+        return ans;
+    }
+};
+class Solution2586 {
+public:
+    bool yy(string &s) {
+        int count = 0;
+        for (auto yy : {'a', 'e', 'i', 'o', 'u'}) {
+            if (s[0] == yy) { count++; }
+            if (s[s.size() - 1] == yy) { count++; }
+            if (count == 2) return true;
+        }
+        return false;
+    }
+    int vowelStrings(vector<string> &words, int left, int right) {
+        int count = 0;
+        for (int i = left; i <= right; i++) {
+            if (yy(words[i])) count++;
+        }
+        return count;
+    }
+};
+class Solution503 {
+public:
+    vector<int> nextGreaterElements(vector<int> &nums) {
+        stack<int> st;
+        vector<int> res(nums.size(), -1);
+        int n = nums.size();
+        for (int i = 0; i < 2 * n; i++) {
+            if (!st.empty() && nums[st.top()] < nums[i % n]) {
+                res[st.top()] = nums[i % n];
+                st.pop();
+            }
+            st.push(i % n);
+        }
+        return res;
+    }
+};
+class Solution {
+public:
+    string toLowerCase(string s) {
+        string m = s;
+        for (int i = 0; i < m.size(); i++) {
+            if (m[i] >= 'A' && m[i] <= 'Z') m[i] = m[i] - 'a';
+        }
+        return m;
+    }
+};
 int main() {
-    string s = "aafasaf";
-    TextEditor().addText(s);
 }
