@@ -387,6 +387,34 @@ public:
         return res;
     }
 };
+class Solution {
+    bool check(const string &s, int start, int end) {
+        int left = start, right = end;
+        while (left <= right) {
+            if (s[left++] != s[right--]) return false;
+        }
+        return true;
+    }
 
-int main() {
-}
+public:
+    vector<vector<string>> res;
+    vector<string> path;
+    void back(string &s, int start) {
+        if (start >= s.size()) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = start; i < s.size(); i++) {
+            if (check(s, start, i)) {
+                path.push_back(string(s.begin() + start, s.begin() + i + 1));
+                back(s, i + 1);
+                path.pop_back();
+            }
+        }
+    };
+    vector<vector<string>> partition(string s) {
+        back(s, 0);
+        return res;
+    }
+};
+int main() {}
