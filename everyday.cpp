@@ -387,15 +387,6 @@ public:
         return res;
     }
 };
-class Solution {
-public:
-    string toLowerCase(string s) {
-        string m = s;
-        for (int i = 0; i < m.size(); i++) {
-            if (m[i] >= 'A' && m[i] <= 'Z') m[i] = m[i] - 'a';
-        }
-        return m;
-    }
-};
+
 int main() {
 }
