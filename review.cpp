@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <functional>
 #include <list>
 #include <map>
@@ -2118,7 +2119,7 @@ public:
     }
 };
 // 55. 跳跃游戏
-class Solution {
+class Solution55 {
 public:
     bool canJump(vector<int> &nums) {
         int comm = 0;
@@ -2147,7 +2148,42 @@ public:
         return dp[nums.size() - 1];
     }
 };
+// 45 跳跃游戏II
+//链接：https://leetcode.cn/problems/jump-game-ii/solutions/2926993/tu-jie-yi-zhang-tu-miao-dong-tiao-yue-yo-h2d4/
+class Solution45 {
+public:
+    int jump(vector<int> &nums) {
+        int ans = 0;
+        int cur_right = 0;  // 已建造的桥的右端点
+        int next_right = 0; // 下一座桥的右端点的最大值
+        for (int i = 0; i + 1 < nums.size(); i++) {
+            next_right = max(next_right, i + nums[i]);
+            if (i == cur_right) {       // 到达已建造的桥的右端点
+                cur_right = next_right; // 造一座桥
+                ans++;
+            }
+        }
+        return ans;
+    }
+};
+// 1005. K 次取反后最大化的数组和
+class Solution {
+public:
+    int largestSumAfterKNegations(vector<int> &nums, int k) {
+        int sum = 0;
+        sort(nums.begin(), nums.end(), [](int left, int right) { return abs(left) > abs(right); });
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] < 0 && k > 0) {
+                nums[i] = -nums[i];
+                k--;
+            }
+        }
+        if (k % 2 == 1) { nums[nums.size() - 1] = -nums[nums.size() - 1]; }
+        for (auto &a : nums) sum += a;
+        return sum;
+    }
+};
 int main() {
-    vector<int> a{3, 2, 1, 0, 4};
-    Solution().canJump(a);
+    vector<int> a{-4, 4, -3, 3, -4, -1, 8, -7, -7};
+    Solution().largestSumAfterKNegations(a, 2);
 }
