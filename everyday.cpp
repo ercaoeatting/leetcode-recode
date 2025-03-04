@@ -1,7 +1,9 @@
 #include <algorithm>
+#include <climits>
 #include <iostream>
 #include <iterator>
 #include <list>
+#include <set>
 #include <stack>
 #include <unordered_map>
 #include <unordered_set>
@@ -283,6 +285,29 @@ public:
     }
 };
 class MyFoodRatings {
+    class FoodRatings {
+        unordered_map<string, pair<int, string>> food_map; // 食物 -> <评分，烹饪方式>
+        unordered_map<string, set<pair<int, string>>> cuisine_map; // 烹饪方式 -> <食物评分，食物名>
+
+    public:
+        FoodRatings(vector<string> &foods, vector<string> &cuisines, vector<int> &ratings) {
+            for (int i = 0; i < foods.size(); i++) {
+                food_map[foods[i]] = {ratings[i], cuisines[i]};
+                cuisine_map[cuisines[i]].emplace(-ratings[i], foods[i]);
+            }
+        }
+
+        void changeRating(string food, int newRating) {
+            auto &food_info = food_map[food]; // food_info food的评分和烹饪方式
+            cuisine_map[food_info.second].erase({-food_info.first, food});
+            cuisine_map[food_info.second].emplace(-newRating, food);
+            food_map[food].first = newRating;
+        }
+
+        string highestRated(string cuisine) { return cuisine_map[cuisine].begin()->second; }
+    };
+
+    // leetcode.cn/problems/design-a-food-rating-system/solutions/1694044/ha-xi-biao-tao-ping-heng-shu-by-endlessc-hzct/
 public:
     unordered_map<string, vector<pair<string, int>>> foodmap;
     MyFoodRatings(vector<string> &foods, vector<string> &cuisines, vector<int> &ratings) {
@@ -387,15 +412,100 @@ public:
         return res;
     }
 };
-class Solution {
+class toLowerCase {
 public:
-    string toLowerCase(string s) {
+    string toLowerCase1(string s) {
         string m = s;
         for (int i = 0; i < m.size(); i++) {
-            if (m[i] >= 'A' && m[i] <= 'Z') m[i] = m[i] - 'a';
+            if (m[i] >= 'A' && m[i] <= 'Z') m[i] = m[i] - ('A' - 'a');
         }
         return m;
     }
 };
-int main() {
-}
+
+class Solution132 {
+public:
+    int minCut(string s) {
+        int n = s.size();
+        // 预计算回文子串
+        vector<vector<bool>> dp(n, vector<bool>(n, false));
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0; i + len - 1 < n; i++) {
+                int j = i + len - 1;
+                if (s[i] == s[j]) {
+                    if (len <= 2 || dp[i + 1][j - 1]) { dp[i][j] = true; }
+                }
+            }
+        }
+
+        // 计算最小分割次数
+        vector<int> cuts(n, INT_MAX);
+        for (int i = 0; i < n; i++) {
+            if (dp[0][i]) { cuts[i] = 0; }
+            else {
+                if (cuts[i] == INT_MAX) {
+                    for (int j = 0; j < i; j++) {
+                        if (dp[j + 1][i]) cuts[i] = min(cuts[i], cuts[j] + 1);
+                    }
+                }
+            }
+        }
+        return cuts[n - 1];
+    }
+};
+
+class Solution1278 {
+public:
+    int palindromePartition(string s, int k) {
+        int n = s.size();
+        vector<vector<int>> vminchange(n, vector<int>(n, -1));
+        auto minchange = [&](auto &&f, int i, int j) {
+            if (i >= j) return 0;
+            int &res = vminchange[i][j];
+            if (res != -1) { // 之前计算过
+                return res;
+            }
+            return res = f(f, i + 1, j - 1) + (s[i] != s[j]);
+        };
+        vector<vector<int>> f(n, vector<int>(k + 1, -1));
+        auto dfs = [&](auto &&dfs, int r, int k) {
+            int &res = f[r][k];
+            if (k == 1) { return res = minchange(minchange, 0, r); }
+            else {
+                if (res != -1) return res;
+                res = INT_MAX;
+                for (int i = k - 2; i < r; i++) {
+                    res = min(res, dfs(dfs, i, k - 1) + minchange(minchange, i + 1, r));
+                }
+                return res;
+            }
+        };
+        return dfs(dfs, n - 1, k);
+    }
+};
+
+class Solution1745 {
+public:
+    bool checkPartitioning(std::string s) {
+        int n = s.size();
+        // 预处理所有子串是否为回文串
+        std::vector<std::vector<bool>> isPalindrome(n, std::vector<bool>(n, false));
+        for (int j = 0; j < n; ++j) {
+            for (int i = 0; i <= j; ++i) {
+                if (s[i] == s[j] && (j - i <= 2 || isPalindrome[i + 1][j - 1])) {
+                    isPalindrome[i][j] = true;
+                }
+            }
+        }
+
+        // 检查是否可以分割成三个回文子串
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n - 1; ++j) {
+                if (isPalindrome[0][i] && isPalindrome[i + 1][j] && isPalindrome[j + 1][n - 1]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
