@@ -2149,7 +2149,7 @@ public:
     }
 };
 // 45 跳跃游戏II
-//链接：https://leetcode.cn/problems/jump-game-ii/solutions/2926993/tu-jie-yi-zhang-tu-miao-dong-tiao-yue-yo-h2d4/
+// 链接：https://leetcode.cn/problems/jump-game-ii/solutions/2926993/tu-jie-yi-zhang-tu-miao-dong-tiao-yue-yo-h2d4/
 class Solution45 {
 public:
     int jump(vector<int> &nums) {
@@ -2167,7 +2167,7 @@ public:
     }
 };
 // 1005. K 次取反后最大化的数组和
-class Solution {
+class Solution1005 {
 public:
     int largestSumAfterKNegations(vector<int> &nums, int k) {
         int sum = 0;
@@ -2183,7 +2183,39 @@ public:
         return sum;
     }
 };
-int main() {
-    vector<int> a{-4, 4, -3, 3, -4, -1, 8, -7, -7};
-    Solution().largestSumAfterKNegations(a, 2);
-}
+// 加油站
+class Solution134 {
+public:
+    int canCompleteCircuit(vector<int> &gas, vector<int> &cost) {
+        int sum = 0, cursum = 0; // sum 从i开始的剩余油的数量   curSum 总的累加
+        int res = 0;
+        for (int i = 0; i < gas.size(); i++) {
+            sum += gas[i] - cost[i];
+            cursum += gas[i] - cost[i];
+            if (sum < 0) {
+                res = i + 1;
+                sum = 0;
+            }
+        }
+        if (cursum < 0) return -1;
+        return res;
+    }
+};
+// 135 分发糖果
+// 顾此失彼
+class Solution {
+public:
+    int candy(vector<int> &ratings) {
+        int n = ratings.size();
+        vector<int> can(n, 1);
+        for (int i = 1; i < n; i++) {
+            if (ratings[i] > ratings[i - 1]) can[i] = can[i - 1] + 1;
+        }
+        for (int i = n - 1; i > 0; i--) {
+            if (ratings[i - 1] > ratings[i]) { can[i - 1] = max(can[i - 1], can[i] + 1); }
+        }
+        int result = 0;
+        for (int i = 0; i < can.size(); i++) result += can[i];
+        return result;
+    }
+};

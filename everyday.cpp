@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <climits>
-#include <iostream>
 #include <iterator>
 #include <list>
 #include <set>
@@ -52,24 +51,6 @@ public:
         return res;
     }
 };
-class MyHashMap {
-public:
-    MyHashMap() {}
-
-    void put(int key, int value) {}
-
-    int get(int key) {}
-
-    void remove(int key) {}
-};
-
-/**
- * Your MyHashMap object will be instantiated and called as such:
- * MyHashMap* obj = new MyHashMap();
- * obj->put(key,value);
- * int param_2 = obj->get(key);
- * obj->remove(key);
- */
 
 class MyHashSet {
 private:
@@ -412,36 +393,6 @@ public:
         return res;
     }
 };
-class Solution {
-    bool check(const string &s, int start, int end) {
-        int left = start, right = end;
-        while (left <= right) {
-            if (s[left++] != s[right--]) return false;
-        }
-        return true;
-    }
-
-public:
-    vector<vector<string>> res;
-    vector<string> path;
-    void back(string &s, int start) {
-        if (start >= s.size()) {
-            res.push_back(path);
-            return;
-        }
-        for (int i = start; i < s.size(); i++) {
-            if (check(s, start, i)) {
-                path.push_back(string(s.begin() + start, s.begin() + i + 1));
-                back(s, i + 1);
-                path.pop_back();
-            }
-        }
-    };
-    vector<vector<string>> partition(string s) {
-        back(s, 0);
-        return res;
-    }
-};
 
 class Solution132 {
 public:
@@ -527,5 +478,19 @@ public:
             }
         }
         return false;
+    }
+};
+class Solution {
+public:
+    string breakPalindrome(string palindrome) {
+        if (palindrome.size() == 1) return "";
+        for (int i = 0; i < palindrome.size(); i++) {
+            if (palindrome[i] > 'a' && (palindrome.size() % 2 == 0 || i != palindrome.size() / 2)) {
+                palindrome[i] = 'a';
+                return palindrome;
+            }
+        }
+        palindrome[palindrome.size() - 1] = 'b';
+        return palindrome;
     }
 };
