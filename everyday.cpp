@@ -2,6 +2,7 @@
 #include <climits>
 #include <iterator>
 #include <list>
+#include <map>
 #include <set>
 #include <stack>
 #include <unordered_map>
@@ -393,7 +394,10 @@ public:
         return res;
     }
 };
-
+/**
+ * @brief 回文串系列
+ *
+ */
 class Solution132 {
 public:
     int minCut(string s) {
@@ -480,7 +484,7 @@ public:
         return false;
     }
 };
-class Solution {
+class Solution3_5 {
 public:
     string breakPalindrome(string palindrome) {
         if (palindrome.size() == 1) return "";
@@ -492,5 +496,140 @@ public:
         }
         palindrome[palindrome.size() - 1] = 'b';
         return palindrome;
+    }
+};
+/**
+ * @brief 前缀和系列
+ *
+ */
+// lc303
+class NumArray {
+    vector<int> nums_;
+    vector<int> pre_sum;
+
+public:
+    NumArray(vector<int> &nums) : nums_(nums) {
+        pre_sum.resize(nums_.size());
+        pre_sum[0] = nums[0];
+        for (int i = 1; i < nums_.size(); i++) { pre_sum[i] += pre_sum[i - 1] + nums_[i]; }
+    }
+
+    int sumRange(int left, int right) {
+        if (left == 0) return pre_sum[right];
+        return pre_sum[right] - pre_sum[left - 1];
+    }
+};
+
+// 560. 和为 K 的子数组
+class Solution560 {
+public:
+    int subarraySum(vector<int> &nums, int k) {
+        int n = nums.size();
+        vector<int> s(n + 1);
+        for (int i = 0; i < n; i++) { s[i + 1] = s[i] + nums[i]; }
+
+        int ans = 0;
+        unordered_map<int, int> cnt;
+        for (int sj : s) {
+            ans += cnt[sj - k] ? cnt[sj - k] : 0;
+            cnt[sj]++; // 下标小于j的s[j]-k的数目
+        }
+        return ans;
+    }
+    int subarraySum2(vector<int> &nums, int k) {
+        int ans = 0, preSum = 0;
+        unordered_map<int, int> cnt{{0, 1}}; // s[0]=0 单独统计
+        for (int x : nums) {
+            preSum += x;
+            ans += cnt[(preSum - k)] ? cnt[preSum - k] : 0;
+            cnt[preSum]++;
+        }
+        return ans;
+    }
+};
+
+// 作者：灵茶山艾府
+// 链接：https://leetcode.cn/problems/subarray-sum-equals-k/solutions/2781031/qian-zhui-he-ha-xi-biao-cong-liang-ci-bi-4mwr/
+// lc2588 美丽的子数组
+class lc2588 {
+public:
+    long long beautifulSubarrays(vector<int> &nums) {
+        int ans = 0, pre = 0;
+        unordered_map<int, int> cnt{{0, 1}};
+        for (int x : nums) {
+            pre ^= x;
+            ans += cnt[pre] ? cnt[pre] : 0;
+            cnt[pre]++;
+        }
+        return ans;
+    }
+};
+// 128 最长连续序列
+
+class Solution2 {
+public:
+    int count = 0;
+    unordered_map<int, int> umap;
+    void back(vector<int> &nums, int k, int start) {
+        if (start >= nums.size()) { return; }
+        for (int i = start; i < nums.size(); i++) {
+            if (umap[nums[i] - k] == 0 && umap[nums[i] + k] == 0) {
+                count++;
+                umap[nums[i]]++;
+                back(nums, k, i + 1);
+                umap[nums[i]]--;
+            }
+        }
+    }
+    int beautifulSubsets(vector<int> &nums, int k) {
+        back(nums, k, 0);
+        return count;
+    }
+};
+
+class Solution {
+public:
+    int beautifulSubsets(vector<int> &nums, int k) {
+        unordered_map<int, map<int, int>> groups;
+        for (int x : nums) {
+            // 模 k 同余的数分到同一组，记录元素 x 及其出现次数
+            groups[x % k][x]++;
+        }
+
+        int ans = 1;
+        for (auto &[_, cnt] : groups) {
+            // 计算这一组的方案数
+            auto it = cnt.begin();
+            int f0 = 1, f1 = 1 << it->second;
+            for (it++; it != cnt.end(); it++) {
+                auto [x, c] = *it;
+                int new_f = x - prev(it)->first == k ? f1 + f0 * ((1 << c) - 1) : f1 << c;
+                f0 = f1;
+                f1 = new_f;
+            }
+            ans *= f1; // 每组方案数相乘
+        }
+        return ans - 1; // 去掉空集
+    }
+
+    int beautifulSubsets2(vector<int> &nums, int k) {
+        unordered_map<int, int> cnt;
+        for (int x : nums) { cnt[x]++; }
+
+        int ans = 1;
+        for (auto &[x, times] : cnt) {
+            if (cnt.find(x - k) != cnt.end()) { // x 不是等差数列的首项
+                continue;
+            }
+            // 计算这一组的方案数
+            int f0 = 1, f1 = 1 << times;
+            for (int y = x + k; cnt.find(y) != cnt.end(); y += k) {
+                int new_f = f1 + f0 * ((1 << cnt[y]) - 1);
+                f0 = f1;
+                f1 = new_f;
+            }
+            ans *= f1; // 每组方案数相乘
+        }
+        return ans - 1; // 去掉空集
     }
 };
