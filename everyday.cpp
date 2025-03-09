@@ -3,6 +3,7 @@
 #include <iterator>
 #include <list>
 #include <map>
+#include <numeric>
 #include <set>
 #include <stack>
 #include <unordered_map>
@@ -587,7 +588,7 @@ public:
     }
 };
 
-class Solution {
+class Solution2597 {
 public:
     int beautifulSubsets(vector<int> &nums, int k) {
         unordered_map<int, map<int, int>> groups;
@@ -633,3 +634,137 @@ public:
         return ans - 1; // 去掉空集
     }
 };
+
+class Solutionf {
+public:
+    long long maximumBeauty(vector<int> &flowers, long long newFlowers, int target, int full,
+                            int partial) {
+        int n = flowers.size();
+
+        // 如果全部种满，还剩下多少朵花？
+        long long left_flowers = newFlowers - 1LL * target * n; // 先减掉
+        for (int &flower : flowers) {
+            flower = min(flower, target);
+            left_flowers += flower; // 把已有的加回来
+        }
+
+        // 没有种花，所有花园都已种满
+        if (left_flowers == newFlowers) {
+            return 1LL * n * full; // 答案只能是 n*full（注意不能减少花的数量）
+        }
+
+        // 可以全部种满
+        if (left_flowers >= 0) {
+            // 两种策略取最大值：留一个花园种 target-1 朵花，其余种满；或者，全部种满
+            return max(1LL * (target - 1) * partial + 1LL * (n - 1) * full, 1LL * n * full);
+        }
+
+        sort(flowers.begin(), flowers.end()); // 时间复杂度的瓶颈在这，尽量写在后面
+
+        long long ans = 0, pre_sum = 0;
+        int j = 0;
+        // 枚举 i，表示后缀 [i, n-1] 种满（i=0 的情况上面已讨论）
+        for (int i = 1; i <= n; i++) {
+            // 撤销，flowers[i-1] 不变成 target
+            left_flowers += target - flowers[i - 1];
+            if (left_flowers < 0) { // 花不能为负数，需要继续撤销
+                continue;
+            }
+
+            // 满足以下条件说明 [0, j] 都可以种 flowers[j] 朵花
+            while (j < i && 1LL * flowers[j] * j <= pre_sum + left_flowers) {
+                pre_sum += flowers[j];
+                j++;
+            }
+
+            // 计算总美丽值
+            // 在前缀 [0, j-1] 中均匀种花，这样最小值最大
+            long long avg =
+                (left_flowers + pre_sum) / j; // 由于上面特判了，这里 avg 一定小于 target
+            long long total_beauty = avg * partial + 1LL * (n - i) * full;
+            ans = max(ans, total_beauty);
+        }
+
+        return ans;
+    }
+};
+// 2070. 每一个查询的最大美丽值
+class Solution2070 {
+public:
+    //  在线算法，遍历queries，但这里有个技巧，先按照价格sort一下items，后面能二分，从而降低时间复杂度n^2
+    //  -> (n+m)log n
+    vector<int> maximumBeauty(vector<vector<int>> &items, vector<int> &queries) {
+        sort(items.begin(), items.end());
+        // 预处理：计算前缀最大值
+        for (int i = 1; i < items.size(); i++) { items[i][1] = max(items[i][1], items[i - 1][1]); }
+        // 处理每个查询
+        vector<int> res(queries.size(), 0);
+        for (int i = 0; i < queries.size(); i++) {
+            int left = 0, right = items.size() - 1;
+            int maxBeauty = 0;
+            // 二分查找
+            while (left <= right) {
+                int middle = left + (right - left) / 2;
+                if (items[middle][0] <= queries[i]) {
+                    maxBeauty = items[middle][1]; // 更新最大值
+                    left = middle + 1;            // 继续向右查找
+                }
+                else {
+                    right = middle - 1; // 向左查找
+                }
+            }
+            res[i] = maxBeauty;
+        }
+        return res;
+    }
+    // 离线算法 把 queries 排序，通过改变回答询问的顺序，使问题更容易处理。
+    vector<int> maximumBeauty2(vector<vector<int>> &items, vector<int> &queries) {
+        // 对 items 按照价格进行排序
+        sort(items.begin(), items.end(),
+             [](const vector<int> &a, const vector<int> &b) { return a[0] < b[0]; });
+
+        // 创建查询索引数组，并按照查询值排序
+        vector<int> idx(queries.size());
+        iota(idx.begin(), idx.end(), 0); // 填充索引 0, 1, 2, ..., n-1
+        sort(idx.begin(), idx.end(), [&](int i, int j) { return queries[i] < queries[j]; });
+
+        // 处理查询
+        vector<int> ans(queries.size());
+        int max_beauty = 0, j = 0;
+        for (int i : idx) {
+            int q = queries[i];
+            // 增量地遍历满足 price <= q 的物品，更新最大美丽值
+            while (j < items.size() && items[j][0] <= q) {
+                max_beauty = max(max_beauty, items[j][1]);
+                j++;
+            }
+            ans[i] = max_beauty;
+        }
+
+        return ans;
+    }
+    // 链接：https://leetcode.cn/problems/most-beautiful-item-for-each-query/solutions/1100468/jiang-xun-wen-chi-xian-pai-xu-by-endless-o5j0/
+};
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if (!headA || !headB) return nullptr;
+        ListNode *pa = headA, *pb = headB;
+        while (pa != pb) {
+            if (pa->next)
+                pa = pa->next;
+            else { pa = headB; }
+            if (pb->next)
+                pb = pb->next;
+            else { pb = headA; }
+        }
+        return pa;
+    }
+};
+int main() { vector<int> a{1, 3, 1, 1}; }
