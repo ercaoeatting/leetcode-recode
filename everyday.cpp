@@ -271,7 +271,7 @@ public:
 };
 class MyFoodRatings {
     class FoodRatings {
-        unordered_map<string, pair<int, string>> food_map; // 食物 -> <评分，烹饪方式>
+        unordered_map<string, pair<int, string>> food_map;         // 食物 -> <评分，烹饪方式>
         unordered_map<string, set<pair<int, string>>> cuisine_map; // 烹饪方式 -> <食物评分，食物名>
 
     public:
@@ -397,47 +397,6 @@ public:
         return res;
     }
 };
-
-// 132. 分割回文串 II
-class Solution132 {
-    class dp_preLoad {
-    public:
-        int minCut(string s) {
-            int n = s.size();
-            // 预计算回文子串
-            vector<vector<bool>> dp(n, vector<bool>(n, false));
-            for (int len = 1; len <= n; len++) {
-                for (int i = 0; i + len - 1 < n; i++) {
-                    int j = i + len - 1;
-                    if (s[i] == s[j]) {
-                        if (len <= 2 || dp[i + 1][j - 1]) { dp[i][j] = true; }
-                    }
-                }
-            }
-
-            // 计算最小分割次数
-            vector<int> cuts(n, INT_MAX);
-            for (int i = 0; i < n; i++) {
-                if (dp[0][i]) {
-                    cuts[i] = 0; // 如果 s[0..i] 是回文，则不需要分割
-                }
-                else {
-                    for (int j = 0; j < i; j++) {
-                        if (dp[j + 1][i]) { cuts[i] = min(cuts[i], cuts[j] + 1); }
-                    }
-                }
-            }
-
-            return cuts[n - 1];
-        }
-    };
-    bool check(const string &s, int start, int end) {
-        int left = start, right = end;
-        while (left <= right) {
-            if (s[left++] != s[right--]) return false;
-        }
-        return true;
-    }
 
 /**
  * @brief 回文串系列
@@ -795,20 +754,14 @@ struct ListNode {
     ListNode(int x) : val(x), next(NULL) {}
 };
 
+// 2269. 找到一个数字的 K 美丽值
 class Solution {
 public:
-    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        if (!headA || !headB) return nullptr;
-        ListNode *pa = headA, *pb = headB;
-        while (pa != pb) {
-            if (pa->next)
-                pa = pa->next;
-            else { pa = headB; }
-            if (pb->next)
-                pb = pb->next;
-            else { pb = headA; }
+    int divisorSubstrings(int num, int k) {
+        string s = to_string(num);
+        for (int i = 0; i < s.size() - k; i++) {
+            
         }
-        return pa;
-    }
+        }
 };
 int main() { vector<int> a{1, 3, 1, 1}; }
