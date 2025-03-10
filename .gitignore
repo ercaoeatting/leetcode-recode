@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .vscode/
 .cache/
 exe/
@@ -7,3 +8,14 @@ a.cpp
 *.exe
 CMakeLists.txt
 practice.cpp
+=======
+.vscode/
+.cache/
+exe/
+build/
+test.cpp
+a.cpp
+*.exe
+CMakeLists.txt
+.clangd
+>>>>>>> a6d8de3 (暂存本地修改)

@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <climits>
+#include <cstdio>
+#include <iostream>
 #include <iterator>
 #include <list>
 #include <map>
@@ -395,6 +397,48 @@ public:
         return res;
     }
 };
+
+// 132. 分割回文串 II
+class Solution132 {
+    class dp_preLoad {
+    public:
+        int minCut(string s) {
+            int n = s.size();
+            // 预计算回文子串
+            vector<vector<bool>> dp(n, vector<bool>(n, false));
+            for (int len = 1; len <= n; len++) {
+                for (int i = 0; i + len - 1 < n; i++) {
+                    int j = i + len - 1;
+                    if (s[i] == s[j]) {
+                        if (len <= 2 || dp[i + 1][j - 1]) { dp[i][j] = true; }
+                    }
+                }
+            }
+
+            // 计算最小分割次数
+            vector<int> cuts(n, INT_MAX);
+            for (int i = 0; i < n; i++) {
+                if (dp[0][i]) {
+                    cuts[i] = 0; // 如果 s[0..i] 是回文，则不需要分割
+                }
+                else {
+                    for (int j = 0; j < i; j++) {
+                        if (dp[j + 1][i]) { cuts[i] = min(cuts[i], cuts[j] + 1); }
+                    }
+                }
+            }
+
+            return cuts[n - 1];
+        }
+    };
+    bool check(const string &s, int start, int end) {
+        int left = start, right = end;
+        while (left <= right) {
+            if (s[left++] != s[right--]) return false;
+        }
+        return true;
+    }
+
 /**
  * @brief 回文串系列
  *
