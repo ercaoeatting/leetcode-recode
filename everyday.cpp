@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <climits>
+#include <cmath>
 #include <cstdio>
 #include <iostream>
 #include <iterator>
@@ -755,13 +756,20 @@ struct ListNode {
 };
 
 // 2269. 找到一个数字的 K 美丽值
-class Solution {
+class Solution2269 {
 public:
     int divisorSubstrings(int num, int k) {
         string s = to_string(num);
-        for (int i = 0; i < s.size() - k; i++) {
-            d
+        int count = 0;
+        for (int i = 0; i <= s.size() - k; i++) {
+            int subint = stoi(s.substr(i, k));
+            if (subint != 0 && num % subint == 0) count++;
         }
-        }
+        return count;
+    }
 };
-int main() { vector<int> a{1, 3, 1, 1}; }
+
+
+int main() {
+    vector<int> a{100, 4, 200, 1, 3, 2};
+}
