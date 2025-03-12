@@ -272,7 +272,7 @@ public:
 };
 class MyFoodRatings {
     class FoodRatings {
-        unordered_map<string, pair<int, string>> food_map;         // 食物 -> <评分，烹饪方式>
+        unordered_map<string, pair<int, string>> food_map; // 食物 -> <评分，烹饪方式>
         unordered_map<string, set<pair<int, string>>> cuisine_map; // 烹饪方式 -> <食物评分，食物名>
 
     public:
@@ -769,7 +769,61 @@ public:
     }
 };
 
+class Solution2012 {
+public:
+    int sumOfBeauties(vector<int> &nums) {
+        int n = nums.size();
+        vector<int> sufMin(n, 0);
+        int preMax = nums[0];
+        sufMin[n - 1] = nums[n - 1];
+        for (int i = n - 2; i > 0; i--) { sufMin[i] = min(sufMin[i + 1], nums[i]); }
+        int ans = 0;
+        for (int i = 1; i < n - 1; i++) {
+            preMax = max(preMax, nums[i - 1]);
+            if (nums[i] > preMax && nums[i] < sufMin[i + 1]) { ans += 2; }
+            else if (nums[i] > nums[i - 1] && nums[i] < nums[i + 1]) { ans += 1; }
+        }
+        return ans;
+    }
+};
 
-int main() {
-    vector<int> a{100, 4, 200, 1, 3, 2};
-}
+// 860. 柠檬水找零
+class Solution860 {
+public:
+    bool lemonadeChange(vector<int> &bills) {
+        int store[2] = {0, 0}; // 0 5d 1 10d 2 20d
+        for (int x : bills) {
+            if (x == 5) { store[0]++; }
+            else if (x == 10) {
+                store[1]++;
+                if (store[0] > 0) { store[0]--; }
+                else { return false; }
+            }
+            else {
+                if (store[1] > 0 && store[0] > 0) {
+                    store[1]--;
+                    store[0]--;
+                }
+                else if (store[0] > 2) { store[0] -= 3; }
+                else { return false; }
+            }
+        }
+        return true;
+    }
+};
+// 406. 根据身高重建队列
+class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>> &people) {
+        sort(people.begin(), people.end(), [](vector<int> &a, vector<int> &b) {
+            if (a[0] == b[0]) return a[1] < b[1];
+            return a[0] > b[0];
+        });
+        vector<vector<int>> que(people.size());
+        for (int i = 0; i < people.size(); i++) {
+            que.insert(que.begin() + people[i][1], people[i]);
+        }
+        return que;
+    }
+};
+int main() {}
