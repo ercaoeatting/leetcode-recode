@@ -769,7 +769,12 @@ public:
     }
 };
 
-
+class Solution {
+public:
+    int countOfSubstrings(string word, int k) {
+        
+    }
+};
 int main() {
     vector<int> a{100, 4, 200, 1, 3, 2};
 }
