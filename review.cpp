@@ -1275,10 +1275,10 @@ public:
     }
     // 这段好点
     TreeNode *mergeTrees2(TreeNode *t1, TreeNode *t2) {
-        if (t1 == NULL) return t2;                     // 如果t1为空，合并之后就应该是t2
-        if (t2 == NULL) return t1;                     // 如果t2为空，合并之后就应该是t1
-        t1->val += t2->val;                            // 中
-        t1->left = mergeTrees2(t1->left, t2->left);    // 左
+        if (t1 == NULL) return t2;                  // 如果t1为空，合并之后就应该是t2
+        if (t2 == NULL) return t1;                  // 如果t2为空，合并之后就应该是t1
+        t1->val += t2->val;                         // 中
+        t1->left = mergeTrees2(t1->left, t2->left); // 左
         t1->right = mergeTrees2(t1->right, t2->right); // 右
         return t1;
     }
@@ -2203,7 +2203,7 @@ public:
 };
 // 135 分发糖果
 // 顾此失彼
-class Solution {
+class Solution135 {
 public:
     int candy(vector<int> &ratings) {
         int n = ratings.size();
@@ -2217,5 +2217,60 @@ public:
         int result = 0;
         for (int i = 0; i < can.size(); i++) result += can[i];
         return result;
+    }
+};
+
+// 860. 柠檬水找零
+class Solution860 {
+public:
+    bool lemonadeChange(vector<int> &bills) {
+        int store[2] = {0, 0}; // 0 5d 1 10d 2 20d
+        for (int x : bills) {
+            if (x == 5) { store[0]++; }
+            else if (x == 10) {
+                store[1]++;
+                if (store[0] > 0) { store[0]--; }
+                else { return false; }
+            }
+            else {
+                if (store[1] > 0 && store[0] > 0) {
+                    store[1]--;
+                    store[0]--;
+                }
+                else if (store[0] > 2) { store[0] -= 3; }
+                else { return false; }
+            }
+        }
+        return true;
+    }
+};
+// 406. 根据身高重建队列
+class Solution406 {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>> &people) {
+        sort(people.begin(), people.end(), [](vector<int> &a, vector<int> &b) {
+            if (a[0] == b[0]) return a[1] < b[1];
+            return a[0] > b[0];
+        });
+        vector<vector<int>> que(people.size());
+        for (int i = 0; i < people.size(); i++) {
+            que.insert(que.begin() + people[i][1], people[i]);
+        }
+        return que;
+    }
+};
+// 452. 用最少数量的箭引爆气球
+class Solution452 {
+public:
+    int findMinArrowShots(vector<vector<int>> &points) {
+        if (points.empty()) return 0;
+        sort(points.begin(), points.end(),
+             [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
+        int ans = 1;
+        for (int i = 1; i < points.size(); i++) {
+            if (points[i][0] > points[i - 1][1]) { ans++; }
+            else { points[i][1] = min(points[i][1], points[i - 1][1]); }
+        }
+        return ans;
     }
 };

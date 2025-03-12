@@ -2,6 +2,7 @@
 #include <climits>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <iterator>
 #include <list>
@@ -787,43 +788,29 @@ public:
     }
 };
 
-// 860. 柠檬水找零
-class Solution860 {
-public:
-    bool lemonadeChange(vector<int> &bills) {
-        int store[2] = {0, 0}; // 0 5d 1 10d 2 20d
-        for (int x : bills) {
-            if (x == 5) { store[0]++; }
-            else if (x == 10) {
-                store[1]++;
-                if (store[0] > 0) { store[0]--; }
-                else { return false; }
-            }
-            else {
-                if (store[1] > 0 && store[0] > 0) {
-                    store[1]--;
-                    store[0]--;
-                }
-                else if (store[0] > 2) { store[0] -= 3; }
-                else { return false; }
-            }
-        }
-        return true;
-    }
-};
-// 406. 根据身高重建队列
+// 3305. 元音辅音字符串计数 I
 class Solution {
+    bool check(char &c) { return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'; }
+
 public:
-    vector<vector<int>> reconstructQueue(vector<vector<int>> &people) {
-        sort(people.begin(), people.end(), [](vector<int> &a, vector<int> &b) {
-            if (a[0] == b[0]) return a[1] < b[1];
-            return a[0] > b[0];
-        });
-        vector<vector<int>> que(people.size());
-        for (int i = 0; i < people.size(); i++) {
-            que.insert(que.begin() + people[i][1], people[i]);
+    long long f(string word, int k) {
+        vector<long long> cut('u' - 'a' + 1, 0);
+        long long i = 0;
+        int k_count = 0;
+        long long ans = 0;
+        for (char c : word) {
+            if (check(c)) { cut[c - 'a']++; }
+            else { k_count++; }
+            while (cut[0] > 0 && cut['e' - 'a'] > 0 && cut['i' - 'a'] > 0 && cut['o' - 'a'] > 0 &&
+                   cut['u' - 'a'] > 0 && k_count >= k) {
+                if (check(word[i])) { cut[word[i] - 'a']--; }
+                else { k_count--; }
+                i++;
+            }
+            ans += i;
         }
-        return que;
+        return ans;
     }
+    long long countOfSubstrings(string word, int k) { return f(word, k) - f(word, k + 1); }
 };
-int main() {}
+int main() { system("pause"); }
