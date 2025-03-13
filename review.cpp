@@ -2274,3 +2274,89 @@ public:
         return ans;
     }
 };
+
+// 435. 无重叠区间
+class Solution435 {
+public:
+    int eraseOverlapIntervals(vector<vector<int>> &intervals) {
+        if (intervals.empty()) return 0;
+        int ans = 0;
+        sort(intervals.begin(), intervals.end(),
+             [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
+        for (int i = 1; i < intervals.size(); i++) {
+            if (intervals[i][0] < intervals[i - 1][1]) {
+                ans++;
+                intervals[i][1] = min(intervals[i][1], intervals[i - 1][1]); // 模拟撤销的动作
+            }
+        }
+        return ans;
+    }
+};
+
+// 763.划分字母区间
+class Solution763 {
+public:
+    vector<int> partitionLabels(string s) {
+        int i = 0, j = 0;
+        vector<int> res;
+        unordered_map<char, int> umap;
+        for (int i = 0; i < s.size(); i++) {
+            if (umap.find(s[i]) != umap.end()) continue;
+            umap[s[i]] = s.find_last_of(s[i]);
+        }
+        j = umap[s[i]]; // 右边界
+        int count = 0;
+        while (j < s.size()) {
+            while (i < j) {
+                i++;
+                if (umap[s[i]] > j) j = umap[s[i]];
+            }
+            res.push_back(j - count + 1);
+            count = ++i;
+            if (i >= s.size()) break;
+            j = umap[s[i]];
+        }
+        return res;
+    }
+    // 随想录写的  比我自己写的清晰很多
+    class Solution {
+    public:
+        vector<int> partitionLabels(string s) {
+            vector<int> result;
+            // 记录每个字符最后一次出现的位置
+            unordered_map<char, int> lastOccurrence;
+            for (int i = 0; i < s.size(); i++) { lastOccurrence[s[i]] = i; }
+            int start = 0; // 当前子串的起始位置
+            int end = 0;   // 当前子串的结束位置
+            for (int i = 0; i < s.size(); i++) {
+                // 更新当前子串的结束位置
+                end = max(end, lastOccurrence[s[i]]);
+                // 如果当前位置等于结束位置，说明当前子串划分完成
+                if (i == end) {
+                    result.push_back(end - start + 1); // 记录子串长度
+                    start = i + 1;                     // 开始下一个子串
+                }
+            }
+            return result;
+        }
+    };
+};
+
+// 56. 合并区间
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>> &intervals) {
+        if (intervals.size() <= 1) return intervals;
+        sort(intervals.begin(), intervals.end(),
+             [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
+        vector<vector<int>> res{intervals[0]};
+        for (int i = 1; i < intervals.size(); i++) {
+            if (intervals[i][0] <= res.back()[1]) {
+                res.back()[1] = max(res.back()[1], intervals[i][1]);
+            }
+            else { res.push_back(intervals[i]); }
+        }
+        return res;
+    }
+};
+int main() { string s = "ababcbacadefegdehijhklij"; }
