@@ -5,11 +5,13 @@
 #include <cstdint>
 #include <cstdlib>
 #include <functional>
+#include <iostream>
 #include <list>
 #include <map>
 #include <queue>
 #include <stack>
 #include <string>
+#include <cstring>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -2343,7 +2345,7 @@ public:
 };
 
 // 56. 合并区间
-class Solution {
+class Solution56 {
 public:
     vector<vector<int>> merge(vector<vector<int>> &intervals) {
         if (intervals.size() <= 1) return intervals;
@@ -2359,4 +2361,106 @@ public:
         return res;
     }
 };
-int main() { string s = "ababcbacadefegdehijhklij"; }
+// 738. 单调递增的数字
+class Solution738 {
+public:
+    int monotoneIncreasingDigits(int n) {
+        string s = to_string(n);
+        int flag = s.size();
+        for (int i = s.size() - 2; i >= 0; i--) {
+            if (s[i] > s[i + 1]) {
+                flag = i + 1;
+                s[i]--;
+            }
+        }
+        for (int i = flag; i < s.size(); i++) { s[i] = '9'; }
+        return stoi(s);
+    }
+};
+// 968. 监控二叉树
+class Solution968 {
+    int ans = 0;
+
+public:
+    // re 1 监控装这里
+    // re 2 本节点有覆盖
+    // re 3 本节点无覆盖
+    int travel(TreeNode *node) {
+        if (!node) return 2;
+        int left = travel(node->left);
+        int right = travel(node->right);
+        // 情况1 子节点均被覆盖
+        if (left == 2 && right == 2) return 3;
+        // 情况3  至多只有一个子节点被覆盖
+        if (left == 3 || right == 3) {
+            ans++;
+            return 1;
+        }
+        // 情况2 某个子节点装了监控
+        if (left == 1 || right == 1) return 2;
+        return -1;
+    }
+    int minCameraCover(TreeNode *root) {
+        int s = travel(root);
+        if (s == 3) ans++;
+        return ans;
+    }
+};
+// 2272. 最大波动的子字符串
+class Solution2272 {
+public:
+    int largestVariance(string s) {
+        int ans = 0;
+        unordered_map<char, int> umap;
+        for (char c : s) { umap[c]++; }
+        for (char a = 'a'; a <= 'z'; a++) {
+            for (char b = 'a'; b <= 'z'; b++) {
+                if (b == a) { continue; }
+                if (umap[a] == 0 || umap[b] == 0) continue;
+                int f0 = 0, f1 = INT_MIN;
+                for (char ch : s) {
+                    if (ch == a) {
+                        f0 = max(f0, 0) + 1;
+                        f1++;
+                    }
+                    else if (ch == b) {
+                        f1 = f0 = max(f0, 0) - 1;
+                    } // else f0 = max(f0, 0); 可以留到 ch 等于 a 或者 b 的时候计算，f1 不变
+                    ans = max(ans, f1);
+                }
+            }
+        }
+        return ans;
+    }
+    class Solution {
+    public:
+        int largestVariance(string s) {
+            int ans = 0;
+            int f0[26][26]{}, f1[26][26];
+            memset(f1, -0x3f, sizeof(f1)); // 初始化成一个很小的负数
+
+            for (char ch : s) {
+                ch -= 'a';
+                // 遍历到 ch 时，只需计算 a=ch 或者 b=ch 的状态，其他状态和 ch 无关，f 值不变
+                for (int i = 0; i < 26; i++) {
+                    if (i == ch) { continue; }
+                    // 假设出现次数最多的字母 a=ch，更新所有 b=i 的状态
+                    f0[ch][i] = max(f0[ch][i], 0) + 1;
+                    f1[ch][i]++;
+                    // 假设出现次数最少的字母 b=ch，更新所有 a=i 的状态
+                    f1[i][ch] = f0[i][ch] = max(f0[i][ch], 0) - 1;
+                    ans = max(ans,
+                              max(f1[ch][i], f1[i][ch])); // 或者 max({ans, f1[ch][i], f1[i][ch]})
+                }
+            }
+            return ans;
+        }
+    };
+};
+enum duokong
+{
+    KAIDUO = 1,
+    KAIKONG = 2
+};
+void init(duokong dk) { std::cout << "VER kaikong LOGIC!" << dk << std::endl; }
+int main() { init(KAIDUO); }

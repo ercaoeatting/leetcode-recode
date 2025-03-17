@@ -789,7 +789,7 @@ public:
 };
 
 // 3305. 元音辅音字符串计数 I
-class Solution {
+class Solution3305 {
     bool check(char &c) { return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'; }
 
 public:
@@ -813,4 +813,15 @@ public:
     }
     long long countOfSubstrings(string word, int k) { return f(word, k) - f(word, k + 1); }
 };
+
+// 3340. 检查平衡字符串
+class Solution3340 {
+public:
+    bool isBalanced(string num) {
+        int s = 0;
+        for (int i = 0; i < num.size(); i++) { s += (i % 2 == 1) ? num[i] - '0' : '0' - num[i]; }
+        return s == 0;
+    }
+};
+
 int main() { system("pause"); }
