@@ -1277,10 +1277,10 @@ public:
     }
     // 这段好点
     TreeNode *mergeTrees2(TreeNode *t1, TreeNode *t2) {
-        if (t1 == NULL) return t2;                  // 如果t1为空，合并之后就应该是t2
-        if (t2 == NULL) return t1;                  // 如果t2为空，合并之后就应该是t1
-        t1->val += t2->val;                         // 中
-        t1->left = mergeTrees2(t1->left, t2->left); // 左
+        if (t1 == NULL) return t2;                     // 如果t1为空，合并之后就应该是t2
+        if (t2 == NULL) return t1;                     // 如果t2为空，合并之后就应该是t1
+        t1->val += t2->val;                            // 中
+        t1->left = mergeTrees2(t1->left, t2->left);    // 左
         t1->right = mergeTrees2(t1->right, t2->right); // 右
         return t1;
     }
@@ -2406,61 +2406,81 @@ public:
         return ans;
     }
 };
-// 2272. 最大波动的子字符串
-class Solution2272 {
-public:
-    int largestVariance(string s) {
-        int ans = 0;
-        unordered_map<char, int> umap;
-        for (char c : s) { umap[c]++; }
-        for (char a = 'a'; a <= 'z'; a++) {
-            for (char b = 'a'; b <= 'z'; b++) {
-                if (b == a) { continue; }
-                if (umap[a] == 0 || umap[b] == 0) continue;
-                int f0 = 0, f1 = INT_MIN;
-                for (char ch : s) {
-                    if (ch == a) {
-                        f0 = max(f0, 0) + 1;
-                        f1++;
-                    }
-                    else if (ch == b) {
-                        f1 = f0 = max(f0, 0) - 1;
-                    } // else f0 = max(f0, 0); 可以留到 ch 等于 a 或者 b 的时候计算，f1 不变
-                    ans = max(ans, f1);
-                }
-            }
-        }
-        return ans;
-    }
-    class Solution {
-    public:
-        int largestVariance(string s) {
-            int ans = 0;
-            int f0[26][26]{}, f1[26][26];
-            memset(f1, -0x3f, sizeof(f1)); // 初始化成一个很小的负数
 
-            for (char ch : s) {
-                ch -= 'a';
-                // 遍历到 ch 时，只需计算 a=ch 或者 b=ch 的状态，其他状态和 ch 无关，f 值不变
-                for (int i = 0; i < 26; i++) {
-                    if (i == ch) { continue; }
-                    // 假设出现次数最多的字母 a=ch，更新所有 b=i 的状态
-                    f0[ch][i] = max(f0[ch][i], 0) + 1;
-                    f1[ch][i]++;
-                    // 假设出现次数最少的字母 b=ch，更新所有 a=i 的状态
-                    f1[i][ch] = f0[i][ch] = max(f0[i][ch], 0) - 1;
-                    ans = max(ans,
-                              max(f1[ch][i], f1[i][ch])); // 或者 max({ans, f1[ch][i], f1[i][ch]})
-                }
-            }
-            return ans;
+/**
+ * @brief  DP
+ *
+ */
+
+// 746. 使用最小花费爬楼梯
+class Solution746 {
+public:
+    int minCostClimbingStairs(vector<int> &cost) {
+        int n = cost.size();
+        if (n <= 1) return 0;
+        vector<int> dp(n + 2, 0);
+        for (int i = 2; i <= n; i++) {
+            dp[i + 1] = min(dp[i] + cost[i - 1], dp[i - 1] + cost[i - 2]);
         }
-    };
+        return dp[n + 1];
+    }
 };
-enum duokong
-{
-    KAIDUO = 1,
-    KAIKONG = 2
+// 62. 不同路径
+class Solution62 {
+public:
+    int uniquePaths(int m, int n) {
+        // 最简单的方法 一共走m+n-2步，选出m-1步走下
+        vector<vector<int>> dp(m, vector<int>(n, 0));
+        for (int i = 0; i < m; i++) { dp[i][0] = 1; }
+        for (int i = 0; i < n; i++) { dp[0][i] = 1; }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) { dp[i][j] = dp[i - 1][j] + dp[i][j - 1]; }
+        }
+        return dp[m - 1][n - 1];
+    }
 };
-void init(duokong dk) { std::cout << "VER kaikong LOGIC!" << dk << std::endl; }
-int main() { init(KAIDUO); }
+// 63. 不同路径 II
+class Solution63 {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>> &obstacleGrid) {
+        int m = obstacleGrid.size(), n = obstacleGrid[0].size();
+        if (obstacleGrid[m - 1][n - 1] == 1 ||
+            obstacleGrid[0][0] == 1) // 如果在起点或终点出现了障碍，直接返回0
+            return 0;
+        vector<vector<int>> dp(m, vector<int>(n, 0));
+        for (int i = 0; i < m; i++) {
+            if (obstacleGrid[i][0] == 0)
+                dp[i][0] = 1;
+            else
+                break;
+        }
+        for (int i = 0; i < n; i++) {
+            if (obstacleGrid[0][i] == 0)
+                dp[0][i] = 1;
+            else
+                break;
+        }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] == 0) dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+};
+// 343. 整数拆分
+class Solution {
+public:
+    int integerBreak(int n) {
+        vector<int> dp(n + 1, 0);
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            for (int k = 1; k < i && k <= i - k; k++) {
+                dp[i] =
+                    max({dp[i], dp[i - k] * dp[k], (i - k) * k, dp[i - k] * k, (i - k) * dp[k]});
+            }
+        }
+        return dp[n];
+    }
+};
+int main() { cout << Solution().integerBreak(2); }

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <iterator>
 #include <list>
@@ -273,7 +274,7 @@ public:
 };
 class MyFoodRatings {
     class FoodRatings {
-        unordered_map<string, pair<int, string>> food_map; // 食物 -> <评分，烹饪方式>
+        unordered_map<string, pair<int, string>> food_map;         // 食物 -> <评分，烹饪方式>
         unordered_map<string, set<pair<int, string>>> cuisine_map; // 烹饪方式 -> <食物评分，食物名>
 
     public:
@@ -822,6 +823,56 @@ public:
         for (int i = 0; i < num.size(); i++) { s += (i % 2 == 1) ? num[i] - '0' : '0' - num[i]; }
         return s == 0;
     }
+};
+// 2272. 最大波动的子字符串
+class Solution2272 {
+public:
+    int largestVariance(string s) {
+        int ans = 0;
+        unordered_map<char, int> umap;
+        for (char c : s) { umap[c]++; }
+        for (char a = 'a'; a <= 'z'; a++) {
+            for (char b = 'a'; b <= 'z'; b++) {
+                if (b == a) { continue; }
+                if (umap[a] == 0 || umap[b] == 0) continue;
+                int f0 = 0, f1 = INT_MIN;
+                for (char ch : s) {
+                    if (ch == a) {
+                        f0 = max(f0, 0) + 1;
+                        f1++;
+                    }
+                    else if (ch == b) {
+                        f1 = f0 = max(f0, 0) - 1;
+                    } // else f0 = max(f0, 0); 可以留到 ch 等于 a 或者 b 的时候计算，f1 不变
+                    ans = max(ans, f1);
+                }
+            }
+        }
+        return ans;
+    }
+    class Solution {
+    public:
+        int largestVariance(string s) {
+            int ans = 0;
+            int f0[26][26]{}, f1[26][26];
+            memset(f1, -0x3f, sizeof(f1)); // 初始化成一个很小的负数
+            for (char ch : s) {
+                ch -= 'a';
+                // 遍历到 ch 时，只需计算 a=ch 或者 b=ch 的状态，其他状态和 ch 无关，f 值不变
+                for (int i = 0; i < 26; i++) {
+                    if (i == ch) { continue; }
+                    // 假设出现次数最多的字母 a=ch，更新所有 b=i 的状态
+                    f0[ch][i] = max(f0[ch][i], 0) + 1;
+                    f1[ch][i]++;
+                    // 假设出现次数最少的字母 b=ch，更新所有 a=i 的状态
+                    f1[i][ch] = f0[i][ch] = max(f0[i][ch], 0) - 1;
+                    ans = max(ans,
+                              max(f1[ch][i], f1[i][ch])); // 或者 max({ans, f1[ch][i], f1[i][ch]})
+                }
+            }
+            return ans;
+        }
+    };
 };
 
 int main() { system("pause"); }
