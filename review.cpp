@@ -3092,7 +3092,7 @@ public:
     }
 };
 
-class Solution {
+class Solutiongp5 {
 public:
     int maxProfit(vector<int> &prices, int fee) {
         int f0 = -prices[0], f1 = 0;
@@ -3104,7 +3104,93 @@ public:
         return max(0, f1);
     }
 };
+/**
+ * @brief 子序列问题系列
+ *
+ */
+class Solution300 {
+public:
+    int lengthOfLIS(vector<int> &nums) {
+        int n = nums.size();
+        vector<int> dp(n, 1);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        return ranges::max(dp);
+    }
+};
+class Solution674 {
+public:
+    int findLengthOfLCIS(vector<int> &nums) {
+        int n = nums.size();
+        vector<int> dp(n, 1);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[i - 1]) {
+                    dp[i] = dp[i - 1] + 1;
+                }
+            }
+        }
+        return ranges::max(dp);
+    }
+};
+
+class Solution718 {
+public:
+    int findLength1(vector<int> &nums1, vector<int> &nums2) {
+        int m = nums1.size(), n = nums2.size(), res = 0;
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (nums1[i - 1] == nums2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                    res = max(res, dp[i][j]);
+                }
+            }
+        }
+        return res;
+    }
+
+    int maxWindow(vector<int> &nums1, vector<int> &nums2, int start1,
+                  int start2, int len) {
+        int max_len = 0, current = 0;
+        for (int k = 0; k < len; k++) {
+            if (nums1[start1 + k] == nums2[start2 + k]) {
+                current++;
+                max_len = max(max_len, current);
+            } else {
+                current = 0;
+            }
+        }
+        return max_len;
+    }
+    int findLength(vector<int> &nums1, vector<int> &nums2) {
+        int m = nums1.size(), n = nums2.size();
+        int res = 0;
+
+        // 滑动nums2对齐nums1的每个位置
+        for (int i = 0; i < m; i++) {
+            int len = min(m - i, n);
+            int max_len = maxWindow(nums1, nums2, i, 0, len);
+            res = max(res, max_len);
+        }
+
+        // 滑动nums1对齐nums2的每个位置
+        for (int j = 0; j < n; j++) {
+            int len = min(n - j, m);
+            int max_len = maxWindow(nums1, nums2, 0, j, len);
+            res = max(res, max_len);
+        }
+
+        return res;
+    }
+};
+
 int main() {
-    vector<int> s{1, 3, 2, 8, 4, 9};
-    Solution().maxProfit(s, 2);
+    vector<int> s{10, 9, 2, 5, 3, 7, 101, 18};
+    // Solution().lengthOfLIS(s);
 }

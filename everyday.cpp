@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <climits>
 #include <cmath>
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -1216,4 +1217,47 @@ public:
     };
 };
 
-int main() { vector<int> s{2, 3, 4, 9, 8}; }
+class Solution1281 {
+public:
+    int subtractProductAndSum(int n) {
+        int multiply = 1, add = 0;
+        while (n) {
+            int loc = n % 10;
+            multiply *= loc;
+            add += loc;
+            n /= 10;
+        }
+        return multiply - add;
+    }
+};
+
+class Solution {
+public:
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+        ListNode *node = new ListNode(0);
+        ListNode *res = node;
+        int tmp = 0;
+        while (l1 || l2) {
+            if (l1) {
+                node->val += l1->val;
+                l1 = l1->next;
+            }
+            if (l2) {
+                node->val += l2->val;
+                l2 = l2->next;
+            }
+            if (node->val > 9) {
+                node->val -= 10;
+                tmp = 1;
+            } else {
+                tmp = 0;
+            }
+            if (l1 || l2 || tmp) {
+                node->next = new ListNode(tmp);
+                node = node->next;
+            }
+        }
+        node->next = nullptr;
+        return res;
+    }
+};
