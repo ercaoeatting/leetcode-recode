@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <climits>
 #include <iostream>
 #include <stack>
 #include <string>
@@ -28,7 +29,7 @@ public:
                 int max1 = max(a[i], b[j]);            // 第一组的最大值
                 int min2 = min(a[i + 1], b[j + 1]);    // 第二组的最小值
                 return (m + n) % 2 ? max1 : (max1 + min2) / 2.0;
-            }    //////
+            } //////
             i++; // 继续枚举
             j--;
         }
@@ -56,11 +57,8 @@ public:
         ranges::sort(resp);
         int ans = 0, count = 1;
         for (int i = 1; i < resp.size(); i++) {
-            if (resp[i] == resp[i - 1] + 1) {
-                ans = max(++count, ans);
-            } else {
-                count = 1;
-            }
+            if (resp[i] == resp[i - 1] + 1) { ans = max(++count, ans); }
+            else { count = 1; }
         }
         return ans;
     }
