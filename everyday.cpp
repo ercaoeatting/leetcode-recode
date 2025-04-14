@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <list>
@@ -13,6 +14,7 @@
 #include <set>
 #include <stack>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -1231,33 +1233,162 @@ public:
     }
 };
 
+// 数位DP
+// 902. 最大为 N 的数字组合
+class Solution902 {
+public:
+    int atMostNGivenDigitSet(vector<string> &digits, int n) {
+        string n_s = to_string(n);
+        int m = n_s.size();
+        vector<int> dp(m, -1); // 记忆化缓存
+        function<int(int, bool, bool)> dfs = [&](int i, bool islimit,
+                                                 bool isnum) -> int {
+            if (i == m) return isnum; // 填过数字才算一个有效数字
+            if (!islimit && isnum && dp[i] != -1) return dp[i]; // 记忆化
+
+            int res = 0;
+            if (!isnum) // 选择跳过当前位（不填数字）
+                res += dfs(i + 1, false, false);
+            char up = islimit ? n_s[i] : '9'; // 当前位的上限
+            for (const string &d : digits) {
+                if (d[0] > up) break; // 超过上限，直接停止
+                res += dfs(i + 1, islimit && (d[0] == up), true);
+            }
+            if (!islimit && isnum) dp[i] = res; // 记忆化
+            return res;
+        };
+        return dfs(0, true, false);
+    }
+};
+class Solution2999 {
+public:
+    long long numberOfPowerfulInt(long long start, long long finish, int limit,
+                                  string s) {
+        string s_finish = to_string(finish);
+        string s_start = to_string(start);
+        s_start = string(s_finish.size() - s_start.size(), '0') + s_start;
+        int n = s_finish.size();
+        int diff = n - s.size();
+        vector<long long> memo(n, -1);
+        function<long long(int, bool, bool)> f = [&](int i, bool low,
+                                                     bool high) -> long long {
+            if (i == n) return 1;
+            if (!low && !high && memo[i] != -1) return memo[i];
+            long long res = 0;
+            int lo = low ? s_start[i] - '0' : 0;
+            int hi = high ? s_finish[i] - '0' : 9;
+            if (i < diff) {
+                for (int d = lo; d <= min(hi, limit); d++) {
+                    res += f(i + 1, low && d == lo, high && d == hi);
+                }
+            } else {
+                int d = s[i - diff] - '0';
+                if (d >= lo && d <= hi) {
+                    res += f(i + 1, low && d == lo, high && d == hi);
+                }
+            }
+            if (!low && !high) {
+                memo[i] = res; // 记忆化 (i,false,false)
+            }
+            return res;
+        };
+        return f(0, true, true);
+    }
+};
+class Solution2843 {
+public:
+    int countSymmetricIntegers(int low, int high) {
+        string h = to_string(high);
+        string l = to_string(low);
+        int n = h.size(), m = n / 2;
+        int diff_lh = n - l.size();
+        // memo[i][start][diff] start <= start_last, diff+9*m <= 18*m
+        vector memo(n, vector(diff_lh + 1, vector<int>(18 * m + 1, -1)));
+        function<int(int, int, int, bool, bool)> dfs =
+            [&](int i, int start, int diff, bool low, bool high) -> int {
+            if (i == n) return diff == 9 * m;
+            if (start != -1 && !low && !high && memo[i][start][diff] != -1) {
+                return memo[i][start][diff];
+            }
+            int lo = low && i >= diff_lh ? l[i - diff_lh] - '0' : 0;
+            int hi = high ? h[i] - '0' : 9;
+
+            if (start == -1 && (n - i) % 2) {
+                return lo > 0 ? 0 : dfs(i + 1, start, diff, true, false);
+            }
+            int res = 0;
+            bool isleft = start == -1 || i < (start + n) / 2;
+            for (int d = lo; d <= hi; d++) {
+                res += dfs(i + 1, start == -1 && d > 0 ? i : start,
+                           diff + (isleft ? d : -d), low && d == lo,
+                           high && d == hi);
+            }
+            if (start != -1 && !low && !high) {
+                memo[i][start][diff] = res;
+            }
+            return res;
+        };
+        return dfs(0, -1, 9 * m, true, true);
+    }
+};
+
+class Solution3272 {
+public:
+    long long countGoodIntegers(int n, int k) {
+        long long ans = 0;
+        int base = pow(10, (n - 1) / 2);
+        function<int(int)> f;
+        f = [&f](int n) -> int { return n == 0 ? 1 : n * f(n - 1); };
+        unordered_set<string> uset;
+        for (int i = base; i < 10 * base; i++) {
+            string s = to_string(i);
+            string rev = s.substr(0, s.size() - n % 2);
+            reverse(rev.begin(), rev.end());
+            s += rev;
+            if (stoll(s) % k) { // 回文数不能被 k 整除
+                continue;
+            }
+            ranges::sort(s);
+            if (!uset.insert(s).second) { // 不能重复统计
+                continue;
+            }
+            int ump[10]{0};
+            for (char x : s) {
+                ump[x - '0']++;
+            }
+            int chu = 1;
+            for (int x : ump) {
+                chu *= f(x);
+            }
+            ans += (n - ump[0]) * f(n - 1) / chu;
+        }
+        return ans;
+    }
+};
+// 作者：灵茶山艾府
+// 链接：https://leetcode.cn/problems/count-good-numbers/solutions/857728/cheng-fa-yuan-li-kuai-su-mi-by-endlessch-btkn/
+// 来源：力扣（LeetCode）
+// 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
 class Solution {
 public:
-    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
-        ListNode *node = new ListNode(0);
-        ListNode *res = node;
-        int tmp = 0;
-        while (l1 || l2) {
-            if (l1) {
-                node->val += l1->val;
-                l1 = l1->next;
+    int countGoodTriplets(vector<int> &arr, int a, int b, int c) {
+        int mx = ranges::max(arr);
+        vector<int> precount(mx + 2, 0); // precount[i] arr中＜i的数目
+        int ans = 0;
+        for (int j = 0; j < arr.size() - 1; j++) {
+            int aj = arr[j];
+            for (int k = j + 1; k < arr.size(); k++) {
+                int ak = arr[k];
+                if (abs(aj - ak) > b) continue;
+                int range_min = max({0, aj - a, ak - c});
+                int range_max = min({mx, aj + a, ak + c});
+                ans += precount[range_max + 1] - precount[range_min];
             }
-            if (l2) {
-                node->val += l2->val;
-                l2 = l2->next;
-            }
-            if (node->val > 9) {
-                node->val -= 10;
-                tmp = 1;
-            } else {
-                tmp = 0;
-            }
-            if (l1 || l2 || tmp) {
-                node->next = new ListNode(tmp);
-                node = node->next;
-            }
+            // 更新precount
+            ranges::for_each(precount.begin() + aj, precount.end(),
+                             [](int &x) { x++; });
         }
-        node->next = nullptr;
-        return res;
+        return ans;
     }
 };

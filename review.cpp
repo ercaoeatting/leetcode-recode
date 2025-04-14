@@ -22,7 +22,9 @@
 using namespace std;
 ostream &operator<<(ostream &out, vector<vector<int>> &a) {
     for (auto a0 : a) {
-        for (int x : a0) { cout << x << " "; }
+        for (int x : a0) {
+            cout << x << " ";
+        }
         cout << "\n";
     }
     return out;
@@ -33,9 +35,13 @@ public:
         int left = 0, right = nums.size() - 1;
         while (left <= right) {
             int middle = (left + right) / 2;
-            if (nums[middle] > target) { right = middle - 1; }
-            else if (nums[middle] < target) { left = middle + 1; }
-            else { return middle; }
+            if (nums[middle] > target) {
+                right = middle - 1;
+            } else if (nums[middle] < target) {
+                left = middle + 1;
+            } else {
+                return middle;
+            }
         }
         return -1;
     }
@@ -46,7 +52,9 @@ public:
     int removeElement(vector<int> &nums, int val) {
         int slow = 0;
         for (int fast = 0; fast < nums.size(); fast++) {
-            if (nums[fast] != val) { nums[slow++] = nums[fast]; }
+            if (nums[fast] != val) {
+                nums[slow++] = nums[fast];
+            }
         }
         return slow;
     }
@@ -63,8 +71,7 @@ public:
             if (nums[left] * nums[left] < nums[right] * nums[right]) {
                 result[k--] = nums[right] * nums[right];
                 right--;
-            }
-            else {
+            } else {
                 result[k--] = nums[left] * nums[left];
                 left++;
             }
@@ -116,13 +123,21 @@ public:
         int left = 0, top = 0, right = n - 1, bottom = n - 1, m = 1;
         vector<vector<int>> res(n, vector<int>(n, 0));
         while (left <= right && top <= bottom) {
-            for (int i = left; i <= right; i++) { res[top][i] = m++; }
+            for (int i = left; i <= right; i++) {
+                res[top][i] = m++;
+            }
             top++;
-            for (int j = top; j <= bottom; j++) { res[j][right] = m++; }
+            for (int j = top; j <= bottom; j++) {
+                res[j][right] = m++;
+            }
             right--;
-            for (int k = right; k >= left; k--) { res[bottom][k] = m++; }
+            for (int k = right; k >= left; k--) {
+                res[bottom][k] = m++;
+            }
             bottom--;
-            for (int x = bottom; x >= top; x--) { res[x][left] = m++; }
+            for (int x = bottom; x >= top; x--) {
+                res[x][left] = m++;
+            }
             left++;
         }
         return res;
@@ -148,8 +163,9 @@ public:
                 ListNode *tmp = cur->next;
                 cur->next = tmp->next;
                 delete tmp;
+            } else {
+                cur = cur->next;
             }
-            else { cur = cur->next; }
         }
         head = dummyHead->next;
         delete dummyHead;
@@ -171,9 +187,13 @@ public:
     }
 
     int get(int index) {
-        if (index < 0 || index > (_size - 1)) { return -1; }
+        if (index < 0 || index > (_size - 1)) {
+            return -1;
+        }
         node *tmp = _dummyHead->next;
-        while (index--) { tmp = tmp->next; }
+        while (index--) {
+            tmp = tmp->next;
+        }
         return tmp->val;
     }
 
@@ -188,16 +208,22 @@ public:
     void addAtTail(int val) {
         node *newNode = new node(val);
         node *cur = _dummyHead;
-        while (cur->next != nullptr) { cur = cur->next; }
+        while (cur->next != nullptr) {
+            cur = cur->next;
+        }
         cur->next = newNode;
         _size++;
     }
 
     void addAtIndex(int index, int val) {
         if (index < 0) index = 0;
-        if (index > (_size)) { return; }
+        if (index > (_size)) {
+            return;
+        }
         node *cur = _dummyHead;
-        while (index--) { cur = cur->next; }
+        while (index--) {
+            cur = cur->next;
+        }
         node *tmp = new node(val, cur->next);
         cur->next = tmp;
         _size++;
@@ -207,7 +233,9 @@ public:
     void deleteAtIndex(int index) {
         if (index < 0 || index > (_size - 1)) return;
         node *cur = _dummyHead;
-        while (index--) { cur = cur->next; }
+        while (index--) {
+            cur = cur->next;
+        }
         node *tmp = cur->next;
         cur->next = tmp->next;
         delete tmp;
@@ -267,7 +295,9 @@ public:
         ListNode *dummyHead = new ListNode(0, head);
         dummyHead->next = head;
         ListNode *fast = dummyHead, *slow = dummyHead;
-        while (n--) { fast = fast->next; }
+        while (n--) {
+            fast = fast->next;
+        }
         while (fast->next) {
             fast = fast->next;
             slow = slow->next;
@@ -284,8 +314,12 @@ class Solution242 {
 public:
     bool isAnagram(string s, string t) {
         int a[26] = {0};
-        for (int i = 0; i < s.size(); i++) { a[s[i] - 'a']++; }
-        for (int i = 0; i < s.size(); i++) { a[t[i] - 'a']--; }
+        for (int i = 0; i < s.size(); i++) {
+            a[s[i] - 'a']++;
+        }
+        for (int i = 0; i < s.size(); i++) {
+            a[t[i] - 'a']--;
+        }
         for (int i = 0; i < 26; i++) {
             if (a[i] != 0) return false;
         }
@@ -308,11 +342,17 @@ public:
         int lenA = len(headA);
         int lenB = len(headB);
         ListNode *curA = headA, *curB = headB;
-        if (lenA < lenB) { swap(curA, curB); }
+        if (lenA < lenB) {
+            swap(curA, curB);
+        }
         int dlen = abs(lenA - lenB);
-        while (dlen--) { curA = curA->next; }
+        while (dlen--) {
+            curA = curA->next;
+        }
         while (curA) {
-            if (curA == curB) { return curA; }
+            if (curA == curB) {
+                return curA;
+            }
             curA = curA->next;
             curB = curB->next;
         }
@@ -347,7 +387,9 @@ public:
         unordered_set<int> res;
         inter.insert(nums1.begin(), nums1.end());
         for (int num : nums2) {
-            if (inter.find(num) != inter.end()) { res.insert(num); }
+            if (inter.find(num) != inter.end()) {
+                res.insert(num);
+            }
         }
         return vector<int>(res.begin(), res.end());
     }
@@ -397,12 +439,16 @@ public:
         unordered_map<int, int> umap;
         int count = 0;
         for (int a : nums1) {
-            for (int b : nums2) { umap[a + b]++; }
+            for (int b : nums2) {
+                umap[a + b]++;
+            }
         }
 
         for (int c : nums3) {
             for (int d : nums4) {
-                if (umap.find(-(c + d)) != umap.end()) { count += umap[-(c + d)]; }
+                if (umap.find(-(c + d)) != umap.end()) {
+                    count += umap[-(c + d)];
+                }
             }
         }
         return count;
@@ -413,10 +459,13 @@ class Solution383 {
 public:
     bool canConstruct1(string ransomNote, string magazine) {
         unordered_map<char, int> umap;
-        for (char i : magazine) { umap[i]++; }
+        for (char i : magazine) {
+            umap[i]++;
+        }
         for (char j : ransomNote) {
-            if (umap.find(j) == umap.end()) { return false; }
-            else {
+            if (umap.find(j) == umap.end()) {
+                return false;
+            } else {
                 umap[j]--;
                 if (umap[j] < 0) return false;
             }
@@ -426,7 +475,9 @@ public:
     // 用数组其实就行
     bool canConstruct(string ransomNote, string magazine) {
         int record[26] = {0};
-        for (char i : magazine) { record[i - 'a']++; }
+        for (char i : magazine) {
+            record[i - 'a']++;
+        }
         for (char j : ransomNote) {
             if (record[j - 'a'] > 0) {
                 record[j - 'a']--;
@@ -455,9 +506,14 @@ public:
                 else if (nums[i] + nums[left] + nums[right] < 0)
                     left++;
                 else {
-                    result.push_back(vector<int>{nums[i], nums[left], nums[right]});
-                    while (left < right && nums[right] == nums[right - 1]) { right--; }
-                    while (left < right && nums[left] == nums[left + 1]) { left++; }
+                    result.push_back(
+                        vector<int>{nums[i], nums[left], nums[right]});
+                    while (left < right && nums[right] == nums[right - 1]) {
+                        right--;
+                    }
+                    while (left < right && nums[left] == nums[left + 1]) {
+                        left++;
+                    }
                     right--;
                     left++;
                 }
@@ -481,14 +537,20 @@ public:
                 if (j > i + 1 && nums[j] == nums[j - 1]) continue;
                 int left = j + 1, right = nums.size() - 1;
                 while (left < right) {
-                    if ((long)(nums[i] + nums[j] + nums[left] + nums[right] < target))
+                    if ((long)(nums[i] + nums[j] + nums[left] + nums[right] <
+                               target))
                         left++;
-                    else if ((long)nums[i] + nums[j] + nums[left] + nums[right] > target)
+                    else if ((long)nums[i] + nums[j] + nums[left] +
+                                 nums[right] >
+                             target)
                         right--;
                     else {
-                        result.push_back(vector<int>{nums[i], nums[j], nums[left], nums[right]});
-                        while (left < right && nums[left] == nums[left + 1]) left++;
-                        while (left < right && nums[right] == nums[right - 1]) right--;
+                        result.push_back(vector<int>{nums[i], nums[j],
+                                                     nums[left], nums[right]});
+                        while (left < right && nums[left] == nums[left + 1])
+                            left++;
+                        while (left < right && nums[right] == nums[right - 1])
+                            right--;
                         left++;
                         right--;
                     }
@@ -526,7 +588,9 @@ public:
         s.resize(slow);
     }
     void reverseS(string &s, int a, int b) {
-        for (int i = a, j = b; i < j; i++, j--) { swap(s[i], s[j]); }
+        for (int i = a, j = b; i < j; i++, j--) {
+            swap(s[i], s[j]);
+        }
     }
     string reverseWords(string s) {
         deleteSpace(s);
@@ -538,7 +602,9 @@ public:
                 reverseS(s, a, b);
                 a = i + 1;
             }
-            if (i == s.size() - 1) { reverseS(s, a, i); }
+            if (i == s.size() - 1) {
+                reverseS(s, a, i);
+            }
         }
         return s;
     }
@@ -551,8 +617,12 @@ class Solution28 {
         int j = 0;
         next[0] = 0;
         for (int i = 1; i < s.size(); i++) {
-            while (j > 0 && s[i] != s[j]) { j = next[j - 1]; } // 前后缀不同
-            if (s[i] == s[j]) { j++; }                         // 找到相同的前后缀
+            while (j > 0 && s[i] != s[j]) {
+                j = next[j - 1];
+            } // 前后缀不同
+            if (s[i] == s[j]) {
+                j++;
+            } // 找到相同的前后缀
             next[i] = j;
         }
     }
@@ -564,9 +634,15 @@ public:
         getNext(next, needle);
         int j = 0;
         for (int i = 0; i < haystack.size(); i++) {
-            while (j > 0 && haystack[i] != needle[j]) { j = next[j - 1]; }
-            if (haystack[i] == needle[j]) { j++; }
-            if (j == needle.size()) { return (i - needle.size() + 1); }
+            while (j > 0 && haystack[i] != needle[j]) {
+                j = next[j - 1];
+            }
+            if (haystack[i] == needle[j]) {
+                j++;
+            }
+            if (j == needle.size()) {
+                return (i - needle.size() + 1);
+            }
         }
         return -1;
     }
@@ -608,7 +684,9 @@ public:
     }
 
     int peek() {
-        if (!out.empty()) { return out.top(); }
+        if (!out.empty()) {
+            return out.top();
+        }
         while (!in.empty()) {
             out.push(in.top());
             in.pop();
@@ -672,8 +750,9 @@ public:
     bool isValid(string s) {
         stack<char> st;
         for (char c : s) {
-            if (!st.empty() && st.top() == c) { st.pop(); }
-            else if (c == '(')
+            if (!st.empty() && st.top() == c) {
+                st.pop();
+            } else if (c == '(')
                 st.push(')');
             else if (c == '[')
                 st.push(']');
@@ -716,7 +795,8 @@ public:
     int evalRPN(vector<string> &tokens) {
         stack<long long> st;
         for (int i = 0; i < tokens.size(); i++) {
-            if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/") {
+            if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" ||
+                tokens[i] == "/") {
                 long long num1 = st.top();
                 st.pop();
                 long long num2 = st.top();
@@ -725,8 +805,9 @@ public:
                 if (tokens[i] == "-") st.push(num2 - num1);
                 if (tokens[i] == "*") st.push(num2 * num1);
                 if (tokens[i] == "/") st.push(num2 / num1);
+            } else {
+                st.push(stoll(tokens[i]));
             }
-            else { st.push(stoll(tokens[i])); }
         }
 
         int result = st.top();
@@ -740,11 +821,14 @@ public:
     struct mostQ {
         deque<int> Q;
         void push(int c) {
-            while (!Q.empty() && c > Q.back()) { Q.pop_back(); }
+            while (!Q.empty() && c > Q.back()) {
+                Q.pop_back();
+            }
             Q.push_back(c);
         }
         void pop(int c) {
-            if (!Q.empty() && c == Q.front()) // 我感觉这里才是精华，能知道要不要弹出
+            if (!Q.empty() &&
+                c == Q.front()) // 我感觉这里才是精华，能知道要不要弹出
                 Q.pop_front();
         }
         int front() { return Q.front(); }
@@ -752,7 +836,9 @@ public:
     vector<int> maxSlidingWindow(vector<int> &nums, int k) {
         mostQ mq;
         vector<int> res(nums.size() - k + 1, 0);
-        for (int i = 0; i < k; i++) { mq.push(nums[i]); }
+        for (int i = 0; i < k; i++) {
+            mq.push(nums[i]);
+        }
         res[0] = mq.front();
         int j = 1;
         for (int i = k; i < nums.size(); i++) {
@@ -773,13 +859,18 @@ public:
     vector<int> topKFrequent1(vector<int> &nums,
                               int k) { // 十足的笨办法  复杂度nlogn
         unordered_map<int, int> map;
-        for (int num : nums) { map[num]++; }
+        for (int num : nums) {
+            map[num]++;
+        }
         vector<pair<int, int>> vec(map.begin(), map.end());
-        sort(vec.begin(), vec.end(), [](const pair<int, int> &lhs, const pair<int, int> &rhs) {
-            return lhs.second > rhs.second;
-        });
+        sort(vec.begin(), vec.end(),
+             [](const pair<int, int> &lhs, const pair<int, int> &rhs) {
+                 return lhs.second > rhs.second;
+             });
         vector<int> a(k);
-        for (int i = 0; i < k; ++i) { a[i] = vec[i].first; }
+        for (int i = 0; i < k; ++i) {
+            a[i] = vec[i].first;
+        }
         return a;
     }
     // 小顶堆
@@ -822,7 +913,8 @@ struct TreeNode {
     TreeNode *right;
     TreeNode() : val(0), left(nullptr), right(nullptr) {}
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right)
+        : val(x), left(left), right(right) {}
 };
 class Solution_preordrer {
 public:
@@ -853,8 +945,7 @@ public:
             if (cur != nullptr) {
                 st.push(cur);
                 cur = cur->left;
-            }
-            else {
+            } else {
                 cur = st.top();
                 st.pop();
                 a.push_back(cur->val);
@@ -1039,9 +1130,12 @@ public:
             return false;
         else if (left->val != right->val)
             return false;
-        return compare(left->left, right->right) && compare(left->right, right->left);
+        return compare(left->left, right->right) &&
+               compare(left->right, right->left);
     }
-    bool isSymmetric(TreeNode *root) { return compare(root->left, root->right); }
+    bool isSymmetric(TreeNode *root) {
+        return compare(root->left, root->right);
+    }
 };
 // 222. 完全二叉树的节点个数
 class Solution222 {
@@ -1072,7 +1166,8 @@ public:
             rightDepth++;
         }
         if (leftDepth == rightDepth) {
-            return (2 << leftDepth) - 1; // 注意(2<<1) 相当于2^2，所以leftDepth初始为0
+            return (2 << leftDepth) -
+                   1; // 注意(2<<1) 相当于2^2，所以leftDepth初始为0
         }
         return countNodes(root->left) + countNodes(root->right) + 1;
     }
@@ -1141,8 +1236,12 @@ public:
                 TreeNode *cur = q.front();
                 if (sizet == size + 1) res = cur->val;
                 q.pop();
-                if (cur->left) { q.push(cur->left); }
-                if (cur->right) { q.push(cur->right); }
+                if (cur->left) {
+                    q.push(cur->left);
+                }
+                if (cur->right) {
+                    q.push(cur->right);
+                }
             }
         }
         return res;
@@ -1155,8 +1254,12 @@ public:
     bool hasPathSum(TreeNode *root, int targetSum) {
         if (root == nullptr) return false;
         if (root->val == targetSum && !root->left && root->right) return true;
-        if (root->left) { res1 = hasPathSum(root->left, targetSum - root->val); }
-        if (root->right) { res2 = hasPathSum(root->right, targetSum - root->val); }
+        if (root->left) {
+            res1 = hasPathSum(root->left, targetSum - root->val);
+        }
+        if (root->right) {
+            res2 = hasPathSum(root->right, targetSum - root->val);
+        }
         return res1 || res2;
     }
     bool hasPathSum2(TreeNode *root, int targetSum) {
@@ -1166,10 +1269,15 @@ public:
         while (!st.empty()) {
             pair<TreeNode *, int> pcur = st.top();
             st.pop();
-            if (pcur.first->val == pcur.second && !pcur.first->left && !pcur.first->right)
+            if (pcur.first->val == pcur.second && !pcur.first->left &&
+                !pcur.first->right)
                 return true;
-            if (pcur.first->left) { st.push({pcur.first->left, pcur.second - pcur.first->val}); }
-            if (pcur.first->right) { st.push({pcur.first->right, pcur.second - pcur.first->val}); }
+            if (pcur.first->left) {
+                st.push({pcur.first->left, pcur.second - pcur.first->val});
+            }
+            if (pcur.first->right) {
+                st.push({pcur.first->right, pcur.second - pcur.first->val});
+            }
         }
         return false;
     }
@@ -1182,8 +1290,9 @@ public:
     private:
         // 中序区间：[inorderBegin, inorderEnd)，后序区间[postorderBegin,
         // postorderEnd)
-        TreeNode *traversal(vector<int> &inorder, int inorderBegin, int inorderEnd,
-                            vector<int> &postorder, int postorderBegin, int postorderEnd) {
+        TreeNode *traversal(vector<int> &inorder, int inorderBegin,
+                            int inorderEnd, vector<int> &postorder,
+                            int postorderBegin, int postorderEnd) {
             if (postorderBegin == postorderEnd) return NULL;
 
             int rootValue = postorder[postorderEnd - 1];
@@ -1192,7 +1301,8 @@ public:
             if (postorderEnd - postorderBegin == 1) return root;
 
             int delimiterIndex;
-            for (delimiterIndex = inorderBegin; delimiterIndex < inorderEnd; delimiterIndex++) {
+            for (delimiterIndex = inorderBegin; delimiterIndex < inorderEnd;
+                 delimiterIndex++) {
                 if (inorder[delimiterIndex] == rootValue) break;
             }
             // 切割中序数组
@@ -1206,16 +1316,21 @@ public:
             // 切割后序数组
             // 左后序区间，左闭右开[leftPostorderBegin, leftPostorderEnd)
             int leftPostorderBegin = postorderBegin;
-            int leftPostorderEnd = postorderBegin + delimiterIndex -
-                                   inorderBegin; // 终止位置是 需要加上 中序区间的大小size
+            int leftPostorderEnd =
+                postorderBegin + delimiterIndex -
+                inorderBegin; // 终止位置是 需要加上 中序区间的大小size
             // 右后序区间，左闭右开[rightPostorderBegin, rightPostorderEnd)
-            int rightPostorderBegin = postorderBegin + (delimiterIndex - inorderBegin);
-            int rightPostorderEnd = postorderEnd - 1; // 排除最后一个元素，已经作为节点了
+            int rightPostorderBegin =
+                postorderBegin + (delimiterIndex - inorderBegin);
+            int rightPostorderEnd =
+                postorderEnd - 1; // 排除最后一个元素，已经作为节点了
 
-            root->left = traversal(inorder, leftInorderBegin, leftInorderEnd, postorder,
-                                   leftPostorderBegin, leftPostorderEnd);
-            root->right = traversal(inorder, rightInorderBegin, rightInorderEnd, postorder,
-                                    rightPostorderBegin, rightPostorderEnd);
+            root->left =
+                traversal(inorder, leftInorderBegin, leftInorderEnd, postorder,
+                          leftPostorderBegin, leftPostorderEnd);
+            root->right =
+                traversal(inorder, rightInorderBegin, rightInorderEnd,
+                          postorder, rightPostorderBegin, rightPostorderEnd);
 
             return root;
         }
@@ -1224,7 +1339,8 @@ public:
         TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
             if (inorder.size() == 0 || postorder.size() == 0) return NULL;
             // 左闭右开的原则
-            return traversal(inorder, 0, inorder.size(), postorder, 0, postorder.size());
+            return traversal(inorder, 0, inorder.size(), postorder, 0,
+                             postorder.size());
         }
     };
     TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
@@ -1234,12 +1350,16 @@ public:
         if (inorder.size() == 1) return root;
         int split = -1;
         for (int i = 0; i < inorder.size(); i++) {
-            if (inorder[i] == rootval) { split = i; }
+            if (inorder[i] == rootval) {
+                split = i;
+            }
         }
         vector<int> leftTreein(inorder.begin(), inorder.begin() + split);
-        vector<int> leftTreepo(postorder.begin(), postorder.begin() + leftTreein.size());
+        vector<int> leftTreepo(postorder.begin(),
+                               postorder.begin() + leftTreein.size());
         vector<int> rightTreein(inorder.begin() + split + 1, inorder.end());
-        vector<int> rightTreepo(postorder.begin() + leftTreein.size(), postorder.end() - 1);
+        vector<int> rightTreepo(postorder.begin() + leftTreein.size(),
+                                postorder.end() - 1);
         root->left = buildTree(leftTreein, leftTreepo);
         root->right = buildTree(rightTreein, rightTreepo);
         return root;
@@ -1281,16 +1401,18 @@ public:
         TreeNode *root = new TreeNode(val1 + val2);
         // 递归合并左右子树
         if (root1 || root2) {
-            root->left = traversal(root1 ? root1->left : nullptr, root2 ? root2->left : nullptr);
-            root->right = traversal(root1 ? root1->right : nullptr, root2 ? root2->right : nullptr);
+            root->left = traversal(root1 ? root1->left : nullptr,
+                                   root2 ? root2->left : nullptr);
+            root->right = traversal(root1 ? root1->right : nullptr,
+                                    root2 ? root2->right : nullptr);
         }
         return root;
     }
     // 这段好点
     TreeNode *mergeTrees2(TreeNode *t1, TreeNode *t2) {
-        if (t1 == NULL) return t2;                     // 如果t1为空，合并之后就应该是t2
-        if (t2 == NULL) return t1;                     // 如果t2为空，合并之后就应该是t1
-        t1->val += t2->val;                            // 中
+        if (t1 == NULL) return t2; // 如果t1为空，合并之后就应该是t2
+        if (t2 == NULL) return t1; // 如果t2为空，合并之后就应该是t1
+        t1->val += t2->val;        // 中
         t1->left = mergeTrees2(t1->left, t2->left);    // 左
         t1->right = mergeTrees2(t1->right, t2->right); // 右
         return t1;
@@ -1330,7 +1452,9 @@ public:
     void travel(TreeNode *cur) {
         if (!cur) return;
         travel(cur->left);
-        if (pre) { delta = min(delta, cur->val - pre->val); }
+        if (pre) {
+            delta = min(delta, cur->val - pre->val);
+        }
         pre = cur;
         travel(cur->right);
     }
@@ -1349,12 +1473,13 @@ public:
                 st.push(cur);
                 st.push(nullptr);
                 if (cur->right) st.push(cur->right);
-            }
-            else {
+            } else {
                 st.pop();
                 cur = st.top();
                 st.pop();
-                if (pre) { delta = min(delta, cur->val - pre->val); }
+                if (pre) {
+                    delta = min(delta, cur->val - pre->val);
+                }
                 pre = cur;
             }
         }
@@ -1405,7 +1530,9 @@ public:
         travel(root);
         vector<pair<int, int>> res1(umap.begin(), umap.end());
         sort(res1.begin(), res1.end(),
-             [&](const pair<int, int> &a, const pair<int, int> &b) { return a.second > b.second; });
+             [&](const pair<int, int> &a, const pair<int, int> &b) {
+                 return a.second > b.second;
+             });
         vector<int> res;
         res.push_back(res1[0].first);
         for (int i = 1; i < res1.size(); i++) {
@@ -1425,9 +1552,12 @@ public:
         traversal(root->left);
         // 中
         // 先处理f
-        if (!pre) { f = 1; } // 第一个非空节点
-        else if (root->val == pre->val) { f++; }
-        else { // 3 3 4（遇到了这个节点） 4
+        if (!pre) {
+            f = 1;
+        } // 第一个非空节点
+        else if (root->val == pre->val) {
+            f++;
+        } else { // 3 3 4（遇到了这个节点） 4
             f = 1;
         }
         // 再处理具体的众数
@@ -1435,8 +1565,9 @@ public:
             maxf = f;
             res.clear();
             res.push_back(root->val);
+        } else if (f == maxf) {
+            res.push_back(root->val);
         }
-        else if (f == maxf) { res.push_back(root->val); }
         pre = root;
         traversal(root->right);
     }
@@ -1491,14 +1622,19 @@ public:
                 return nullptr;
             }
             // 左或者右孩子不空
-            else if (root->left && !root->right) { return root->left; }
-            else if (!root->left && root->right) { return root->right; }
+            else if (root->left && !root->right) {
+                return root->left;
+            } else if (!root->left && root->right) {
+                return root->right;
+            }
             // 左右都不空
             else {
                 TreeNode *rootLeft = root->left;
                 TreeNode *rootRight = root->right;
                 root = root->right;
-                while (root->left) { root = root->left; }
+                while (root->left) {
+                    root = root->left;
+                }
                 root->left = rootLeft;
                 return rootRight;
             }
@@ -1555,7 +1691,9 @@ public:
         root->right = travelsal(nums, max_size + 1, right);
         return root;
     }
-    TreeNode *sortedArrayToBST(vector<int> &nums) { return travelsal(nums, 0, nums.size() - 1); }
+    TreeNode *sortedArrayToBST(vector<int> &nums) {
+        return travelsal(nums, 0, nums.size() - 1);
+    }
 };
 // 538. 把二叉搜索树转换为累加树
 class Solution538 {
@@ -1564,7 +1702,9 @@ public:
     TreeNode *convertBST(TreeNode *root) {
         if (!root) return nullptr;
         if (root->right) convertBST(root->right);
-        if (pre) { root->val += pre->val; }
+        if (pre) {
+            root->val += pre->val;
+        }
         pre = root;
         if (root->left) convertBST(root->left);
         return root;
@@ -1648,7 +1788,9 @@ public:
     }
     vector<string> letterCombinations(string digits) {
         result.clear();
-        if (digits.size() == 0) { return result; }
+        if (digits.size() == 0) {
+            return result;
+        }
         getCombinations(digits, 0, "");
         return result;
     }
@@ -1680,15 +1822,18 @@ class Solution40 {
 public:
     vector<vector<int>> res;
     vector<int> path;
-    void back(vector<int> &candidates, int target, int sum, int start, vector<bool> used) {
+    void back(vector<int> &candidates, int target, int sum, int start,
+              vector<bool> used) {
         if (sum > target) return;
         if (sum == target) {
             res.push_back(path);
             return;
         }
         // if (i > start && candidates[i] == candidates[i - 1]) continue;
-        for (int i = start; i < candidates.size() && sum + candidates[i] <= target; i++) {
-            if (i > 0 && used[i - 1] == 0 && candidates[i] == candidates[i - 1]) continue;
+        for (int i = start;
+             i < candidates.size() && sum + candidates[i] <= target; i++) {
+            if (i > 0 && used[i - 1] == 0 && candidates[i] == candidates[i - 1])
+                continue;
             path.push_back(candidates[i]);
             used[i] = 1;
             back(candidates, target, sum + candidates[i], i + 1, used);
@@ -1740,13 +1885,21 @@ public:
 // 93 复原IP地址
 class Solution93 {
     bool isValid(const string &s, int start, int end) {
-        if (start > end) { return false; }
-        if (s[start] == '0' && start != end) { return false; }
+        if (start > end) {
+            return false;
+        }
+        if (s[start] == '0' && start != end) {
+            return false;
+        }
         int num = 0;
         for (int i = start; i <= end; i++) {
-            if (s[i] > '9' || s[i] < '0') { return false; }
+            if (s[i] > '9' || s[i] < '0') {
+                return false;
+            }
             num = num * 10 + (s[i] - '0');
-            if (num > 255) { return false; }
+            if (num > 255) {
+                return false;
+            }
         }
         return true;
     }
@@ -1778,7 +1931,9 @@ public:
     vector<int> path;
     vector<vector<int>> res;
     void back(vector<int> &nums, int start) {
-        if (start >= nums.size()) { return; }
+        if (start >= nums.size()) {
+            return;
+        }
         for (int i = start; i < nums.size(); i++) {
             path.push_back(nums[i]);
             res.push_back(path);
@@ -1798,7 +1953,9 @@ public:
     vector<int> path;
     vector<vector<int>> res;
     void back(vector<int> &nums, int start) {
-        if (start >= nums.size()) { return; }
+        if (start >= nums.size()) {
+            return;
+        }
         for (int i = start; i < nums.size(); i++) {
             if (i > start && nums[i] == nums[i - 1]) continue;
             path.push_back(nums[i]);
@@ -1808,7 +1965,8 @@ public:
         }
     }
     vector<vector<int>> subsetsWithDup(vector<int> &nums) {
-        sort(nums.begin(), nums.end(), [](int left, int right) { return left < right; });
+        sort(nums.begin(), nums.end(),
+             [](int left, int right) { return left < right; });
         res.push_back({});
         back(nums, 0);
         return res;
@@ -1826,10 +1984,12 @@ private:
         }
         unordered_set<int> uset; // 使用set对本层元素进行去重
         for (int i = startIndex; i < nums.size(); i++) {
-            if ((!path.empty() && nums[i] < path.back()) || uset.find(nums[i]) != uset.end()) {
+            if ((!path.empty() && nums[i] < path.back()) ||
+                uset.find(nums[i]) != uset.end()) {
                 continue;
             }
-            uset.insert(nums[i]); // 记录这个元素在本层用过了，本层后面不能再用了
+            uset.insert(
+                nums[i]); // 记录这个元素在本层用过了，本层后面不能再用了
             path.push_back(nums[i]);
             backtracking(nums, i + 1);
             path.pop_back();
@@ -1848,13 +2008,18 @@ public:
         vector<vector<int>> result;
         vector<int> path;
         void backtracking(vector<int> &nums, int startIndex) {
-            if (path.size() > 1) { result.push_back(path); }
-            int used[201] = {0}; // 这里使用数组来进行去重操作，题目说数值范围[-100, 100]
+            if (path.size() > 1) {
+                result.push_back(path);
+            }
+            int used[201] = {
+                0}; // 这里使用数组来进行去重操作，题目说数值范围[-100, 100]
             for (int i = startIndex; i < nums.size(); i++) {
-                if ((!path.empty() && nums[i] < path.back()) || used[nums[i] + 100] == 1) {
+                if ((!path.empty() && nums[i] < path.back()) ||
+                    used[nums[i] + 100] == 1) {
                     continue;
                 }
-                used[nums[i] + 100] = 1; // 记录这个元素在本层用过了，本层后面不能再用了
+                used[nums[i] + 100] =
+                    1; // 记录这个元素在本层用过了，本层后面不能再用了
                 path.push_back(nums[i]);
                 backtracking(nums, i + 1);
                 path.pop_back();
@@ -1908,7 +2073,8 @@ public:
             return;
         }
         for (int i = 0; i < nums.size(); i++) {
-            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) continue;
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]))
+                continue;
             path.push_back(nums[i]);
             used[i] = true;
             back(nums);
@@ -1944,7 +2110,9 @@ public:
     }
     vector<string> findItinerary(vector<vector<string>> &tickets) {
         tn = tickets.size();
-        for (const auto &ticket : tickets) { umap[ticket[0]][ticket[1]]++; }
+        for (const auto &ticket : tickets) {
+            umap[ticket[0]][ticket[1]]++;
+        }
         res.push_back("JFK");
         back();
         return res;
@@ -1957,15 +2125,21 @@ class Solution51 {
     vector<string> solve;
     bool ifRight(int row, int col, vector<string> &chessboard) {
         for (int i = 0; i < row; i++) { // 这是一个剪枝
-            if (chessboard[i][col] == 'Q') { return false; }
+            if (chessboard[i][col] == 'Q') {
+                return false;
+            }
         }
         // 检查 45度角是否有皇后
         for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
-            if (chessboard[i][j] == 'Q') { return false; }
+            if (chessboard[i][j] == 'Q') {
+                return false;
+            }
         }
         // 检查 135度角是否有皇后
         for (int i = row - 1, j = col + 1; i >= 0 && j < nn; i--, j++) {
-            if (chessboard[i][j] == 'Q') { return false; }
+            if (chessboard[i][j] == 'Q') {
+                return false;
+            }
         }
         return true;
     }
@@ -1995,16 +2169,22 @@ public:
 class Solution37 {
     bool isValid(int row, int col, char val, vector<vector<char>> &board) {
         for (int i = 0; i < 9; i++) { // 判断行里是否重复
-            if (board[row][i] == val) { return false; }
+            if (board[row][i] == val) {
+                return false;
+            }
         }
         for (int j = 0; j < 9; j++) { // 判断列里是否重复
-            if (board[j][col] == val) { return false; }
+            if (board[j][col] == val) {
+                return false;
+            }
         }
         int startRow = (row / 3) * 3;
         int startCol = (col / 3) * 3;
         for (int i = startRow; i < startRow + 3; i++) { // 判断9方格里是否重复
             for (int j = startCol; j < startCol + 3; j++) {
-                if (board[i][j] == val) { return false; }
+                if (board[i][j] == val) {
+                    return false;
+                }
             }
         }
         return true;
@@ -2014,7 +2194,9 @@ public:
     bool back(vector<vector<char>> &board) {
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board[0].size(); j++) {
-                if (board[i][j] != '.') { continue; }
+                if (board[i][j] != '.') {
+                    continue;
+                }
                 for (char k = '1'; k <= '9'; k++)
                     if (isValid(i, j, k, board)) {
                         board[i][j] = k;
@@ -2043,8 +2225,9 @@ public:
                 num++;
                 boyi++;
                 i++;
+            } else {
+                boyi++;
             }
-            else { boyi++; }
         }
         return num;
     }
@@ -2071,7 +2254,8 @@ public:
         for (int i = 1; i < nums.size(); i++) {
             dp[i][0] = dp[i][1] = 1;
             for (int j = 0; j < i; j++) {
-                if (nums[j] > nums[i]) dp[i][1] = max(dp[i][1], dp[j][0] + 1); // 做山谷
+                if (nums[j] > nums[i])
+                    dp[i][1] = max(dp[i][1], dp[j][0] + 1); // 做山谷
                 if (nums[j] < nums[i]) dp[i][0] = max(dp[i][0], dp[j][1] + 1);
             }
         }
@@ -2081,11 +2265,12 @@ public:
         if (nums.size() <= 1) return nums.size();
         int curDiff = 0; // 当前一对差值
         int preDiff = 0; // 前一对差值
-        int result = 1;  // 记录峰值个数，序列默认序列最右边有一个峰值
+        int result = 1; // 记录峰值个数，序列默认序列最右边有一个峰值
         for (int i = 0; i < nums.size() - 1; i++) {
             curDiff = nums[i + 1] - nums[i];
             // 出现峰值
-            if ((preDiff <= 0 && curDiff > 0) || (preDiff >= 0 && curDiff < 0)) {
+            if ((preDiff <= 0 && curDiff > 0) ||
+                (preDiff >= 0 && curDiff < 0)) {
                 result++;
                 preDiff = curDiff;
             }
@@ -2103,7 +2288,9 @@ public:
         for (int i = 0; i < nums.size(); i++) {
             count += nums[i];
             sum = max(count, sum);
-            if (count < 0) { count = 0; }
+            if (count < 0) {
+                count = 0;
+            }
         }
         return sum;
     }
@@ -2133,7 +2320,9 @@ public:
         dp[0] = 1;
         for (int i = 0; i < nums.size(); i++) {
             if (dp[i] == 1) {
-                for (int j = 1; j <= nums[i] && i + j < nums.size(); j++) { dp[i + j] = 1; }
+                for (int j = 1; j <= nums[i] && i + j < nums.size(); j++) {
+                    dp[i + j] = 1;
+                }
             }
         }
         return dp[nums.size() - 1];
@@ -2162,14 +2351,17 @@ class Solution1005 {
 public:
     int largestSumAfterKNegations(vector<int> &nums, int k) {
         int sum = 0;
-        sort(nums.begin(), nums.end(), [](int left, int right) { return abs(left) > abs(right); });
+        sort(nums.begin(), nums.end(),
+             [](int left, int right) { return abs(left) > abs(right); });
         for (int i = 0; i < nums.size(); i++) {
             if (nums[i] < 0 && k > 0) {
                 nums[i] = -nums[i];
                 k--;
             }
         }
-        if (k % 2 == 1) { nums[nums.size() - 1] = -nums[nums.size() - 1]; }
+        if (k % 2 == 1) {
+            nums[nums.size() - 1] = -nums[nums.size() - 1];
+        }
         for (auto &a : nums) sum += a;
         return sum;
     }
@@ -2203,7 +2395,9 @@ public:
             if (ratings[i] > ratings[i - 1]) can[i] = can[i - 1] + 1;
         }
         for (int i = n - 1; i > 0; i--) {
-            if (ratings[i - 1] > ratings[i]) { can[i - 1] = max(can[i - 1], can[i] + 1); }
+            if (ratings[i - 1] > ratings[i]) {
+                can[i - 1] = max(can[i - 1], can[i] + 1);
+            }
         }
         int result = 0;
         for (int i = 0; i < can.size(); i++) result += can[i];
@@ -2217,19 +2411,24 @@ public:
     bool lemonadeChange(vector<int> &bills) {
         int store[2] = {0, 0}; // 0 5d 1 10d 2 20d
         for (int x : bills) {
-            if (x == 5) { store[0]++; }
-            else if (x == 10) {
+            if (x == 5) {
+                store[0]++;
+            } else if (x == 10) {
                 store[1]++;
-                if (store[0] > 0) { store[0]--; }
-                else { return false; }
-            }
-            else {
+                if (store[0] > 0) {
+                    store[0]--;
+                } else {
+                    return false;
+                }
+            } else {
                 if (store[1] > 0 && store[0] > 0) {
                     store[1]--;
                     store[0]--;
+                } else if (store[0] > 2) {
+                    store[0] -= 3;
+                } else {
+                    return false;
                 }
-                else if (store[0] > 2) { store[0] -= 3; }
-                else { return false; }
             }
         }
         return true;
@@ -2259,8 +2458,11 @@ public:
              [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
         int ans = 1;
         for (int i = 1; i < points.size(); i++) {
-            if (points[i][0] > points[i - 1][1]) { ans++; }
-            else { points[i][1] = min(points[i][1], points[i - 1][1]); }
+            if (points[i][0] > points[i - 1][1]) {
+                ans++;
+            } else {
+                points[i][1] = min(points[i][1], points[i - 1][1]);
+            }
         }
         return ans;
     }
@@ -2277,7 +2479,8 @@ public:
         for (int i = 1; i < intervals.size(); i++) {
             if (intervals[i][0] < intervals[i - 1][1]) {
                 ans++;
-                intervals[i][1] = min(intervals[i][1], intervals[i - 1][1]); // 模拟撤销的动作
+                intervals[i][1] =
+                    min(intervals[i][1], intervals[i - 1][1]); // 模拟撤销的动作
             }
         }
         return ans;
@@ -2316,7 +2519,9 @@ public:
             vector<int> result;
             // 记录每个字符最后一次出现的位置
             unordered_map<char, int> lastOccurrence;
-            for (int i = 0; i < s.size(); i++) { lastOccurrence[s[i]] = i; }
+            for (int i = 0; i < s.size(); i++) {
+                lastOccurrence[s[i]] = i;
+            }
             int start = 0; // 当前子串的起始位置
             int end = 0;   // 当前子串的结束位置
             for (int i = 0; i < s.size(); i++) {
@@ -2344,8 +2549,9 @@ public:
         for (int i = 1; i < intervals.size(); i++) {
             if (intervals[i][0] <= res.back()[1]) {
                 res.back()[1] = max(res.back()[1], intervals[i][1]);
+            } else {
+                res.push_back(intervals[i]);
             }
-            else { res.push_back(intervals[i]); }
         }
         return res;
     }
@@ -2362,7 +2568,9 @@ public:
                 s[i]--;
             }
         }
-        for (int i = flag; i < s.size(); i++) { s[i] = '9'; }
+        for (int i = flag; i < s.size(); i++) {
+            s[i] = '9';
+        }
         return stoi(s);
     }
 };
@@ -2420,19 +2628,29 @@ public:
     int uniquePaths2(int m, int n) {
         // 最简单的方法 一共走m+n-2步，选出m-1步走下
         vector<vector<int>> dp(m, vector<int>(n, 0));
-        for (int i = 0; i < m; i++) { dp[i][0] = 1; }
-        for (int i = 0; i < n; i++) { dp[0][i] = 1; }
+        for (int i = 0; i < m; i++) {
+            dp[i][0] = 1;
+        }
+        for (int i = 0; i < n; i++) {
+            dp[0][i] = 1;
+        }
         for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n; j++) { dp[i][j] = dp[i - 1][j] + dp[i][j - 1]; }
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
         }
         return dp[m - 1][n - 1];
     }
     int uniquePaths(int m, int n) {
         // 最简单的方法 一共走m+n-2步，选出m-1步走下
         vector<int> dp(n, 0);
-        for (int i = 0; i < n; i++) { dp[i] = 1; }
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+        }
         for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n; j++) { dp[j] = dp[j - 1] + dp[j]; }
+            for (int j = 1; j < n; j++) {
+                dp[j] = dp[j - 1] + dp[j];
+            }
         }
         return dp[n - 1];
     }
@@ -2460,7 +2678,8 @@ public:
         }
         for (int i = 1; i < m; i++) {
             for (int j = 1; j < n; j++) {
-                if (obstacleGrid[i][j] == 0) dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                if (obstacleGrid[i][j] == 0)
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
             }
         }
         return dp[m - 1][n - 1];
@@ -2474,8 +2693,8 @@ public:
         dp[1] = 1;
         for (int i = 2; i <= n; i++) {
             for (int k = 1; k < i && k <= i - k; k++) {
-                dp[i] =
-                    max({dp[i], dp[i - k] * dp[k], (i - k) * k, dp[i - k] * k, (i - k) * dp[k]});
+                dp[i] = max({dp[i], dp[i - k] * dp[k], (i - k) * k,
+                             dp[i - k] * k, (i - k) * dp[k]});
             }
         }
         return dp[n];
@@ -2490,7 +2709,9 @@ public:
         dp[0] = 1;
         dp[1] = 1;
         for (int i = 2; i <= n; i++) {
-            for (int j = 0; j < i; j++) { dp[i] += dp[j] * dp[i - j - 1]; }
+            for (int j = 0; j < i; j++) {
+                dp[i] += dp[j] * dp[i - j - 1];
+            }
         }
         return dp[n];
     }
@@ -2503,7 +2724,8 @@ public:
         bool res;
         if (mem[i][j] == -1)
             mem[i][j] = res =
-                j >= nums[i] && back(nums, i - 1, j - nums[i], mem) || back(nums, i - 1, j, mem);
+                j >= nums[i] && back(nums, i - 1, j - nums[i], mem) ||
+                back(nums, i - 1, j, mem);
         else
             return mem[i][j];
         return res;
@@ -2511,7 +2733,9 @@ public:
     // 第一种方法 记忆化搜索
     bool canPartition1(vector<int> &nums) {
         int sum = 0;
-        for (int x : nums) { sum += x; }
+        for (int x : nums) {
+            sum += x;
+        }
         if (sum % 2 == 1) return false;
         vector<vector<int>> mem(nums.size(), vector<int>(sum / 2 + 1, -1));
         return back(nums, nums.size() - 1, sum / 2, mem);
@@ -2520,7 +2744,9 @@ public:
     // 看背包装好后的最大价值
     bool canPartition(vector<int> &nums) {
         int sum = 0;
-        for (int x : nums) { sum += x; }
+        for (int x : nums) {
+            sum += x;
+        }
         if (sum % 2 == 1) return false;
         vector<int> dp(sum / 2 + 1, 0);
         for (int i = 0; i < nums.size(); i++) {
@@ -2546,7 +2772,9 @@ public:
         vector<int> dp(left + 1, 0);
         dp[0] = 1;
         for (int i = 0; i < nums.size(); i++) {
-            for (int j = left; j >= nums[i]; j--) { dp[j] = dp[j] + dp[j - nums[i]]; }
+            for (int j = left; j >= nums[i]; j--) {
+                dp[j] = dp[j] + dp[j - nums[i]];
+            }
         }
         return dp[left];
     }
@@ -2556,7 +2784,9 @@ public:
 class Solution474 {
 public:
     int findMaxForm(vector<string> &strs, int m, int n) {
-        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0)); // dp[i][j] 有i个0和j个1的最大子集长度
+        vector<vector<int>> dp(
+            m + 1,
+            vector<int>(n + 1, 0)); // dp[i][j] 有i个0和j个1的最大子集长度
         for (const string &str : strs) {
             int num0 = 0, num1 = 0;
             for (char c : str) {
@@ -2579,11 +2809,14 @@ public:
 class Solution518 {
 public:
     int change(int amount, vector<int> &coins) {
-        vector<uint64_t> dp(amount + 1,
-                            0); // dp[i][j] 背包载重j，截止第i个物品能凑出重量为j的方案数
+        vector<uint64_t> dp(
+            amount + 1,
+            0); // dp[i][j] 背包载重j，截止第i个物品能凑出重量为j的方案数
         dp[0] = 1;
         for (int i = 0; i < coins.size(); i++) {
-            for (int j = coins[i]; j <= amount; j++) { dp[j] += dp[j - coins[i]]; }
+            for (int j = coins[i]; j <= amount; j++) {
+                dp[j] += dp[j - coins[i]];
+            }
         }
         return dp[amount];
     }
@@ -2630,7 +2863,8 @@ public:
         dp[0] = 0;
         for (int i = 0; i * i <= n; i++) {
             for (int j = i * i; j <= n; j++) {
-                if (dp[j - i * i] != INT_MAX) dp[j] = min(dp[j], dp[j - i * i] + 1);
+                if (dp[j - i * i] != INT_MAX)
+                    dp[j] = min(dp[j], dp[j - i * i] + 1);
             }
         }
         return dp[n];
@@ -2644,10 +2878,13 @@ class Solution139 {
             unordered_set<string> wordSet(wordDict.begin(), wordDict.end());
             vector<bool> dp(s.size() + 1, false);
             dp[0] = true;
-            for (int i = 1; i <= s.size(); i++) {     // 遍历背包
-                for (int j = 0; j < i; j++) {         // 遍历物品
-                    string word = s.substr(j, i - j); // substr(起始位置，截取的个数)
-                    if (wordSet.find(word) != wordSet.end() && dp[j]) { dp[i] = true; }
+            for (int i = 1; i <= s.size(); i++) { // 遍历背包
+                for (int j = 0; j < i; j++) {     // 遍历物品
+                    string word =
+                        s.substr(j, i - j); // substr(起始位置，截取的个数)
+                    if (wordSet.find(word) != wordSet.end() && dp[j]) {
+                        dp[i] = true;
+                    }
                 }
             }
             return dp[s.size()];
@@ -2669,8 +2906,9 @@ public:
         for (int j = 1; j <= s.size(); j++) {
             for (int i = 0; i < wordDict.size(); i++) {
                 if (j >= wordDict[i].size()) {
-                    dp[j] = dp[j - wordDict[i].size()] &&
-                            check(wordDict[i], s, j - wordDict[i].size(), j - 1);
+                    dp[j] =
+                        dp[j - wordDict[i].size()] &&
+                        check(wordDict[i], s, j - wordDict[i].size(), j - 1);
                     if (dp[j]) break;
                 }
             }
@@ -2773,7 +3011,9 @@ public:
     // 贪心
     int maxProfitT(vector<int> &prices) {
         int ans = 0;
-        for (int i = 1; i < prices.size(); i++) { ans += max(0, prices[i] - prices[i - 1]); }
+        for (int i = 1; i < prices.size(); i++) {
+            ans += max(0, prices[i] - prices[i - 1]);
+        }
         return ans;
     }
     // DP
@@ -2825,7 +3065,9 @@ public:
             for (int i = 1; i < 2 * k; i++) {
                 if (i % 2 == 0)
                     dp[i] = max(dp_his[i], dp_his[i - 1] - prices[j]);
-                else { dp[i] = max(dp_his[i], dp_his[i - 1] + prices[j]); }
+                else {
+                    dp[i] = max(dp_his[i], dp_his[i - 1] + prices[j]);
+                }
             }
             dp_his = dp;
         }
@@ -2873,7 +3115,9 @@ public:
         vector<int> dp(n, 1);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < i; j++) {
-                if (nums[i] > nums[j]) { dp[i] = max(dp[i], dp[j] + 1); }
+                if (nums[i] > nums[j]) {
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
             }
         }
         return ranges::max(dp);
@@ -2886,7 +3130,9 @@ public:
         vector<int> dp(n, 1);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < i; j++) {
-                if (nums[i] > nums[i - 1]) { dp[i] = dp[i - 1] + 1; }
+                if (nums[i] > nums[i - 1]) {
+                    dp[i] = dp[i - 1] + 1;
+                }
             }
         }
         return ranges::max(dp);
@@ -2909,14 +3155,16 @@ public:
         return res;
     }
 
-    int maxWindow(vector<int> &nums1, vector<int> &nums2, int start1, int start2, int len) {
+    int maxWindow(vector<int> &nums1, vector<int> &nums2, int start1,
+                  int start2, int len) {
         int max_len = 0, current = 0;
         for (int k = 0; k < len; k++) {
             if (nums1[start1 + k] == nums2[start2 + k]) {
                 current++;
                 max_len = max(max_len, current);
+            } else {
+                current = 0;
             }
-            else { current = 0; }
         }
         return max_len;
     }
@@ -2981,9 +3229,10 @@ public:
     }
 };
 
-class Solution {
+class Solution392 {
 public:
-    bool isSubsequence(string s, string t) {
+    // O(t.size())
+    bool isSubsequence1(string s, string t) {
         if (s.size() > t.size()) return false;
         int i = 0, j = 0;
         while (i < s.size()) {
@@ -2991,13 +3240,72 @@ public:
             if (s[i] == t[j]) {
                 i++;
                 j++;
+            } else {
+                j++;
             }
-            else { j++; }
         }
         return true;
     }
+    // 进阶：
+    // 如果有大量输入的 S，称作 S1, S2, ...,
+    //     Sk 其中 k >= 10亿，你需要依次检查它们是否为 T
+    //                      的子序列。在这种情况下，你会怎样改变代码？
+    bool isSubsequence2(string s, string t) {
+        int n = t.size();
+        if (n < s.size()) return false;
+        if (s.size() == 0) return true;
+        vector<vector<int>> dp(n, vector<int>(26, n));
+        // dp[i][j] 下标≥i的串t中字符j的序号，如果没有则为t.size()
+        // 直接返回没找到 递推：t[i]== j -> t[i][j]=i;   否则=t[i+1][j]
+        dp[n - 1][t[n - 1] - 'a'] = n - 1;
+        for (int i = t.size() - 2; i >= 0; i--) {
+            dp[i][t[i] - 'a'] = i;
+            for (int j = 'z' - 'a'; j >= 0; j--) {
+                if (j != t[i] - 'a') dp[i][j] = dp[i + 1][j];
+            }
+        }
+        // s = "abc"   t = "ahhhbfffffcdd"
+        for (int i = 0, j = 0; i < s.size(); i++) {
+            if (j >= t.size()) return false;
+            if (dp[j][s[i] - 'a'] == n) return false;
+            j = dp[j][s[i] - 'a'] + 1;
+        }
+        return true;
+    }
+    // DP
+    bool isSubsequence(string s, string t) {
+        if (s.size() > t.size()) return false;
+        if (s.size() == 0) return true;
+        int m = s.size(), n = t.size();
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+        // dp[i][j] 是s 0...i-1 t 0...j-1 的公共串长度
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s[i - 1] == t[j - 1])
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                else
+                    // dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                    dp[i][j] =
+                        dp[i][j - 1]; // 一般的，本题目可以只考虑删除t串的字符
+            }
+        }
+        return dp[m][n] == s.size();
+    }
 };
-int main() {
-    vector<int> s{10, 9, 2, 5, 3, 7, 101, 18};
-    // Solution().lengthOfLIS(s);
-}
+class Solution {
+public:
+    int numDistinct(string s, string t) {
+        int m = s.size(), n = t.size();
+        vector<uint64_t> dp(n + 1, 0); // dp[j] t[0...j]有多少种方式填满
+        // 把t当背包，每个地方只能放对应的字符，把s的每个字符当物品 0-1背包
+        dp[0] = 1;
+        for (int i = 1; i <= m; i++) {      // 遍历物品 s[i-1]
+            for (int j = n; j >= 1; j--) {  // 遍历背包
+                if (s[i - 1] == t[j - 1]) { // 匹配了
+                    dp[j] += dp[j - 1];
+                }
+            }
+        }
+        return dp[n] % 1000000007;
+    }
+};
