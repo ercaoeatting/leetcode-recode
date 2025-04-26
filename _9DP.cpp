@@ -15,7 +15,9 @@ public:
         dp[0] = 0;
         dp[1] = 1;
         if (n < 2) return n; // 防空指针，也是剪枝
-        for (int i = 2; i <= n; i++) { dp[i] = dp[i - 1] + dp[i - 2]; }
+        for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
         return dp[n];
     }
 };
@@ -26,7 +28,9 @@ public:
         if (n <= 2) return n;
         dp[1] = 1;
         dp[2] = 2;
-        for (int i = 3; i <= n; i++) { dp[i] = dp[i - 1] + dp[i - 2]; }
+        for (int i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
         return dp[n];
     }
     // 依然可以优化空间复杂度
@@ -66,7 +70,9 @@ public:
         vector<int> dp(cost.size() + 1);
         dp[0] = 0;
         dp[1] = 0;
-        for (int i = 2; i <= cost.size(); i++) { dp[i] = min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]); }
+        for (int i = 2; i <= cost.size(); i++) {
+            dp[i] = min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
+        }
         return dp[cost.size()];
     }
 };
@@ -78,7 +84,9 @@ public:
         for (int i = 0; i < m; i++) dp[i][0] = 1;
         for (int i = 0; i < n; i++) dp[0][i] = 1;
         for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n; j++) { dp[i][j] = dp[i - 1][j] + dp[i][j - 1]; }
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
         }
         return dp[m - 1][n - 1];
     }
@@ -106,7 +114,9 @@ public:
         for (int i = 1; i < m; i++) {
             for (int j = 1; j < n; j++) {
                 dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
-                if (obstacleGrid[i][j]) { dp[i][j] = 0; }
+                if (obstacleGrid[i][j]) {
+                    dp[i][j] = 0;
+                }
             }
         }
         return dp[m - 1][n - 1];
@@ -120,7 +130,9 @@ public:
         memset(dp, 0, sizeof(int) * (n + 1));
         dp[2] = 1;
         for (int i = 3; i <= n; i++) {
-            for (int j = 1; j <= i / 2; j++) { dp[i] = max(dp[i], max((i - j) * j, dp[i - j] * j)); }
+            for (int j = 1; j <= i / 2; j++) {
+                dp[i] = max(dp[i], max((i - j) * j, dp[i - j] * j));
+            }
         }
         return dp[n];
     }
@@ -132,7 +144,9 @@ public:
         vector<int> dp(n + 1);
         dp[0] = 1;
         for (int i = 1; i <= n; i++) {
-            for (int j = 0; j < i; j++) { dp[i] += dp[j] * dp[i - j - 1]; }
+            for (int j = 0; j < i; j++) {
+                dp[i] += dp[j] * dp[i - j - 1];
+            }
         }
         return dp[n];
     }
@@ -143,8 +157,12 @@ public:
     void pack(int index, int bagweight) {
         vector<int> weight(index, 0); // 存储每件物品所占空间
         vector<int> value(index, 0);  // 存储每件物品价值
-        for (int i = 0; i < index; ++i) { cin >> weight[i]; }
-        for (int j = 0; j < index; ++j) { cin >> value[j]; }
+        for (int i = 0; i < index; ++i) {
+            cin >> weight[i];
+        }
+        for (int j = 0; j < index; ++j) {
+            cin >> value[j];
+        }
         vector<vector<int>> dp(index, vector<int>(bagweight + 1, 0));
         for (int j = weight[0]; j <= bagweight; j++) dp[0][j] = value[0];
         for (int i = 1; i < weight.size(); i++) {
@@ -152,7 +170,8 @@ public:
                 if (j < weight[i])
                     dp[i][j] = dp[i - 1][j];
                 else
-                    dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - weight[i]] + value[i]); // 核心转移公式
+                    dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - weight[i]] +
+                                                     value[i]); // 核心转移公式
             }
         }
         cout << dp[index - 1][bagweight];
@@ -161,11 +180,17 @@ public:
     void deal(int M, int bagweight) {
         vector<int> weight(M, 0);
         vector<int> value(M, 0);
-        for (int i = 0; i < M; i++) { cin >> weight[i]; }
-        for (int j = 0; j < M; j++) { cin >> value[j]; }
+        for (int i = 0; i < M; i++) {
+            cin >> weight[i];
+        }
+        for (int j = 0; j < M; j++) {
+            cin >> value[j];
+        }
         vector<int> dp(bagweight + 1, 0);
         for (int i = 0; i < M; i++) {
-            for (int j = bagweight; j >= weight[i]; j--) { dp[j] = max(dp[j], dp[j - weight[i]] + value[i]); }
+            for (int j = bagweight; j >= weight[i]; j--) {
+                dp[j] = max(dp[j], dp[j - weight[i]] + value[i]);
+            }
         }
         std::cout << dp[bagweight] << std::endl;
     }
@@ -174,11 +199,15 @@ class lc416 {
 public:
     bool canPartition(vector<int>& nums) {
         int sum = 0;
-        for (int i = 0; i < nums.size(); i++) { sum += nums[i]; }
+        for (int i = 0; i < nums.size(); i++) {
+            sum += nums[i];
+        }
         if (sum % 2 != 0) return false;
         vector<int> dp(sum / 2 + 1, 0);
         for (int i = 0; i < nums.size(); i++) {
-            for (int j = sum / 2; j >= nums[i]; j--) { dp[j] = max(dp[j], dp[j - nums[i]] + nums[i]); }
+            for (int j = sum / 2; j >= nums[i]; j--) {
+                dp[j] = max(dp[j], dp[j - nums[i]] + nums[i]);
+            }
         }
         return dp[sum / 2] == sum / 2;
     }
@@ -188,7 +217,9 @@ class lc1049 {
 public:
     int lastStoneWeightII(vector<int>& nums) {
         int sum = 0;
-        for (int i = 0; i < nums.size(); i++) { sum += nums[i]; }
+        for (int i = 0; i < nums.size(); i++) {
+            sum += nums[i];
+        }
         if (sum % 2 != 0) return false;
         vector<int> dp(sum / 2 + 1, 0);
         for (int i = 0; i < nums.size(); i++) {
@@ -210,7 +241,9 @@ public:
         vector<int> dp((target + sum) / 2 + 1, 0);
         dp[0] = 1;
         for (int i = 0; i < nums.size(); i++) {
-            for (int j = (sum + target) / 2; j >= nums[i]; j--) { dp[j] += dp[j - nums[i]]; }
+            for (int j = (sum + target) / 2; j >= nums[i]; j--) {
+                dp[j] += dp[j - nums[i]];
+            }
         }
         return dp[(target + sum) / 2];
     }
@@ -223,11 +256,16 @@ public:
         for (string s : strs) {
             int n0 = 0, n1 = 0;
             for (char c : s) {
-                if (c == '0') { n0++; }
-                else { n1++; }
+                if (c == '0') {
+                    n0++;
+                } else {
+                    n1++;
+                }
             }
             for (int i = m; i >= n0; i--) {
-                for (int j = n; j >= n1; j--) { dp[i][j] = max(dp[i][j], dp[i - n0][j - n1] + 1); }
+                for (int j = n; j >= n1; j--) {
+                    dp[i][j] = max(dp[i][j], dp[i - n0][j - n1] + 1);
+                }
             }
         }
         return dp[m][n];
@@ -241,7 +279,9 @@ public:
         vector<int> dp(amount + 1, 0);
         dp[0] = 1;
         for (int i = 0; i < coins.size(); i++) {
-            for (int j = coins[i]; j <= amount; j++) { dp[j] += dp[j - coins[i]]; }
+            for (int j = coins[i]; j <= amount; j++) {
+                dp[j] += dp[j - coins[i]];
+            }
         }
         return dp[amount];
     }
@@ -254,7 +294,8 @@ public:
         dp[0] = 1;
         for (int j = 0; j <= target; j++) {
             for (int i = 0; i < nums.size(); i++) {
-                if (j >= nums[i] && dp[j] < INT_MAX - dp[j - nums[i]]) dp[j] += dp[j - nums[i]];
+                if (j >= nums[i] && dp[j] < INT_MAX - dp[j - nums[i]])
+                    dp[j] += dp[j - nums[i]];
             }
         }
         return dp[target];
@@ -268,7 +309,8 @@ public:
         dp[0] = 0;
         for (int i = 0; i < coins.size(); i++) {
             for (int j = coins[i]; j <= amount; j++) {
-                if (dp[j - coins[i]] != INT_MAX) dp[j] = min(dp[j], dp[j - coins[i]] + 1);
+                if (dp[j - coins[i]] != INT_MAX)
+                    dp[j] = min(dp[j], dp[j - coins[i]] + 1);
             }
         }
         return dp[amount];
@@ -300,7 +342,9 @@ public:
                 if (dp[j]) break; // 剪枝操作
                 if (!dp[i]) continue;
                 string substr = s.substr(i, j - i);
-                if (word.find(substr) != word.end() && dp[i]) { dp[j] = true; }
+                if (word.find(substr) != word.end() && dp[i]) {
+                    dp[j] = true;
+                }
             }
         }
         return dp[s.size()];
@@ -311,12 +355,18 @@ class lc198 {
 public:
     int rob(vector<int>& nums) {
         int size = nums.size();
-        if (size == 1) { return nums[0]; }
-        if (size == 2) { return max(nums[0], nums[1]); }
+        if (size == 1) {
+            return nums[0];
+        }
+        if (size == 2) {
+            return max(nums[0], nums[1]);
+        }
         vector<int> dp(size, 0);
         dp[0] = nums[0];
         dp[1] = max(nums[0], nums[1]);
-        for (int i = 2; i < size; i++) { dp[i] = max(dp[i - 2] + nums[i], dp[i - 1]); }
+        for (int i = 2; i < size; i++) {
+            dp[i] = max(dp[i - 2] + nums[i], dp[i - 1]);
+        }
         return dp[size - 1];
     }
 };
@@ -326,7 +376,8 @@ struct TreeNode {
     TreeNode* right;
     TreeNode() : val(0), left(nullptr), right(nullptr) {}
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right)
+        : val(x), left(left), right(right) {}
 };
 
 class lc152 {
@@ -342,8 +393,7 @@ public:
                 dp[i][1] = max(dp[i - 1][1] * nums[i], nums[i]);
                 dp[i][0] = min(dp[i - 1][0] * nums[i], nums[i]);
                 res = max(dp[i][1], res);
-            }
-            else {
+            } else {
                 dp[i][1] = max(dp[i - 1][0] * nums[i], nums[i]);
                 dp[i][0] = min(dp[i - 1][1] * nums[i], nums[i]);
                 res = max(dp[i][1], res);
@@ -362,7 +412,9 @@ public:
         vector<int> dp(size, 0);
         dp[0] = nums[0];
         dp[1] = max(nums[0], nums[1]);
-        for (int i = 2; i < size; i++) { dp[i] = max(dp[i - 1], dp[i - 2] + nums[i]); }
+        for (int i = 2; i < size; i++) {
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums[i]);
+        }
         return dp[size - 1];
     }
 };
@@ -376,8 +428,12 @@ public:
         if (umap[root]) return umap[root];
         // 抢劫父节点
         int val1 = root->val;
-        if (root->left) val1 += rob_bt(root->left->left) + rob_bt(root->left->right);    // 不考虑左子
-        if (root->right) val1 += rob_bt(root->right->left) + rob_bt(root->right->right); // 不考虑右子
+        if (root->left)
+            val1 += rob_bt(root->left->left) +
+                    rob_bt(root->left->right); // 不考虑左子
+        if (root->right)
+            val1 += rob_bt(root->right->left) +
+                    rob_bt(root->right->right); // 不考虑右子
         // 不抢劫父节点
         int val2 = rob_bt(root->left) + rob_bt(root->right);
         umap[root] = max(val1, val2); // 记忆化
@@ -388,8 +444,9 @@ public:
         // dp[k][0]不偷该节点所得到的的最大金钱，dp[k][1]记录偷该节点所得到的的最大金钱。
         vector<int> left = robTree(cur->left);
         vector<int> right = robTree(cur->right);
-        int val1 = cur->val + left[0] + right[0];                   // 偷当前节点
-        int val2 = max(left[0], left[1]) + max(right[0], right[1]); // 不偷当前节点，“考虑”偷子节点
+        int val1 = cur->val + left[0] + right[0]; // 偷当前节点
+        int val2 = max(left[0], left[1]) +
+                   max(right[0], right[1]); // 不偷当前节点，“考虑”偷子节点
         return {val1, val2};
     }
     int rob(TreeNode* root) {
@@ -426,12 +483,14 @@ public:
     // 滚动数组压缩
     int maxProfit_zip(vector<int>& prices) {
         int len = prices.size();
-        vector<vector<int>> dp(2, vector<int>(2)); // 注意这里只开辟了一个2 * 2大小的二维数组
+        vector<vector<int>> dp(
+            2, vector<int>(2)); // 注意这里只开辟了一个2 * 2大小的二维数组
         dp[0][0] -= prices[0];
         dp[0][1] = 0;
         for (int i = 1; i < len; i++) {
             dp[i % 2][0] = max(dp[(i - 1) % 2][0], -prices[i]);
-            dp[i % 2][1] = max(dp[(i - 1) % 2][1], prices[i] + dp[(i - 1) % 2][0]);
+            dp[i % 2][1] =
+                max(dp[(i - 1) % 2][1], prices[i] + dp[(i - 1) % 2][0]);
         }
         return dp[(len - 1) % 2][1];
     }
@@ -441,13 +500,16 @@ class LC122 {
 public:
     int maxProfit(vector<int>& prices) {
         int len = prices.size();
-        vector<vector<int>> dp(2, vector<int>(2)); // 注意这里只开辟了一个2 * 2大小的二维数组
+        vector<vector<int>> dp(
+            2, vector<int>(2)); // 注意这里只开辟了一个2 * 2大小的二维数组
         dp[0][0] -= prices[0];
         dp[0][1] = 0;
         for (int i = 1; i < len; i++) {
             // 两个状态             i-1持有股票          i-1不持有股票
-            dp[i % 2][0] = max(dp[(i - 1) % 2][0], dp[(i - 1) % 2][1] - prices[i]); // dp [0]持有
-            dp[i % 2][1] = max(dp[(i - 1) % 2][1], prices[i] + dp[(i - 1) % 2][0]); // 不持有
+            dp[i % 2][0] = max(dp[(i - 1) % 2][0],
+                               dp[(i - 1) % 2][1] - prices[i]); // dp [0]持有
+            dp[i % 2][1] = max(dp[(i - 1) % 2][1],
+                               prices[i] + dp[(i - 1) % 2][0]); // 不持有
         }
         return dp[(len - 1) % 2][1];
     }
@@ -464,10 +526,12 @@ public:
         dp[0][3] = -prices[0];
         dp[0][4] = 0;
         for (int i = 1; i < len; i++) {
-            dp[i][1] = max(dp[i - 1][1], -prices[i]);               // 第1次持有
-            dp[i][2] = max(dp[i - 1][2], dp[i - 1][1] + prices[i]); // 第1次不持有
+            dp[i][1] = max(dp[i - 1][1], -prices[i]); // 第1次持有
+            dp[i][2] =
+                max(dp[i - 1][2], dp[i - 1][1] + prices[i]); // 第1次不持有
             dp[i][3] = max(dp[i - 1][3], dp[i - 1][2] - prices[i]); // 第2次持有
-            dp[i][4] = max(dp[i - 1][4], dp[i - 1][3] + prices[i]); // 第2次不持有
+            dp[i][4] =
+                max(dp[i - 1][4], dp[i - 1][3] + prices[i]); // 第2次不持有
         }
         return dp[len - 1][4];
     }
@@ -478,11 +542,15 @@ public:
     int maxProfit(int k, vector<int>& prices) {
         vector<vector<int>> dp(prices.size(), vector<int>(2 * k + 1, 0));
         // dp[1] 第一次持有  dp[2] 1no  dp[3]2have
-        for (int i = 0; i < k; i++) { dp[0][2 * i + 1] = -prices[0]; }
+        for (int i = 0; i < k; i++) {
+            dp[0][2 * i + 1] = -prices[0];
+        }
         for (int i = 1; i < prices.size(); i++) {
             for (int j = 0; j < 2 * k - 1; j += 2) {
-                dp[i][j + 1] = max(dp[i - 1][j + 1], dp[i - 1][j] - prices[i]);     // 持有
-                dp[i][j + 2] = max(dp[i - 1][j + 2], dp[i - 1][j + 1] + prices[i]); // 不持有
+                dp[i][j + 1] =
+                    max(dp[i - 1][j + 1], dp[i - 1][j] - prices[i]); // 持有
+                dp[i][j + 2] = max(dp[i - 1][j + 2],
+                                   dp[i - 1][j + 1] + prices[i]); // 不持有
             }
         }
         return dp[prices.size() - 1][2 * k];
@@ -496,12 +564,16 @@ public:
         vector<vector<int>> dp(2, vector<int>(4, 0));
         dp[0][0] = -prices[0];
         for (int i = 1; i < prices.size(); i++) {
-            dp[i % 2][0] = max(dp[(i - 1) % 2][0], max(dp[(i - 1) % 2][1] - prices[i], dp[(i - 1) % 2][3] - prices[i]));
+            dp[i % 2][0] =
+                max(dp[(i - 1) % 2][0], max(dp[(i - 1) % 2][1] - prices[i],
+                                            dp[(i - 1) % 2][3] - prices[i]));
             dp[i % 2][1] = max(dp[(i - 1) % 2][1], dp[(i - 1) % 2][3]);
             dp[i % 2][2] = dp[(i - 1) % 2][0] + prices[i];
             dp[i % 2][3] = dp[(i - 1) % 2][2];
         }
-        return max(dp[(prices.size() - 1) % 2][1], max(dp[(prices.size() - 1) % 2][2], dp[(prices.size() - 1) % 2][3]));
+        return max(dp[(prices.size() - 1) % 2][1],
+                   max(dp[(prices.size() - 1) % 2][2],
+                       dp[(prices.size() - 1) % 2][3]));
     }
 };
 // 最长递增子序列
@@ -514,7 +586,9 @@ public:
         int result = 0;
         for (int i = 1; i < nums.size(); i++) {
             for (int j = 0; j < i; j++) {
-                if (nums[i] > nums[j]) { dp[i] = max(dp[i], dp[j] + 1); }
+                if (nums[i] > nums[j]) {
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
             }
             result = (dp[i] > result) ? dp[i] : result;
         }
@@ -529,6 +603,33 @@ public:
             else {
                 auto j = lower_bound(p.begin(), p.end(), num);
                 *j = num;
+            }
+        }
+        return p.size();
+    }
+    // 等价于
+    int Searchupnum(vector<int>& p, int num) {
+        int left = 0, right = p.size(); // 区间[left,right）
+        while (left < right) {          // [2,3)是有效区间，包含2
+            int middle = left + (right - left) / 2;
+            if (p[middle] >= num) // 答案在 [left, mid)
+                right = middle;
+            else
+                left = middle + 1; // 答案在 [mid+1, right)
+        }
+        return left; // 此时left == right，指向第一个 >= target 的位置
+    }
+    int lengthOfLIS3(vector<int>& nums) {
+        if (nums.empty()) return 0;
+        vector<int> p{nums[0]};
+        for (int i = 1; i < nums.size(); i++) {
+            int num = nums[i];
+            if (num > p.back()) {
+                p.push_back(num);
+            } else {
+                // 使用手写的二分查找替代 lower_bound
+                int j = Searchupnum(p, num);
+                p[j] = num;
             }
         }
         return p.size();

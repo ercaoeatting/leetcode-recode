@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <functional>
+#include <ios>
 #include <iostream>
 #include <iterator>
 #include <list>
@@ -149,16 +150,12 @@ public:
             if (available_size >= size) {
                 // 分配内存，并插入到 check_ 的正确位置以保持有序
                 vector<int> new_block = {start, start + size - 1, mID};
-                auto insert_pos =
-                    lower_bound(check_.begin(), check_.end(), new_block,
-                                [](const vector<int> &a, const vector<int> &b) {
-                                    return a[0] < b[0];
-                                });
+                auto insert_pos = lower_bound(check_.begin(), check_.end(), new_block,
+                                              [](const vector<int> &a, const vector<int> &b) { return a[0] < b[0]; });
                 check_.insert(insert_pos, new_block);
 
                 // 标记内存为 mID
-                fill(array_.begin() + start, array_.begin() + start + size,
-                     mID);
+                fill(array_.begin() + start, array_.begin() + start + size, mID);
                 return start; // 返回分配的内存起始位置
             }
         }
@@ -309,14 +306,11 @@ public:
 };
 class MyFoodRatings {
     class FoodRatings {
-        unordered_map<string, pair<int, string>>
-            food_map; // 食物 -> <评分，烹饪方式>
-        unordered_map<string, set<pair<int, string>>>
-            cuisine_map; // 烹饪方式 -> <食物评分，食物名>
+        unordered_map<string, pair<int, string>> food_map;         // 食物 -> <评分，烹饪方式>
+        unordered_map<string, set<pair<int, string>>> cuisine_map; // 烹饪方式 -> <食物评分，食物名>
 
     public:
-        FoodRatings(vector<string> &foods, vector<string> &cuisines,
-                    vector<int> &ratings) {
+        FoodRatings(vector<string> &foods, vector<string> &cuisines, vector<int> &ratings) {
             for (int i = 0; i < foods.size(); i++) {
                 food_map[foods[i]] = {ratings[i], cuisines[i]};
                 cuisine_map[cuisines[i]].emplace(-ratings[i], foods[i]);
@@ -330,16 +324,13 @@ class MyFoodRatings {
             food_map[food].first = newRating;
         }
 
-        string highestRated(string cuisine) {
-            return cuisine_map[cuisine].begin()->second;
-        }
+        string highestRated(string cuisine) { return cuisine_map[cuisine].begin()->second; }
     };
 
     // leetcode.cn/problems/design-a-food-rating-system/solutions/1694044/ha-xi-biao-tao-ping-heng-shu-by-endlessc-hzct/
 public:
     unordered_map<string, vector<pair<string, int>>> foodmap;
-    MyFoodRatings(vector<string> &foods, vector<string> &cuisines,
-                  vector<int> &ratings) {
+    MyFoodRatings(vector<string> &foods, vector<string> &cuisines, vector<int> &ratings) {
         for (int i = 0; i < cuisines.size(); i++) {
             foodmap[cuisines[i]].push_back({foods[i], ratings[i]});
         }
@@ -357,15 +348,13 @@ public:
     }
 
     string highestRated(string cuisine) {
-        if (foodmap.find(cuisine) == foodmap.end())
-            return ""; // 如果菜系不存在，返回空字符串
+        if (foodmap.find(cuisine) == foodmap.end()) return ""; // 如果菜系不存在，返回空字符串
 
         int maxRating = -1;
         string res = "";
 
         for (const auto &pair : foodmap[cuisine]) {
-            if (pair.second > maxRating ||
-                (pair.second == maxRating && pair.first < res)) {
+            if (pair.second > maxRating || (pair.second == maxRating && pair.first < res)) {
                 maxRating = pair.second;
                 res = pair.first;
             }
@@ -509,8 +498,7 @@ public:
                 if (res != -1) return res;
                 res = INT_MAX;
                 for (int i = k - 2; i < r; i++) {
-                    res = min(res, dfs(dfs, i, k - 1) +
-                                       minchange(minchange, i + 1, r));
+                    res = min(res, dfs(dfs, i, k - 1) + minchange(minchange, i + 1, r));
                 }
                 return res;
             }
@@ -524,12 +512,10 @@ public:
     bool checkPartitioning(std::string s) {
         int n = s.size();
         // 预处理所有子串是否为回文串
-        std::vector<std::vector<bool>> isPalindrome(
-            n, std::vector<bool>(n, false));
+        std::vector<std::vector<bool>> isPalindrome(n, std::vector<bool>(n, false));
         for (int j = 0; j < n; ++j) {
             for (int i = 0; i <= j; ++i) {
-                if (s[i] == s[j] &&
-                    (j - i <= 2 || isPalindrome[i + 1][j - 1])) {
+                if (s[i] == s[j] && (j - i <= 2 || isPalindrome[i + 1][j - 1])) {
                     isPalindrome[i][j] = true;
                 }
             }
@@ -538,8 +524,7 @@ public:
         // 检查是否可以分割成三个回文子串
         for (int i = 0; i < n; ++i) {
             for (int j = i + 1; j < n - 1; ++j) {
-                if (isPalindrome[0][i] && isPalindrome[i + 1][j] &&
-                    isPalindrome[j + 1][n - 1]) {
+                if (isPalindrome[0][i] && isPalindrome[i + 1][j] && isPalindrome[j + 1][n - 1]) {
                     return true;
                 }
             }
@@ -552,8 +537,7 @@ public:
     string breakPalindrome(string palindrome) {
         if (palindrome.size() == 1) return "";
         for (int i = 0; i < palindrome.size(); i++) {
-            if (palindrome[i] > 'a' &&
-                (palindrome.size() % 2 == 0 || i != palindrome.size() / 2)) {
+            if (palindrome[i] > 'a' && (palindrome.size() % 2 == 0 || i != palindrome.size() / 2)) {
                 palindrome[i] = 'a';
                 return palindrome;
             }
@@ -673,8 +657,7 @@ public:
             int f0 = 1, f1 = 1 << it->second;
             for (it++; it != cnt.end(); it++) {
                 auto [x, c] = *it;
-                int new_f = x - prev(it)->first == k ? f1 + f0 * ((1 << c) - 1)
-                                                     : f1 << c;
+                int new_f = x - prev(it)->first == k ? f1 + f0 * ((1 << c) - 1) : f1 << c;
                 f0 = f1;
                 f1 = new_f;
             }
@@ -709,8 +692,7 @@ public:
 
 class Solutionf {
 public:
-    long long maximumBeauty(vector<int> &flowers, long long newFlowers,
-                            int target, int full, int partial) {
+    long long maximumBeauty(vector<int> &flowers, long long newFlowers, int target, int full, int partial) {
         int n = flowers.size();
 
         // 如果全部种满，还剩下多少朵花？
@@ -729,8 +711,7 @@ public:
         if (left_flowers >= 0) {
             // 两种策略取最大值：留一个花园种 target-1
             // 朵花，其余种满；或者，全部种满
-            return max(1LL * (target - 1) * partial + 1LL * (n - 1) * full,
-                       1LL * n * full);
+            return max(1LL * (target - 1) * partial + 1LL * (n - 1) * full, 1LL * n * full);
         }
 
         sort(flowers.begin(),
@@ -754,8 +735,7 @@ public:
 
             // 计算总美丽值
             // 在前缀 [0, j-1] 中均匀种花，这样最小值最大
-            long long avg = (left_flowers + pre_sum) /
-                            j; // 由于上面特判了，这里 avg 一定小于 target
+            long long avg = (left_flowers + pre_sum) / j; // 由于上面特判了，这里 avg 一定小于 target
             long long total_beauty = avg * partial + 1LL * (n - i) * full;
             ans = max(ans, total_beauty);
         }
@@ -768,8 +748,7 @@ class Solution2070 {
 public:
     //  在线算法，遍历queries，但这里有个技巧，先按照价格sort一下items，后面能二分，从而降低时间复杂度n^2
     //  -> (n+m)log n
-    vector<int> maximumBeauty(vector<vector<int>> &items,
-                              vector<int> &queries) {
+    vector<int> maximumBeauty(vector<vector<int>> &items, vector<int> &queries) {
         sort(items.begin(), items.end());
         // 预处理：计算前缀最大值
         for (int i = 1; i < items.size(); i++) {
@@ -795,19 +774,14 @@ public:
         return res;
     }
     // 离线算法 把 queries 排序，通过改变回答询问的顺序，使问题更容易处理。
-    vector<int> maximumBeauty2(vector<vector<int>> &items,
-                               vector<int> &queries) {
+    vector<int> maximumBeauty2(vector<vector<int>> &items, vector<int> &queries) {
         // 对 items 按照价格进行排序
-        sort(items.begin(), items.end(),
-             [](const vector<int> &a, const vector<int> &b) {
-                 return a[0] < b[0];
-             });
+        sort(items.begin(), items.end(), [](const vector<int> &a, const vector<int> &b) { return a[0] < b[0]; });
 
         // 创建查询索引数组，并按照查询值排序
         vector<int> idx(queries.size());
         iota(idx.begin(), idx.end(), 0); // 填充索引 0, 1, 2, ..., n-1
-        sort(idx.begin(), idx.end(),
-             [&](int i, int j) { return queries[i] < queries[j]; });
+        sort(idx.begin(), idx.end(), [&](int i, int j) { return queries[i] < queries[j]; });
 
         // 处理查询
         vector<int> ans(queries.size());
@@ -871,9 +845,7 @@ public:
 
 // 3305. 元音辅音字符串计数 I
 class Solution3305 {
-    bool check(char &c) {
-        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
-    }
+    bool check(char &c) { return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'; }
 
 public:
     long long f(string word, int k) {
@@ -887,8 +859,8 @@ public:
             } else {
                 k_count++;
             }
-            while (cut[0] > 0 && cut['e' - 'a'] > 0 && cut['i' - 'a'] > 0 &&
-                   cut['o' - 'a'] > 0 && cut['u' - 'a'] > 0 && k_count >= k) {
+            while (cut[0] > 0 && cut['e' - 'a'] > 0 && cut['i' - 'a'] > 0 && cut['o' - 'a'] > 0 && cut['u' - 'a'] > 0 &&
+                   k_count >= k) {
                 if (check(word[i])) {
                     cut[word[i] - 'a']--;
                 } else {
@@ -900,9 +872,7 @@ public:
         }
         return ans;
     }
-    long long countOfSubstrings(string word, int k) {
-        return f(word, k) - f(word, k + 1);
-    }
+    long long countOfSubstrings(string word, int k) { return f(word, k) - f(word, k + 1); }
 };
 
 // 3340. 检查平衡字符串
@@ -1031,9 +1001,7 @@ public:
 // 2716. 最小化字符串长度
 class Solution2716 {
 public:
-    int minimizedStringLength(string s) {
-        return unordered_set<char>(s.begin(), s.end()).size();
-    }
+    int minimizedStringLength(string s) { return unordered_set<char>(s.begin(), s.end()).size(); }
 };
 // 2109. 向字符串添加空格
 class Solution2109 {
@@ -1061,8 +1029,7 @@ public:
         dp[n - 1] = questions[n - 1][0];
         for (int i = n - 2; i >= 0; i--) {
             if (i + questions[i][1] + 1 <= n - 1)
-                dp[i] = max(dp[i + 1],
-                            dp[i + questions[i][1] + 1] + questions[i][0]);
+                dp[i] = max(dp[i + 1], dp[i + questions[i][1] + 1] + questions[i][0]);
             else
                 dp[i] = max(dp[i + 1], (long long)questions[i][0]);
         }
@@ -1120,9 +1087,7 @@ public:
                 if (j == 0) break;
                 int ak = arr[k];
                 if (abs(aj - ak) > b) continue;
-                ans += max(s[min({aj + a, ak + c, mx}) + 1] -
-                               s[max({aj - a, ak - c, 0})],
-                           0);
+                ans += max(s[min({aj + a, ak + c, mx}) + 1] - s[max({aj - a, ak - c, 0})], 0);
             }
             ranges::for_each(s.begin() + aj + 1, s.end(), [](auto &x) { x++; });
         }
@@ -1241,9 +1206,8 @@ public:
         string n_s = to_string(n);
         int m = n_s.size();
         vector<int> dp(m, -1); // 记忆化缓存
-        function<int(int, bool, bool)> dfs = [&](int i, bool islimit,
-                                                 bool isnum) -> int {
-            if (i == m) return isnum; // 填过数字才算一个有效数字
+        function<int(int, bool, bool)> dfs = [&](int i, bool islimit, bool isnum) -> int {
+            if (i == m) return isnum;                           // 填过数字才算一个有效数字
             if (!islimit && isnum && dp[i] != -1) return dp[i]; // 记忆化
 
             int res = 0;
@@ -1262,16 +1226,14 @@ public:
 };
 class Solution2999 {
 public:
-    long long numberOfPowerfulInt(long long start, long long finish, int limit,
-                                  string s) {
+    long long numberOfPowerfulInt(long long start, long long finish, int limit, string s) {
         string s_finish = to_string(finish);
         string s_start = to_string(start);
         s_start = string(s_finish.size() - s_start.size(), '0') + s_start;
         int n = s_finish.size();
         int diff = n - s.size();
         vector<long long> memo(n, -1);
-        function<long long(int, bool, bool)> f = [&](int i, bool low,
-                                                     bool high) -> long long {
+        function<long long(int, bool, bool)> f = [&](int i, bool low, bool high) -> long long {
             if (i == n) return 1;
             if (!low && !high && memo[i] != -1) return memo[i];
             long long res = 0;
@@ -1304,8 +1266,7 @@ public:
         int diff_lh = n - l.size();
         // memo[i][start][diff] start <= start_last, diff+9*m <= 18*m
         vector memo(n, vector(diff_lh + 1, vector<int>(18 * m + 1, -1)));
-        function<int(int, int, int, bool, bool)> dfs =
-            [&](int i, int start, int diff, bool low, bool high) -> int {
+        function<int(int, int, int, bool, bool)> dfs = [&](int i, int start, int diff, bool low, bool high) -> int {
             if (i == n) return diff == 9 * m;
             if (start != -1 && !low && !high && memo[i][start][diff] != -1) {
                 return memo[i][start][diff];
@@ -1319,8 +1280,7 @@ public:
             int res = 0;
             bool isleft = start == -1 || i < (start + n) / 2;
             for (int d = lo; d <= hi; d++) {
-                res += dfs(i + 1, start == -1 && d > 0 ? i : start,
-                           diff + (isleft ? d : -d), low && d == lo,
+                res += dfs(i + 1, start == -1 && d > 0 ? i : start, diff + (isleft ? d : -d), low && d == lo,
                            high && d == hi);
             }
             if (start != -1 && !low && !high) {
@@ -1370,25 +1330,102 @@ public:
 // 来源：力扣（LeetCode）
 // 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
-class Solution {
-public:
-    int countGoodTriplets(vector<int> &arr, int a, int b, int c) {
-        int mx = ranges::max(arr);
-        vector<int> precount(mx + 2, 0); // precount[i] arr中＜i的数目
-        int ans = 0;
-        for (int j = 0; j < arr.size() - 1; j++) {
-            int aj = arr[j];
-            for (int k = j + 1; k < arr.size(); k++) {
-                int ak = arr[k];
-                if (abs(aj - ak) > b) continue;
-                int range_min = max({0, aj - a, ak - c});
-                int range_max = min({mx, aj + a, ak + c});
-                ans += precount[range_max + 1] - precount[range_min];
+// 作者：灵茶山艾府
+// 链接：https://leetcode.cn/problems/count-good-triplets-in-an-array/solutions/
+// 来源：力扣（LeetCode）
+// 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+class Solutioncount_good_triplets {
+    template <typename T>
+    class FenwickTree {
+        vector<T> tree;
+
+    public:
+        // 使用下标 1 到 n
+        FenwickTree(int n) : tree(n + 1) {}
+        // a[i] 增加 val
+        // 1 <= i <= n
+        void update(int i, T val) {
+            for (; i < tree.size(); i += i & -i) {
+                tree[i] += val;
             }
-            // 更新precount
-            ranges::for_each(precount.begin() + aj, precount.end(),
-                             [](int &x) { x++; });
+        }
+        // 求前缀和 a[1] + ... + a[i]
+        // 1 <= i <= n
+        T pre(int i) const {
+            T res = 0;
+            for (; i > 0; i &= i - 1) {
+                res += tree[i];
+            }
+            return res;
+        }
+    };
+
+public:
+    long long goodTriplets(vector<int> &nums1, vector<int> &nums2) {
+        int n = nums1.size();
+        vector<int> p(n);
+        for (int i = 0; i < n; i++) {
+            p[nums1[i]] = i;
+        }
+        long long ans = 0;
+        FenwickTree<int> f(n);
+        for (int i = 0; i < n; i++) {
+            int y = p[nums2[i]];
+            int less = f.pre(y); // 添加一个值为 3 的数，就是调用树状数组的
+                                 // update(3,1)。查询小于 3 的元素个数，即小于等于 2
+                                 // 的元素个数，就是调用树状数组的 pre(2)
+            ans += (long)less * (n - 1 - y - (i - less));
+            f.update(y + 1, 1); // y=0....n-1   映射到1.....n
         }
         return ans;
     }
 };
+
+class lc1399统计最大数组的数目 {
+public:
+    int countLargestGroup(int n) {
+        string n_s = to_string(n);
+        int size = n_s.size();
+        vector memo(size, vector(9 * size + 1, -1));
+
+        function<int(int, int, bool)> dfs = [&](int i, int left, bool limit_high) -> int {
+            if (i == size) return left == 0;
+            if (!limit_high && memo[i][left] != -1) return memo[i][left];
+            int res = 0;
+            int hi = limit_high ? n_s[i] - '0' : 9;
+            for (int d = 0; d <= min(hi, left); d++) {
+                res += dfs(i + 1, left - d, limit_high && d == hi);
+            }
+            if (!limit_high) memo[i][left] = res;
+            return res;
+        };
+        int maxcount = 0;
+        int res = 0;
+        for (int i = 1; i <= 9 * size; i++) {
+            int count = dfs(0, i, true);
+            if (count > maxcount) {
+                res = 1;
+                maxcount = count;
+            } else if (count == maxcount)
+                res++;
+        }
+        return res;
+    }
+};
+
+class 统计定界子数组的数目2444 {
+public:
+    long long countSubarrays(vector<int> &nums, int minK, int maxK) {
+        int minI = -1, maxI = -1, i0 = -1;
+        long long ans = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] > maxK || nums[i] < minK) i0 = i;
+            if (nums[i] == minK) minI = i;
+            if (nums[i] == maxK) maxI = i;
+            ans += max(min(minI, maxI) - i0, 0);
+        }
+        return ans;
+    }
+};
+int main() { vector<int> s{1, 1, 1, 1}; }

@@ -3292,9 +3292,9 @@ public:
         return dp[m][n] == s.size();
     }
 };
-class Solution {
+class Solution115 {
 public:
-    int numDistinct(string s, string t) {
+    int numDistinct1(string s, string t) {
         int m = s.size(), n = t.size();
         vector<uint64_t> dp(n + 1, 0); // dp[j] t[0...j]有多少种方式填满
         // 把t当背包，每个地方只能放对应的字符，把s的每个字符当物品 0-1背包
@@ -3308,4 +3308,182 @@ public:
         }
         return dp[n] % 1000000007;
     }
+    int numDistinct(string s, string t) {
+        int m = s.size(), n = t.size();
+        if (m < n) return 0;
+        // dp[i][j] s 0....i-1的子序列中t 0....j-1出现的次数
+        vector dp(m + 1, vector<uint64_t>(n + 1, 0));
+        // 初始化   dp[i][0] = 1
+        for (int i = 0; i < m; i++) dp[i][0] = 1;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s[i - 1] == t[j - 1]) {
+                    // 选s[i-1]和t[j-1]相匹配  也可以不选
+                    // bagg   bag  两者的最后一个g相同，可以不管，用bag匹配 ba
+                    // 也可以不用这个g去匹配，也就是  bag匹配bag
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+                } else
+                    // 没法用s[i-1]和t[j-1]相匹配 只能不考虑s[i-1]
+                    dp[i][j] = dp[i - 1][j];
+            }
+        }
+        return dp[m][n];
+    }
 };
+class Solution72 {
+public:
+    int minDistance(string word1, string word2) {
+        int m = word1.size(), n = word2.size();
+
+        // dpi,j  使得w1 0..i-1 和 w2 0...j-1相同的最少操作数
+        vector dp(m + 1, vector<int>(n + 1, 0));
+        for (int i = 0; i <= word1.size(); i++) dp[i][0] = i;
+        for (int j = 0; j <= word2.size(); j++) dp[0][j] = j;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (word1[i - 1] == word2[j - 1])
+                    dp[i][j] = dp[i - 1][j - 1];
+                else {
+                    // 删除等效于另一个添加
+                    dp[i][j] = min({dp[i - 1][j] + 1, dp[i][j - 1] + 1,
+                                    dp[i - 1][j - 1] + 1 /*改*/});
+                }
+            }
+        }
+        return dp[m][n];
+    }
+};
+
+class Solution647 {
+public:
+    int countSubstrings(string s) {
+        vector<vector<bool>> dp(s.size(), vector<bool>(s.size(), false));
+        int result = 0;
+        for (int i = s.size() - 1; i >= 0; i--) {
+            for (int j = i; j < s.size(); j++) {
+                if (s[i] == s[j] && (j - i <= 1 || dp[i + 1][j - 1])) {
+                    result++;
+                    dp[i][j] = true;
+                }
+            }
+        }
+        return result;
+    }
+    // 双指针方法
+    int countSubstrings2(string s) {
+        int result = 0;
+        for (int i = 0; i < s.size(); i++) {
+            result += extend(s, i, i, s.size());     // 以i为中心
+            result += extend(s, i, i + 1, s.size()); // 以i和i+1为中心
+        }
+        return result;
+    }
+    int extend(const string &s, int i, int j, int n) {
+        int res = 0;
+        while (i >= 0 && j < n && s[i] == s[j]) {
+            i--;
+            j++;
+            res++;
+        }
+        return res;
+    }
+};
+
+class Solution516 {
+public:
+    int longestPalindromeSubseq(string s) {
+        vector<vector<int>> dp(2, vector<int>(s.size(), 0));
+        for (int i = 0; i < s.size(); i++) {
+            dp[i % 2][i] = dp[i % 2][i] = 1;
+        }
+        for (int i = s.size() - 1; i >= 0; i--) {
+            for (int j = i + 1; j < s.size(); j++) {
+                if (s[i] == s[j])
+                    dp[i % 2][j] = dp[(i + 1) % 2][j - 1] + 2;
+                else
+                    dp[i % 2][j] = max(dp[(i + 1) % 2][j], dp[i % 2][j - 1]);
+            }
+        }
+        return dp[0][s.size() - 1];
+    }
+};
+
+class 单调栈_从右到左 {
+public:
+    vector<int> dailyTemperatures(vector<int> &temperatures) {
+        stack<int> st;
+        vector ans(temperatures.size(), 0);
+        for (int i = temperatures.size() - 1; i >= 0; i--) {
+            while (!st.empty() && temperatures[i] >= temperatures[st.top()]) {
+                st.pop();
+            }
+            if (!st.empty()) {
+                ans[i] = st.top() - i;
+            }
+            st.push(i);
+        }
+        return ans;
+    }
+};
+
+class 单调栈_从左到右 {
+public:
+    vector<int> dailyTemperatures(vector<int> &temperatures) {
+        stack<int> st;
+        vector ans(temperatures.size(), 0);
+        for (int i = 0; i < temperatures.size(); i++) {
+            while (!st.empty() && temperatures[i] > temperatures[st.top()]) {
+                ans[st.top()] = i - st.top();
+                st.pop();
+            }
+            st.push(i);
+        }
+        return ans;
+    }
+};
+
+class 接雨水单调栈 {
+public:
+    int trap(vector<int> &height) {
+        int ans = 0;
+        stack<int> st;
+        for (int i = 0; i < height.size(); i++) {
+            // >=可以减少空间复杂度
+            while (!st.empty() && height[i] >= height[st.top()]) {
+                int h_bottom = height[st.top()];
+                st.pop();
+                if (st.empty()) break;
+                int w = i - st.top() - 1;
+                int h = min(height[i], height[st.top()]) - h_bottom;
+                ans += w * h;
+            }
+            st.push(i);
+        }
+        return ans;
+    }
+};
+class 接雨水前后缀 {
+public:
+    int trap(vector<int> &height) {
+        if (height.size() <= 2) return 0;
+        int maxLeft = height[0];
+        vector<int> maxRight(height.size(), 0);
+        int size = maxRight.size();
+
+        // 前缀和求和同时算
+        //  记录每个柱子右边柱子最大高度
+        maxRight[size - 1] = height[size - 1];
+        for (int i = size - 2; i >= 0; i--) {
+            maxRight[i] = max(height[i], maxRight[i + 1]);
+        }
+        // 求和
+        int sum = 0;
+        for (int i = 1; i < size - 1; i++) {
+            int count = min(maxLeft, maxRight[i]) - height[i];
+            if (count > 0) sum += count;
+            maxLeft = max(height[i], maxLeft);
+        }
+        return sum;
+    }
+};
+int main() { vector<int> s{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}; }
