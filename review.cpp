@@ -434,8 +434,7 @@ public:
 // 四数相加II
 class Solution454 {
 public:
-    int fourSumCount(vector<int> &nums1, vector<int> &nums2, vector<int> &nums3,
-                     vector<int> &nums4) {
+    int fourSumCount(vector<int> &nums1, vector<int> &nums2, vector<int> &nums3, vector<int> &nums4) {
         unordered_map<int, int> umap;
         int count = 0;
         for (int a : nums1) {
@@ -506,8 +505,7 @@ public:
                 else if (nums[i] + nums[left] + nums[right] < 0)
                     left++;
                 else {
-                    result.push_back(
-                        vector<int>{nums[i], nums[left], nums[right]});
+                    result.push_back(vector<int>{nums[i], nums[left], nums[right]});
                     while (left < right && nums[right] == nums[right - 1]) {
                         right--;
                     }
@@ -537,20 +535,14 @@ public:
                 if (j > i + 1 && nums[j] == nums[j - 1]) continue;
                 int left = j + 1, right = nums.size() - 1;
                 while (left < right) {
-                    if ((long)(nums[i] + nums[j] + nums[left] + nums[right] <
-                               target))
+                    if ((long)(nums[i] + nums[j] + nums[left] + nums[right] < target))
                         left++;
-                    else if ((long)nums[i] + nums[j] + nums[left] +
-                                 nums[right] >
-                             target)
+                    else if ((long)nums[i] + nums[j] + nums[left] + nums[right] > target)
                         right--;
                     else {
-                        result.push_back(vector<int>{nums[i], nums[j],
-                                                     nums[left], nums[right]});
-                        while (left < right && nums[left] == nums[left + 1])
-                            left++;
-                        while (left < right && nums[right] == nums[right - 1])
-                            right--;
+                        result.push_back(vector<int>{nums[i], nums[j], nums[left], nums[right]});
+                        while (left < right && nums[left] == nums[left + 1]) left++;
+                        while (left < right && nums[right] == nums[right - 1]) right--;
                         left++;
                         right--;
                     }
@@ -795,8 +787,7 @@ public:
     int evalRPN(vector<string> &tokens) {
         stack<long long> st;
         for (int i = 0; i < tokens.size(); i++) {
-            if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" ||
-                tokens[i] == "/") {
+            if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/") {
                 long long num1 = st.top();
                 st.pop();
                 long long num2 = st.top();
@@ -827,8 +818,7 @@ public:
             Q.push_back(c);
         }
         void pop(int c) {
-            if (!Q.empty() &&
-                c == Q.front()) // 我感觉这里才是精华，能知道要不要弹出
+            if (!Q.empty() && c == Q.front()) // 我感觉这里才是精华，能知道要不要弹出
                 Q.pop_front();
         }
         int front() { return Q.front(); }
@@ -864,9 +854,7 @@ public:
         }
         vector<pair<int, int>> vec(map.begin(), map.end());
         sort(vec.begin(), vec.end(),
-             [](const pair<int, int> &lhs, const pair<int, int> &rhs) {
-                 return lhs.second > rhs.second;
-             });
+             [](const pair<int, int> &lhs, const pair<int, int> &rhs) { return lhs.second > rhs.second; });
         vector<int> a(k);
         for (int i = 0; i < k; ++i) {
             a[i] = vec[i].first;
@@ -913,8 +901,7 @@ struct TreeNode {
     TreeNode *right;
     TreeNode() : val(0), left(nullptr), right(nullptr) {}
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right)
-        : val(x), left(left), right(right) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 class Solution_preordrer {
 public:
@@ -1049,8 +1036,7 @@ public:
     Node *next;
     Node() : val(0), left(NULL), right(NULL), next(NULL) {}
     Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
-    Node(int _val, Node *_left, Node *_right, Node *_next)
-        : val(_val), left(_left), right(_right), next(_next) {}
+    Node(int _val, Node *_left, Node *_right, Node *_next) : val(_val), left(_left), right(_right), next(_next) {}
 };
 class Solution116 {
 public:
@@ -1130,12 +1116,9 @@ public:
             return false;
         else if (left->val != right->val)
             return false;
-        return compare(left->left, right->right) &&
-               compare(left->right, right->left);
+        return compare(left->left, right->right) && compare(left->right, right->left);
     }
-    bool isSymmetric(TreeNode *root) {
-        return compare(root->left, root->right);
-    }
+    bool isSymmetric(TreeNode *root) { return compare(root->left, root->right); }
 };
 // 222. 完全二叉树的节点个数
 class Solution222 {
@@ -1166,8 +1149,7 @@ public:
             rightDepth++;
         }
         if (leftDepth == rightDepth) {
-            return (2 << leftDepth) -
-                   1; // 注意(2<<1) 相当于2^2，所以leftDepth初始为0
+            return (2 << leftDepth) - 1; // 注意(2<<1) 相当于2^2，所以leftDepth初始为0
         }
         return countNodes(root->left) + countNodes(root->right) + 1;
     }
@@ -1269,9 +1251,7 @@ public:
         while (!st.empty()) {
             pair<TreeNode *, int> pcur = st.top();
             st.pop();
-            if (pcur.first->val == pcur.second && !pcur.first->left &&
-                !pcur.first->right)
-                return true;
+            if (pcur.first->val == pcur.second && !pcur.first->left && !pcur.first->right) return true;
             if (pcur.first->left) {
                 st.push({pcur.first->left, pcur.second - pcur.first->val});
             }
@@ -1290,8 +1270,7 @@ public:
     private:
         // 中序区间：[inorderBegin, inorderEnd)，后序区间[postorderBegin,
         // postorderEnd)
-        TreeNode *traversal(vector<int> &inorder, int inorderBegin,
-                            int inorderEnd, vector<int> &postorder,
+        TreeNode *traversal(vector<int> &inorder, int inorderBegin, int inorderEnd, vector<int> &postorder,
                             int postorderBegin, int postorderEnd) {
             if (postorderBegin == postorderEnd) return NULL;
 
@@ -1301,8 +1280,7 @@ public:
             if (postorderEnd - postorderBegin == 1) return root;
 
             int delimiterIndex;
-            for (delimiterIndex = inorderBegin; delimiterIndex < inorderEnd;
-                 delimiterIndex++) {
+            for (delimiterIndex = inorderBegin; delimiterIndex < inorderEnd; delimiterIndex++) {
                 if (inorder[delimiterIndex] == rootValue) break;
             }
             // 切割中序数组
@@ -1317,20 +1295,15 @@ public:
             // 左后序区间，左闭右开[leftPostorderBegin, leftPostorderEnd)
             int leftPostorderBegin = postorderBegin;
             int leftPostorderEnd =
-                postorderBegin + delimiterIndex -
-                inorderBegin; // 终止位置是 需要加上 中序区间的大小size
+                postorderBegin + delimiterIndex - inorderBegin; // 终止位置是 需要加上 中序区间的大小size
             // 右后序区间，左闭右开[rightPostorderBegin, rightPostorderEnd)
-            int rightPostorderBegin =
-                postorderBegin + (delimiterIndex - inorderBegin);
-            int rightPostorderEnd =
-                postorderEnd - 1; // 排除最后一个元素，已经作为节点了
+            int rightPostorderBegin = postorderBegin + (delimiterIndex - inorderBegin);
+            int rightPostorderEnd = postorderEnd - 1; // 排除最后一个元素，已经作为节点了
 
             root->left =
-                traversal(inorder, leftInorderBegin, leftInorderEnd, postorder,
-                          leftPostorderBegin, leftPostorderEnd);
-            root->right =
-                traversal(inorder, rightInorderBegin, rightInorderEnd,
-                          postorder, rightPostorderBegin, rightPostorderEnd);
+                traversal(inorder, leftInorderBegin, leftInorderEnd, postorder, leftPostorderBegin, leftPostorderEnd);
+            root->right = traversal(inorder, rightInorderBegin, rightInorderEnd, postorder, rightPostorderBegin,
+                                    rightPostorderEnd);
 
             return root;
         }
@@ -1339,8 +1312,7 @@ public:
         TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
             if (inorder.size() == 0 || postorder.size() == 0) return NULL;
             // 左闭右开的原则
-            return traversal(inorder, 0, inorder.size(), postorder, 0,
-                             postorder.size());
+            return traversal(inorder, 0, inorder.size(), postorder, 0, postorder.size());
         }
     };
     TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
@@ -1355,11 +1327,9 @@ public:
             }
         }
         vector<int> leftTreein(inorder.begin(), inorder.begin() + split);
-        vector<int> leftTreepo(postorder.begin(),
-                               postorder.begin() + leftTreein.size());
+        vector<int> leftTreepo(postorder.begin(), postorder.begin() + leftTreein.size());
         vector<int> rightTreein(inorder.begin() + split + 1, inorder.end());
-        vector<int> rightTreepo(postorder.begin() + leftTreein.size(),
-                                postorder.end() - 1);
+        vector<int> rightTreepo(postorder.begin() + leftTreein.size(), postorder.end() - 1);
         root->left = buildTree(leftTreein, leftTreepo);
         root->right = buildTree(rightTreein, rightTreepo);
         return root;
@@ -1385,9 +1355,7 @@ public:
         root->right = traversal(nums, maxpos + 1, end);
         return root;
     }
-    TreeNode *constructMaximumBinaryTree(vector<int> &nums) {
-        return traversal(nums, 0, nums.size());
-    }
+    TreeNode *constructMaximumBinaryTree(vector<int> &nums) { return traversal(nums, 0, nums.size()); }
 };
 // 617 合并二叉树
 class Solution617 {
@@ -1401,18 +1369,16 @@ public:
         TreeNode *root = new TreeNode(val1 + val2);
         // 递归合并左右子树
         if (root1 || root2) {
-            root->left = traversal(root1 ? root1->left : nullptr,
-                                   root2 ? root2->left : nullptr);
-            root->right = traversal(root1 ? root1->right : nullptr,
-                                    root2 ? root2->right : nullptr);
+            root->left = traversal(root1 ? root1->left : nullptr, root2 ? root2->left : nullptr);
+            root->right = traversal(root1 ? root1->right : nullptr, root2 ? root2->right : nullptr);
         }
         return root;
     }
     // 这段好点
     TreeNode *mergeTrees2(TreeNode *t1, TreeNode *t2) {
-        if (t1 == NULL) return t2; // 如果t1为空，合并之后就应该是t2
-        if (t2 == NULL) return t1; // 如果t2为空，合并之后就应该是t1
-        t1->val += t2->val;        // 中
+        if (t1 == NULL) return t2;                     // 如果t1为空，合并之后就应该是t2
+        if (t2 == NULL) return t1;                     // 如果t2为空，合并之后就应该是t1
+        t1->val += t2->val;                            // 中
         t1->left = mergeTrees2(t1->left, t2->left);    // 左
         t1->right = mergeTrees2(t1->right, t2->right); // 右
         return t1;
@@ -1530,9 +1496,7 @@ public:
         travel(root);
         vector<pair<int, int>> res1(umap.begin(), umap.end());
         sort(res1.begin(), res1.end(),
-             [&](const pair<int, int> &a, const pair<int, int> &b) {
-                 return a.second > b.second;
-             });
+             [&](const pair<int, int> &a, const pair<int, int> &b) { return a.second > b.second; });
         vector<int> res;
         res.push_back(res1[0].first);
         for (int i = 1; i < res1.size(); i++) {
@@ -1592,9 +1556,7 @@ public:
             return cur2;
         return nullptr;
     }
-    TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q) {
-        return travel(root, p, q);
-    }
+    TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q) { return travel(root, p, q); }
 };
 // 701 二叉搜索树的插入
 class Solution701 {
@@ -1675,9 +1637,7 @@ public:
         root->right = travel(nums, max_size + 1, right);
         return root;
     }
-    TreeNode *constructMaximumBinaryTree(vector<int> &nums) {
-        return travel(nums, 0, nums.size() - 1);
-    }
+    TreeNode *constructMaximumBinaryTree(vector<int> &nums) { return travel(nums, 0, nums.size() - 1); }
 };
 // 108. 将有序数组转换为二叉搜索树
 class Solution108 {
@@ -1691,9 +1651,7 @@ public:
         root->right = travelsal(nums, max_size + 1, right);
         return root;
     }
-    TreeNode *sortedArrayToBST(vector<int> &nums) {
-        return travelsal(nums, 0, nums.size() - 1);
-    }
+    TreeNode *sortedArrayToBST(vector<int> &nums) { return travelsal(nums, 0, nums.size() - 1); }
 };
 // 538. 把二叉搜索树转换为累加树
 class Solution538 {
@@ -1822,18 +1780,15 @@ class Solution40 {
 public:
     vector<vector<int>> res;
     vector<int> path;
-    void back(vector<int> &candidates, int target, int sum, int start,
-              vector<bool> used) {
+    void back(vector<int> &candidates, int target, int sum, int start, vector<bool> used) {
         if (sum > target) return;
         if (sum == target) {
             res.push_back(path);
             return;
         }
         // if (i > start && candidates[i] == candidates[i - 1]) continue;
-        for (int i = start;
-             i < candidates.size() && sum + candidates[i] <= target; i++) {
-            if (i > 0 && used[i - 1] == 0 && candidates[i] == candidates[i - 1])
-                continue;
+        for (int i = start; i < candidates.size() && sum + candidates[i] <= target; i++) {
+            if (i > 0 && used[i - 1] == 0 && candidates[i] == candidates[i - 1]) continue;
             path.push_back(candidates[i]);
             used[i] = 1;
             back(candidates, target, sum + candidates[i], i + 1, used);
@@ -1965,8 +1920,7 @@ public:
         }
     }
     vector<vector<int>> subsetsWithDup(vector<int> &nums) {
-        sort(nums.begin(), nums.end(),
-             [](int left, int right) { return left < right; });
+        sort(nums.begin(), nums.end(), [](int left, int right) { return left < right; });
         res.push_back({});
         back(nums, 0);
         return res;
@@ -1984,12 +1938,10 @@ private:
         }
         unordered_set<int> uset; // 使用set对本层元素进行去重
         for (int i = startIndex; i < nums.size(); i++) {
-            if ((!path.empty() && nums[i] < path.back()) ||
-                uset.find(nums[i]) != uset.end()) {
+            if ((!path.empty() && nums[i] < path.back()) || uset.find(nums[i]) != uset.end()) {
                 continue;
             }
-            uset.insert(
-                nums[i]); // 记录这个元素在本层用过了，本层后面不能再用了
+            uset.insert(nums[i]); // 记录这个元素在本层用过了，本层后面不能再用了
             path.push_back(nums[i]);
             backtracking(nums, i + 1);
             path.pop_back();
@@ -2011,15 +1963,12 @@ public:
             if (path.size() > 1) {
                 result.push_back(path);
             }
-            int used[201] = {
-                0}; // 这里使用数组来进行去重操作，题目说数值范围[-100, 100]
+            int used[201] = {0}; // 这里使用数组来进行去重操作，题目说数值范围[-100, 100]
             for (int i = startIndex; i < nums.size(); i++) {
-                if ((!path.empty() && nums[i] < path.back()) ||
-                    used[nums[i] + 100] == 1) {
+                if ((!path.empty() && nums[i] < path.back()) || used[nums[i] + 100] == 1) {
                     continue;
                 }
-                used[nums[i] + 100] =
-                    1; // 记录这个元素在本层用过了，本层后面不能再用了
+                used[nums[i] + 100] = 1; // 记录这个元素在本层用过了，本层后面不能再用了
                 path.push_back(nums[i]);
                 backtracking(nums, i + 1);
                 path.pop_back();
@@ -2073,8 +2022,7 @@ public:
             return;
         }
         for (int i = 0; i < nums.size(); i++) {
-            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]))
-                continue;
+            if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])) continue;
             path.push_back(nums[i]);
             used[i] = true;
             back(nums);
@@ -2254,8 +2202,7 @@ public:
         for (int i = 1; i < nums.size(); i++) {
             dp[i][0] = dp[i][1] = 1;
             for (int j = 0; j < i; j++) {
-                if (nums[j] > nums[i])
-                    dp[i][1] = max(dp[i][1], dp[j][0] + 1); // 做山谷
+                if (nums[j] > nums[i]) dp[i][1] = max(dp[i][1], dp[j][0] + 1); // 做山谷
                 if (nums[j] < nums[i]) dp[i][0] = max(dp[i][0], dp[j][1] + 1);
             }
         }
@@ -2265,12 +2212,11 @@ public:
         if (nums.size() <= 1) return nums.size();
         int curDiff = 0; // 当前一对差值
         int preDiff = 0; // 前一对差值
-        int result = 1; // 记录峰值个数，序列默认序列最右边有一个峰值
+        int result = 1;  // 记录峰值个数，序列默认序列最右边有一个峰值
         for (int i = 0; i < nums.size() - 1; i++) {
             curDiff = nums[i + 1] - nums[i];
             // 出现峰值
-            if ((preDiff <= 0 && curDiff > 0) ||
-                (preDiff >= 0 && curDiff < 0)) {
+            if ((preDiff <= 0 && curDiff > 0) || (preDiff >= 0 && curDiff < 0)) {
                 result++;
                 preDiff = curDiff;
             }
@@ -2351,8 +2297,7 @@ class Solution1005 {
 public:
     int largestSumAfterKNegations(vector<int> &nums, int k) {
         int sum = 0;
-        sort(nums.begin(), nums.end(),
-             [](int left, int right) { return abs(left) > abs(right); });
+        sort(nums.begin(), nums.end(), [](int left, int right) { return abs(left) > abs(right); });
         for (int i = 0; i < nums.size(); i++) {
             if (nums[i] < 0 && k > 0) {
                 nums[i] = -nums[i];
@@ -2454,8 +2399,7 @@ class Solution452 {
 public:
     int findMinArrowShots(vector<vector<int>> &points) {
         if (points.empty()) return 0;
-        sort(points.begin(), points.end(),
-             [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
+        sort(points.begin(), points.end(), [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
         int ans = 1;
         for (int i = 1; i < points.size(); i++) {
             if (points[i][0] > points[i - 1][1]) {
@@ -2474,13 +2418,11 @@ public:
     int eraseOverlapIntervals(vector<vector<int>> &intervals) {
         if (intervals.empty()) return 0;
         int ans = 0;
-        sort(intervals.begin(), intervals.end(),
-             [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
+        sort(intervals.begin(), intervals.end(), [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
         for (int i = 1; i < intervals.size(); i++) {
             if (intervals[i][0] < intervals[i - 1][1]) {
                 ans++;
-                intervals[i][1] =
-                    min(intervals[i][1], intervals[i - 1][1]); // 模拟撤销的动作
+                intervals[i][1] = min(intervals[i][1], intervals[i - 1][1]); // 模拟撤销的动作
             }
         }
         return ans;
@@ -2543,8 +2485,7 @@ class Solution56 {
 public:
     vector<vector<int>> merge(vector<vector<int>> &intervals) {
         if (intervals.size() <= 1) return intervals;
-        sort(intervals.begin(), intervals.end(),
-             [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
+        sort(intervals.begin(), intervals.end(), [](vector<int> &a, vector<int> &b) { return a[0] < b[0]; });
         vector<vector<int>> res{intervals[0]};
         for (int i = 1; i < intervals.size(); i++) {
             if (intervals[i][0] <= res.back()[1]) {
@@ -2660,8 +2601,7 @@ class Solution63 {
 public:
     int uniquePathsWithObstacles(vector<vector<int>> &obstacleGrid) {
         int m = obstacleGrid.size(), n = obstacleGrid[0].size();
-        if (obstacleGrid[m - 1][n - 1] == 1 ||
-            obstacleGrid[0][0] == 1) // 如果在起点或终点出现了障碍，直接返回0
+        if (obstacleGrid[m - 1][n - 1] == 1 || obstacleGrid[0][0] == 1) // 如果在起点或终点出现了障碍，直接返回0
             return 0;
         vector<vector<int>> dp(m, vector<int>(n, 0));
         for (int i = 0; i < m; i++) {
@@ -2678,8 +2618,7 @@ public:
         }
         for (int i = 1; i < m; i++) {
             for (int j = 1; j < n; j++) {
-                if (obstacleGrid[i][j] == 0)
-                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                if (obstacleGrid[i][j] == 0) dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
             }
         }
         return dp[m - 1][n - 1];
@@ -2693,8 +2632,7 @@ public:
         dp[1] = 1;
         for (int i = 2; i <= n; i++) {
             for (int k = 1; k < i && k <= i - k; k++) {
-                dp[i] = max({dp[i], dp[i - k] * dp[k], (i - k) * k,
-                             dp[i - k] * k, (i - k) * dp[k]});
+                dp[i] = max({dp[i], dp[i - k] * dp[k], (i - k) * k, dp[i - k] * k, (i - k) * dp[k]});
             }
         }
         return dp[n];
@@ -2723,9 +2661,7 @@ public:
         if (i == 0) return j == nums[0];
         bool res;
         if (mem[i][j] == -1)
-            mem[i][j] = res =
-                j >= nums[i] && back(nums, i - 1, j - nums[i], mem) ||
-                back(nums, i - 1, j, mem);
+            mem[i][j] = res = j >= nums[i] && back(nums, i - 1, j - nums[i], mem) || back(nums, i - 1, j, mem);
         else
             return mem[i][j];
         return res;
@@ -2784,9 +2720,7 @@ public:
 class Solution474 {
 public:
     int findMaxForm(vector<string> &strs, int m, int n) {
-        vector<vector<int>> dp(
-            m + 1,
-            vector<int>(n + 1, 0)); // dp[i][j] 有i个0和j个1的最大子集长度
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0)); // dp[i][j] 有i个0和j个1的最大子集长度
         for (const string &str : strs) {
             int num0 = 0, num1 = 0;
             for (char c : str) {
@@ -2809,9 +2743,8 @@ public:
 class Solution518 {
 public:
     int change(int amount, vector<int> &coins) {
-        vector<uint64_t> dp(
-            amount + 1,
-            0); // dp[i][j] 背包载重j，截止第i个物品能凑出重量为j的方案数
+        vector<uint64_t> dp(amount + 1,
+                            0); // dp[i][j] 背包载重j，截止第i个物品能凑出重量为j的方案数
         dp[0] = 1;
         for (int i = 0; i < coins.size(); i++) {
             for (int j = coins[i]; j <= amount; j++) {
@@ -2863,8 +2796,7 @@ public:
         dp[0] = 0;
         for (int i = 0; i * i <= n; i++) {
             for (int j = i * i; j <= n; j++) {
-                if (dp[j - i * i] != INT_MAX)
-                    dp[j] = min(dp[j], dp[j - i * i] + 1);
+                if (dp[j - i * i] != INT_MAX) dp[j] = min(dp[j], dp[j - i * i] + 1);
             }
         }
         return dp[n];
@@ -2878,10 +2810,9 @@ class Solution139 {
             unordered_set<string> wordSet(wordDict.begin(), wordDict.end());
             vector<bool> dp(s.size() + 1, false);
             dp[0] = true;
-            for (int i = 1; i <= s.size(); i++) { // 遍历背包
-                for (int j = 0; j < i; j++) {     // 遍历物品
-                    string word =
-                        s.substr(j, i - j); // substr(起始位置，截取的个数)
+            for (int i = 1; i <= s.size(); i++) {     // 遍历背包
+                for (int j = 0; j < i; j++) {         // 遍历物品
+                    string word = s.substr(j, i - j); // substr(起始位置，截取的个数)
                     if (wordSet.find(word) != wordSet.end() && dp[j]) {
                         dp[i] = true;
                     }
@@ -2906,9 +2837,7 @@ public:
         for (int j = 1; j <= s.size(); j++) {
             for (int i = 0; i < wordDict.size(); i++) {
                 if (j >= wordDict[i].size()) {
-                    dp[j] =
-                        dp[j - wordDict[i].size()] &&
-                        check(wordDict[i], s, j - wordDict[i].size(), j - 1);
+                    dp[j] = dp[j - wordDict[i].size()] && check(wordDict[i], s, j - wordDict[i].size(), j - 1);
                     if (dp[j]) break;
                 }
             }
@@ -3155,8 +3084,7 @@ public:
         return res;
     }
 
-    int maxWindow(vector<int> &nums1, vector<int> &nums2, int start1,
-                  int start2, int len) {
+    int maxWindow(vector<int> &nums1, vector<int> &nums2, int start1, int start2, int len) {
         int max_len = 0, current = 0;
         for (int k = 0; k < len; k++) {
             if (nums1[start1 + k] == nums2[start2 + k]) {
@@ -3285,8 +3213,7 @@ public:
                     dp[i][j] = dp[i - 1][j - 1] + 1;
                 else
                     // dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
-                    dp[i][j] =
-                        dp[i][j - 1]; // 一般的，本题目可以只考虑删除t串的字符
+                    dp[i][j] = dp[i][j - 1]; // 一般的，本题目可以只考虑删除t串的字符
             }
         }
         return dp[m][n] == s.size();
@@ -3345,8 +3272,7 @@ public:
                     dp[i][j] = dp[i - 1][j - 1];
                 else {
                     // 删除等效于另一个添加
-                    dp[i][j] = min({dp[i - 1][j] + 1, dp[i][j - 1] + 1,
-                                    dp[i - 1][j - 1] + 1 /*改*/});
+                    dp[i][j] = min({dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1 /*改*/});
                 }
             }
         }
@@ -3484,6 +3410,26 @@ public:
             maxLeft = max(height[i], maxLeft);
         }
         return sum;
+    }
+};
+class 下一个更大的元素I {
+public:
+    vector<int> nextGreaterElement(vector<int> &nums1, vector<int> &nums2) {
+        unordered_map<int, int> idx;
+        for (int i = 0; i < nums1.size(); i++) {
+            idx[nums1[i]] = i;
+        }
+        stack<int> st;
+        vector<int> res(nums1.size(), -1);
+        for (int i = 0; i < nums2.size(); i++) {
+            int num = nums2[i];
+            while (!st.empty() && num > st.top()) {
+                res[idx[st.top()]] = num;
+                st.pop();
+            }
+            if (idx.contains(num)) st.push(num);
+        }
+        return res;
     }
 };
 int main() { vector<int> s{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}; }
