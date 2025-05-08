@@ -3432,4 +3432,20 @@ public:
         return res;
     }
 };
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int> &nums) {
+        vector<int> res(nums.size() * 2, 0);
+        stack<int> st;
+        for (int i = 0; i < 2 * nums.size(); i++) {
+            int num = nums[i % nums.size()];
+            while (!st.empty() && num > nums[st.top()]) {
+                res[st.top()] = num;
+                st.pop();
+            }
+            st.push(i % nums.size());
+        }
+        return vector<int>(nums.begin(), nums.begin() + nums.size());
+    }
+};
 int main() { vector<int> s{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}; }
