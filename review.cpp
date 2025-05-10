@@ -3432,7 +3432,7 @@ public:
         return res;
     }
 };
-class Solution {
+class 下一个更大的元素II {
 public:
     vector<int> nextGreaterElements(vector<int> &nums) {
         vector<int> res(nums.size() * 2, 0);
@@ -3448,4 +3448,32 @@ public:
         return vector<int>(nums.begin(), nums.begin() + nums.size());
     }
 };
-int main() { vector<int> s{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}; }
+
+class 单调栈完结 {
+public:
+    int largestRectangleArea(vector<int> &heights) {
+        int n = heights.size();
+        vector left(n, -1);
+        stack<int> st;
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.empty() && heights[i] < heights[st.top()]) {
+                left[st.top()] = i;
+                st.pop();
+            }
+            st.push(i);
+        }
+        st = stack<int>{};
+        int ans = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.empty() && heights[i] <= heights[st.top()]) {
+                st.pop();
+            }
+            if (!st.empty())
+                ans = max(ans, heights[i] * (st.top() - 1 - left[i]));
+            else
+                ans = max(ans, heights[i] * (n - 1 - left[i]));
+            st.push(i);
+        }
+        return ans;
+    }
+};

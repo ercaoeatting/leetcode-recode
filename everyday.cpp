@@ -1431,25 +1431,32 @@ public:
 
 class Solution {
 public:
-    int minTimeToReach(vector<vector<int>> &moveTime) {
-        int n = moveTime.size(), m = moveTime[0].size();
-        vector dp(n, vector(m, 0));
-        dp[0][0] = 0;
-        for (int i = 1; i < n; i++) {
-            dp[i][0] = max(dp[i - 1][0] + 1, moveTime[i][0] + 1);
+    long long minSum(vector<int> &nums1, vector<int> &nums2) {
+        long long count0_1 = 0, count0_2 = 0;
+        long long sum1 = 0, sum2 = 0;
+        for (int x : nums1) {
+            if (x == 0) count0_1++;
+            sum1 += x;
         }
-        for (int i = 1; i < m; i++) {
-            dp[0][i] = max(moveTime[0][i] + 1, dp[0][i - 1] + 1);
+        for (int x : nums2) {
+            if (x == 0) count0_2++;
+            sum2 += x;
         }
-        for (int i = 1; i < n; i++) {
-            for (int j = 1; j < m; j++) {
-                dp[i][j] = max(moveTime[i][j] + 1, min(dp[i - 1][j], dp[i][j - 1]) + 1);
-            }
+        sum1 += count0_1;
+        sum2 += count0_2;
+        // 情况1 无法相等
+        if ((count0_1 == 0 && sum1 < sum2) || (count0_2 == 0 && sum1 > sum2)) {
+            return -1;
+        } else if (count0_1 == 0 && count0_2 == 0 && sum1 != sum2) {
+            return -1;
         }
-        return dp[n - 1][m - 1];
+        // 情况2 存在没有0的情况
+        else if (count0_1 == 0)
+            return sum1;
+        else if (count0_2 == 0)
+            return sum2;
+        ;
+        // 情况3 都有0
+        return max(sum1, sum2);
     }
 };
-int main() {
-    vector<vector<int>> s{{94, 79, 62, 27, 69, 84}, {6, 32, 11, 82, 42, 30}};
-    Solution().minTimeToReach(s);
-}
