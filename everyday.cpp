@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <climits>
 #include <cmath>
 #include <cstddef>
@@ -6,8 +7,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <functional>
-#include <ios>
-#include <iostream>
 #include <iterator>
 #include <list>
 #include <map>
@@ -1429,7 +1428,7 @@ public:
     }
 };
 
-class Solution {
+class 数组的最小相等和2918 {
 public:
     long long minSum(vector<int> &nums1, vector<int> &nums2) {
         long long count0_1 = 0, count0_2 = 0;
@@ -1458,5 +1457,100 @@ public:
         ;
         // 情况3 都有0
         return max(sum1, sum2);
+    }
+};
+
+class fastpows {
+public:
+    static constexpr int MOD = 1'000'000'007;
+    static constexpr int SIZE = 26;
+    using Matrix = array<array<int, SIZE>, SIZE>;
+
+    Matrix mul(const Matrix &a, const Matrix &b) {
+        Matrix res{};
+        for (int i = 0; i < SIZE; i++) {
+            for (int k = 0; k < SIZE; k++) {
+                if (a[i][k] == 0) continue;
+                for (int j = 0; j < SIZE; j++) {
+                    res[i][j] = (res[i][j] + (long long)a[i][k] * b[k][j]) % MOD;
+                }
+            }
+        }
+        return res;
+    }
+    Matrix fastpow(Matrix base, int n) {
+        Matrix res = {};
+        for (int i = 0; i < SIZE; i++) {
+            res[i][i] = 1; // 单位矩阵
+        }
+        while (n) {
+            if (n & 1) {
+                res = mul(res, base);
+            }
+            base = mul(base, base);
+            n >>= 1;
+        }
+        return res;
+    }
+    int lengthAfterTransformations(string s, int t, vector<int> &nums) {
+        Matrix M{};
+        for (int i = 0; i < 26; i++) {
+            for (int j = i + 1; j <= i + nums[i]; j++) {
+                M[i][j % SIZE] = 1;
+            }
+        }
+        Matrix Mt = fastpow(M, t);
+        int ans = 0;
+        int F0[26]{0};
+        for (char c : s) F0[c - 'a']++;
+        for (int i = 0; i < SIZE; i++) {
+            ans = (ans + reduce(Mt[i].begin(), Mt[i].end(), 0LL) * F0[i]) % MOD;
+        }
+        return ans;
+    }
+};
+
+class 拼车1094 {
+public:
+    bool carPooling(vector<vector<int>> &trips, int capacity) {
+        vector diff(1001, 0);
+        for (const auto &trip : trips) {
+            int numPassengers = trip[0];
+            int from = trip[1];
+            int to = trip[2];
+            diff[from] += numPassengers;
+            diff[to] -= numPassengers;
+        }
+        int sum_d = 0;
+        for (int x : diff) {
+            sum_d += x;
+            if (sum_d > capacity) return false;
+        }
+        return true;
+    }
+};
+class 零数组变换II3356 {
+public:
+    int minZeroArray(vector<int> &nums, vector<vector<int>> &queries) {
+        int n = nums.size();
+        vector diff(n + 1, 0);
+        int sum_d = 0, k = 0; // 双指针
+        for (int i = 0; i < n; i++) {
+            int x = nums[i];
+            sum_d += diff[i];
+            while (sum_d < x && k < queries.size()) { // sum_d < x,意味着至少还需要处理一次问询
+                int l = queries[k][0];
+                int r = queries[k][1];
+                int val = queries[k][2];
+                diff[l] += val;
+                diff[r + 1] -= val;
+                if (l <= i && i <= r) { // x 在更新范围中
+                    sum_d += val;
+                }
+                k++;
+            }
+            if (sum_d < x) return -1;
+        }
+        return k;
     }
 };
