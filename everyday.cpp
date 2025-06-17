@@ -1554,3 +1554,117 @@ public:
         return k;
     }
 };
+
+class 连接两字母单词得到的最长回文串2131 {
+public:
+    int longestPalindrome(vector<string> &words) {
+        unordered_map<string, int> freq; // 单词出现次数
+        for (const string &word : words) {
+            ++freq[word];
+        }
+        int res = 0;      // 最长回文串长度
+        bool mid = false; // 是否含有中心单词
+        for (const auto &[word, cnt] : freq) {
+            // 遍历出现的单词，并更新长度
+            string rev = string(1, word[1]) + word[0]; // 反转后的单词
+            if (word == rev) {
+                if (cnt % 2 == 1) {
+                    mid = true;
+                }
+                res += 2 * (cnt / 2 * 2);
+            } else if (word > rev) { // 避免重复遍历
+                res += 4 * min(freq[word], freq[rev]);
+            }
+        }
+        if (mid) {
+            // 含有中心单词，更新长度
+            res += 2;
+        }
+        return res;
+    }
+};
+
+class 字典序最末1163 {
+public:
+    string lastSubstring(string s) {
+        int i = 0, j = 1, k = 0;
+        int n = s.size();
+        while (j + k < n) {
+            if (s[i + k] == s[j + k])
+                ++k;
+            else if (s[i + k] > s[j + k]) {
+                j = j + k + 1;
+                k = 0;
+            } else {
+                i = max(j, i + k + 1);
+                j = max(i + 1, j);
+                k = 0;
+            }
+        }
+        return s.substr(i);
+    }
+};
+
+class 按字典序排列最小的等效字符串1061 {
+public:
+    string smallestEquivalentString(string s1, string s2, string baseStr) {
+        int fa[26];
+        ranges::iota(fa, 0);
+
+        auto find = [&](this auto &&find, int x) -> int {
+            if (fa[x] != x) {
+                fa[x] = find(fa[x]);
+            }
+            return fa[x];
+        };
+
+        auto merge = [&](int x, int y) {
+            // 把大的代表元指向小的代表元
+            auto [small, big] = minmax(find(x), find(y));
+            fa[big] = small;
+        };
+
+        for (int i = 0; i < s1.size(); i++) {
+            merge(s1[i] - 'a', s2[i] - 'a');
+        }
+
+        for (int i = 0; i < baseStr.size(); i++) {
+            baseStr[i] = find(baseStr[i] - 'a') + 'a';
+        }
+        return baseStr;
+    }
+};
+
+class Solution {
+public:
+    string clearStars(string s) {
+        int n = s.size();
+        // 记录每种字母的出现位置
+        vector<int> vec[26];
+        // 记录删除哪些位置的字母
+        bool ban[n];
+        memset(ban, 0, sizeof(ban));
+
+        for (int i = 0; i < n; i++) {
+            if (s[i] == '*') {
+                // 通过枚举找到最小字母
+                for (int c = 0; c < 26; c++)
+                    if (vec[c].size() > 0) {
+                        // 删除最靠右的该字母
+                        ban[vec[c].back()] = true;
+                        vec[c].pop_back();
+                        break;
+                    }
+            } else {
+                // 字母，记录出现位置
+                vec[s[i] - 'a'].push_back(i);
+            }
+        }
+
+        // 构造答案
+        string ans;
+        for (int i = 0; i < n; i++)
+            if (s[i] != '*' && !ban[i]) ans.push_back(s[i]);
+        return ans;
+    }
+};
