@@ -1605,66 +1605,48 @@ public:
     }
 };
 
-class 按字典序排列最小的等效字符串1061 {
+// class 按字典序排列最小的等效字符串1061 {
+// public:
+//     string smallestEquivalentString(string s1, string s2, string baseStr) {
+//         int fa[26];
+//         ranges::iota(fa, 0);
+
+//         auto find = [&](this auto &&find, int x) -> int {
+//             if (fa[x] != x) {
+//                 fa[x] = find(fa[x]);
+//             }
+//             return fa[x];
+//         };
+
+//         auto merge = [&](int x, int y) {
+//             // 把大的代表元指向小的代表元
+//             auto [small, big] = minmax(find(x), find(y));
+//             fa[big] = small;
+//         };
+
+//         for (int i = 0; i < s1.size(); i++) {
+//             merge(s1[i] - 'a', s2[i] - 'a');
+//         }
+
+//         for (int i = 0; i < baseStr.size(); i++) {
+//             baseStr[i] = find(baseStr[i] - 'a') + 'a';
+//         }
+//         return baseStr;
+//     }
+// };
+
+class 划分数组使最大差为K2294 {
 public:
-    string smallestEquivalentString(string s1, string s2, string baseStr) {
-        int fa[26];
-        ranges::iota(fa, 0);
-
-        auto find = [&](this auto &&find, int x) -> int {
-            if (fa[x] != x) {
-                fa[x] = find(fa[x]);
-            }
-            return fa[x];
-        };
-
-        auto merge = [&](int x, int y) {
-            // 把大的代表元指向小的代表元
-            auto [small, big] = minmax(find(x), find(y));
-            fa[big] = small;
-        };
-
-        for (int i = 0; i < s1.size(); i++) {
-            merge(s1[i] - 'a', s2[i] - 'a');
-        }
-
-        for (int i = 0; i < baseStr.size(); i++) {
-            baseStr[i] = find(baseStr[i] - 'a') + 'a';
-        }
-        return baseStr;
-    }
-};
-
-class Solution {
-public:
-    string clearStars(string s) {
-        int n = s.size();
-        // 记录每种字母的出现位置
-        vector<int> vec[26];
-        // 记录删除哪些位置的字母
-        bool ban[n];
-        memset(ban, 0, sizeof(ban));
-
-        for (int i = 0; i < n; i++) {
-            if (s[i] == '*') {
-                // 通过枚举找到最小字母
-                for (int c = 0; c < 26; c++)
-                    if (vec[c].size() > 0) {
-                        // 删除最靠右的该字母
-                        ban[vec[c].back()] = true;
-                        vec[c].pop_back();
-                        break;
-                    }
-            } else {
-                // 字母，记录出现位置
-                vec[s[i] - 'a'].push_back(i);
+    int partitionArray(vector<int> &nums, int k) {
+        ranges::sort(nums);
+        int res = 1;
+        int min = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] - min > k) {
+                res++;
+                if (i < nums.size() - 1) min = nums[i];
             }
         }
-
-        // 构造答案
-        string ans;
-        for (int i = 0; i < n; i++)
-            if (s[i] != '*' && !ban[i]) ans.push_back(s[i]);
-        return ans;
+        return res;
     }
 };
