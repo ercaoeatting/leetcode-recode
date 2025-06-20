@@ -1650,3 +1650,23 @@ public:
         return res;
     }
 };
+
+class Solution {
+public:
+    int f(int a, int b, int &left) {
+        int d = min({a, b, left});
+        left -= d;
+        return abs(a - b) + d * 2;
+    };
+    int maxDistance(string s, int k) {
+        int ans = 0;
+        int cnt['X']{}; // 'W' + 1 = 'X'
+        for (char ch : s) {
+            cnt[ch]++;
+            ans = max(ans, f(cnt['N'], cnt['S'], k) + f(cnt['E'], cnt['W'], k));
+        }
+
+        return ans;
+    }
+};
+int main() {}
