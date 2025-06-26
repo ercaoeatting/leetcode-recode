@@ -1651,22 +1651,52 @@ public:
     }
 };
 
-class Solution {
+class 最小生成树1584 {
 public:
-    int f(int a, int b, int &left) {
-        int d = min({a, b, left});
-        left -= d;
-        return abs(a - b) + d * 2;
-    };
-    int maxDistance(string s, int k) {
-        int ans = 0;
-        int cnt['X']{}; // 'W' + 1 = 'X'
-        for (char ch : s) {
-            cnt[ch]++;
-            ans = max(ans, f(cnt['N'], cnt['S'], k) + f(cnt['E'], cnt['W'], k));
+    int minCostConnectPoints(std::vector<std::vector<int>> &points) {
+        int n = points.size();
+        if (n <= 1) return 0;
+
+        std::vector<std::vector<int>> g(n, std::vector<int>(n));
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int dist = std::abs(points[i][0] - points[j][0]) + std::abs(points[i][1] - points[j][1]);
+                g[i][j] = g[j][i] = dist; // 无向图
+            }
         }
 
-        return ans;
+        std::vector<int> minDist(n, INT_MAX);
+        std::vector<bool> isInTree(n, false);
+
+        int totalCost = 0;
+
+        minDist[0] = 0;
+
+        for (int count = 0; count < n; ++count) {
+            // 1、Prim 算法三部曲，第一步：选距离生成树最近节点
+            int cur = -1; // 选中哪个节点 加入最小生成树
+            int minVal = INT_MAX;
+
+            for (int j = 0; j < n; j++) {
+                if (!isInTree[j] && minDist[j] < minVal) {
+                    minVal = minDist[j];
+                    cur = j;
+                }
+            }
+
+            if (cur == -1) {
+                break;
+            }
+
+            isInTree[cur] = true;
+            totalCost += minVal;
+
+            for (int j = 0; j < n; j++) {
+                if (!isInTree[j] && g[cur][j] < minDist[j]) {
+                    minDist[j] = g[cur][j];
+                }
+            }
+        }
+        return totalCost;
     }
 };
-int main() {}
