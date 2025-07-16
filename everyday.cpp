@@ -11,6 +11,7 @@
 #include <list>
 #include <map>
 #include <numeric>
+#include <queue>
 #include <set>
 #include <stack>
 #include <string>
@@ -1698,5 +1699,31 @@ public:
             }
         }
         return totalCost;
+    }
+};
+class Solution {
+public:
+    int maxEvents(vector<vector<int>> &events) {
+        int mx = 0;
+        for (auto &e : events) {
+            mx = max(mx, e[1]);
+        }
+        vector<vector<int>> groups(mx + 1);
+        for (int i = 0; i < events.size(); i++) {
+            groups[events[i][0]].push_back(events[i][1]);
+        }
+        priority_queue<int, vector<int>, greater<>> pq;
+        int ans = 0;
+        for (int i = 1; i <= mx; i++) {
+            while (!pq.empty() && pq.top() < i) {
+                pq.pop();
+            }
+            for (int x : groups[i]) pq.push(x);
+            if (!pq.empty()) {
+                pq.pop();
+                ans++;
+            }
+        }
+        return ans;
     }
 };
