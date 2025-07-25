@@ -47,11 +47,10 @@ int prim() {
 struct Edge {
     int i;
     int j;
-    int dis;
-    std::strong_ordering operator<=>(const Edge &other) const = default;
+    int no;
 };
 ostream &operator<<(ostream &os, const Edge &it) {
-    os << it.i << " " << it.j << ":" << it.dis;
+    os << it.i << " " << it.j << ":" << it.no;
     return os;
 }
 class unionFind {
@@ -64,21 +63,29 @@ public:
         std::iota(father.begin(), father.end(), 0);
         father_init = father;
     }
-    void init() { father = father_init; }
-    int find(int u) { return u == father[u] ? u : father[u] = find(father[u]); }
+    void init() {
+        father = father_init;
+    }
+    int find(int u) {
+        return u == father[u] ? u : father[u] = find(father[u]);
+    }
     bool is_same(int u, int v) {
         u = find(u);
         v = find(v);
         return u == v;
     }
-    bool is_same(vector<int> &uv) { return is_same(uv[0], uv[1]); }
+    bool is_same(vector<int> &uv) {
+        return is_same(uv[0], uv[1]);
+    }
     void join(int u, int v) {
         u = find(u);
         v = find(v);
         if (u == v) return;
         father[u] = v;
     }
-    void join(vector<int> &uv) { join(uv[0], uv[1]); }
+    void join(vector<int> &uv) {
+        join(uv[0], uv[1]);
+    }
 };
 int main() {
     int v, e; // v 点数  e 边数
@@ -94,11 +101,11 @@ int main() {
         edges.push_back({v1, v2, val});
     }
     int count = 0;
-    sort(edges.begin(), edges.end(), [](Edge left, Edge right) { return left.dis < right.dis; });
+    sort(edges.begin(), edges.end(), [](Edge left, Edge right) { return left.no < right.no; });
     vector<Edge> res;
     for (int i = 0; i < edges.size(); i++) {
         if (!uf.is_same(edges[i].i, edges[i].j)) {
-            count += edges[i].dis;
+            count += edges[i].no;
             uf.join(edges[i].i, edges[i].j);
             // cout << edges[i] << endl;
             res.push_back(edges[i]);

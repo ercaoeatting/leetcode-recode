@@ -15,18 +15,19 @@
 #include <set>
 #include <stack>
 #include <string>
-#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
-
+#include <ranges>
 using namespace std;
 struct TreeNode {
     int val;
     TreeNode *left;
     TreeNode *right;
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x) :
+        val(x), left(nullptr), right(nullptr) {
+    }
 };
 class FindElements {
     unordered_set<int> valSet;
@@ -39,9 +40,13 @@ public:
         if (root->left) build(root->left, 2 * root->val + 1);
         if (root->right) build(root->left, 2 * root->val + 2);
     }
-    FindElements(TreeNode *root) { build(root, 0); }
+    FindElements(TreeNode *root) {
+        build(root, 0);
+    }
 
-    bool find(int target) { return valSet.count(target) == 1; }
+    bool find(int target) {
+        return valSet.count(target) == 1;
+    }
 };
 
 class FinalString {
@@ -71,10 +76,14 @@ class MyHashSet {
 private:
     vector<list<int>> data;
     static const int base = 769;
-    static int hash(int key) { return key % base; }
+    static int hash(int key) {
+        return key % base;
+    }
 
 public:
-    MyHashSet() : data(base) {}
+    MyHashSet() :
+        data(base) {
+    }
 
     void add(int key) {
         int h = hash(key);
@@ -119,7 +128,9 @@ class MyAllocator {
     int n_;
 
 public:
-    MyAllocator(int n) : n_(n), array_(n) {}
+    MyAllocator(int n) :
+        n_(n), array_(n) {
+    }
 
     int allocate(int size, int mID) {
         if (size <= 0 || size > n_) return -1;
@@ -183,7 +194,9 @@ public:
 // 作者：力扣官方题解
 class Allocator {
 public:
-    Allocator(int n) : n(n), memory(n) {}
+    Allocator(int n) :
+        n(n), memory(n) {
+    }
 
     int allocate(int size, int mID) {
         int count = 0;
@@ -224,7 +237,9 @@ class BrowserHistory {
     stack<string> stack2;
 
 public:
-    BrowserHistory(string homepage) { stack1.push(homepage); }
+    BrowserHistory(string homepage) {
+        stack1.push(homepage);
+    }
 
     void visit(string url) {
         stack1.push(url);
@@ -265,7 +280,9 @@ class TextEditor {
     vector<char>::iterator cursor;
 
 public:
-    TextEditor() { cursor = texts.end(); }
+    TextEditor() {
+        cursor = texts.end();
+    }
 
     void addText(string text) {
         for (char c : text) {
@@ -324,7 +341,9 @@ class MyFoodRatings {
             food_map[food].first = newRating;
         }
 
-        string highestRated(string cuisine) { return cuisine_map[cuisine].begin()->second; }
+        string highestRated(string cuisine) {
+            return cuisine_map[cuisine].begin()->second;
+        }
     };
 
     // leetcode.cn/problems/design-a-food-rating-system/solutions/1694044/ha-xi-biao-tao-ping-heng-shu-by-endlessc-hzct/
@@ -556,7 +575,8 @@ class NumArray {
     vector<int> pre_sum;
 
 public:
-    NumArray(vector<int> &nums) : nums_(nums) {
+    NumArray(vector<int> &nums) :
+        nums_(nums) {
         pre_sum.resize(nums_.size());
         pre_sum[0] = nums[0];
         for (int i = 1; i < nums_.size(); i++) {
@@ -803,7 +823,9 @@ public:
 struct ListNode {
     int val;
     ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
+    ListNode(int x) :
+        val(x), next(NULL) {
+    }
 };
 
 // 2269. 找到一个数字的 K 美丽值
@@ -845,7 +867,9 @@ public:
 
 // 3305. 元音辅音字符串计数 I
 class Solution3305 {
-    bool check(char &c) { return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'; }
+    bool check(char &c) {
+        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+    }
 
 public:
     long long f(string word, int k) {
@@ -859,8 +883,7 @@ public:
             } else {
                 k_count++;
             }
-            while (cut[0] > 0 && cut['e' - 'a'] > 0 && cut['i' - 'a'] > 0 && cut['o' - 'a'] > 0 && cut['u' - 'a'] > 0 &&
-                   k_count >= k) {
+            while (cut[0] > 0 && cut['e' - 'a'] > 0 && cut['i' - 'a'] > 0 && cut['o' - 'a'] > 0 && cut['u' - 'a'] > 0 && k_count >= k) {
                 if (check(word[i])) {
                     cut[word[i] - 'a']--;
                 } else {
@@ -872,7 +895,9 @@ public:
         }
         return ans;
     }
-    long long countOfSubstrings(string word, int k) { return f(word, k) - f(word, k + 1); }
+    long long countOfSubstrings(string word, int k) {
+        return f(word, k) - f(word, k + 1);
+    }
 };
 
 // 3340. 检查平衡字符串
@@ -1001,7 +1026,9 @@ public:
 // 2716. 最小化字符串长度
 class Solution2716 {
 public:
-    int minimizedStringLength(string s) { return unordered_set<char>(s.begin(), s.end()).size(); }
+    int minimizedStringLength(string s) {
+        return unordered_set<char>(s.begin(), s.end()).size();
+    }
 };
 // 2109. 向字符串添加空格
 class Solution2109 {
@@ -1105,7 +1132,9 @@ public:
         }
         return ans;
     }
-    int addDigits666(int num) { return (num - 1) % 9 + 1; }
+    int addDigits666(int num) {
+        return (num - 1) % 9 + 1;
+    }
 };
 
 class Solution20250405 {
@@ -1342,7 +1371,9 @@ class Solutioncount_good_triplets {
 
     public:
         // 使用下标 1 到 n
-        FenwickTree(int n) : tree(n + 1) {}
+        FenwickTree(int n) :
+            tree(n + 1) {
+        }
         // a[i] 增加 val
         // 1 <= i <= n
         void update(int i, T val) {
